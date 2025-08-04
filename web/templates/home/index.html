@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+{% extends 'layout/base.html' %}
+{% block content %}
+<div id="banner" class="carousel slide mb-5" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <!-- Slide 1 -->
+    <div class="carousel-item active">
+      <img src="/static/images/banner1.png" class="d-block w-100 banner-img" alt="Banner 1">
+    </div>
+    <!-- Slide 2 -->
+    <div class="carousel-item">
+      <img src="/static/images/banner2.png" class="d-block w-100 banner-img" alt="Banner 2">
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <button class="carousel-control-prev" type="button" data-bs-target="#banner" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#banner" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
+</div>
+
+<section class="about-section container my-5">
+  <div class="row align-items-center">
+    <!-- Phần bên trái: văn bản -->
+    <div class="col-md-6 mb-4 mb-md-0">
+      <h2 class="about-title">Về <span>LOGO</span></h2>
+      <h5 class="about-subtitle">Logo Coffee & Tea House – HÀNH TRÌNH CHINH PHỤC PHONG VỊ MỚI</h5>
+      <p class="about-text">
+        Hành trình luôn bắt đầu từ việc chọn lựa nguyên liệu kỹ càng từ các vùng đất trù phú, cho đến việc bảo quản, pha chế từ bàn tay nghệ nhân. Qua những nỗ lực không ngừng, Logo luôn hướng đến những trải nghiệm mới mẻ, độc đáo và tinh tế nhất cho khách hàng. Từ những tách trà thơm lừng đến những ly cà phê đậm đà, mỗi sản phẩm đều mang trong mình tâm huyết và sự sáng tạo của đội ngũ Logo.
+      </p>
+    </div>
+
+    <!-- Phần bên phải: hình ảnh -->
+    <div class="col-md-6 text-center">
+      <img src="/static/images/about.jpg" alt="Katinat Staff" class="img-fluid rounded-4 shadow-sm" />
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,60 @@
+<link rel="stylesheet" href="../static/css/prod_by_cateid.css">
+{% extends 'layout/base.html' %}
+{% block content %}
+
+{% if products|length > 0 %}
+{% set current_cate = products[0].category %}
+{% set parent_cate = current_cate.parent %}
+
+<!-- Đường dẫn định vị (breadcrumb) -->
+<div class="mb-3">
+    <p class="text-muted" style="font-size: 0.9rem;">
+        {% if parent_cate.ID in [1, 2] %}
+        Menu / {{ parent_cate.Title }}
+        {% elif parent_cate.ID in [3, 4] %}
+        Sản phẩm đóng gói / {{ parent_cate.Title }}
+        {% else %}
+        {{ current_cate.Title }}
+        {% endif %}
+    </p>
+</div>
+
+<!-- Tiêu đề danh mục -->
+<h5 class="fw-bold text-success mb-4" style="font-size: 1.2rem;">
+    {{ current_cate.Title }}
+</h5>
+
+<div class="product-container">
+    {% for product in products %}
+    {% include 'components/product_card.html' %}
+    {% endfor %}
+</div>
+<button id="btn-loadmore" type="button" class="btn btn-outline-primary">Load more</button>
+
+<!-- Hidden fields -->
+<input type="hidden" id="product-cursor" value="{{ cursor }}">
+<input type="hidden" id="product-cateid" value="{{ current_cate.ID }}">
+
+<!-- Modal -->
+<div class="modal fade" id="modal-product-detail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <!-- <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1> -->
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="modal-product-detail-body">
+        ...
+      </div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+      </div> -->
+    </div>
+  </div>
+</div>
+
+{% else %}
+{% endif %}
+<script src="/static/js/products/product.js"></script>
+{% endblock %}

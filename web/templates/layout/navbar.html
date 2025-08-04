@@ -1,0 +1,94 @@
+<link rel="stylesheet" href="/static/css/navbar.css">
+
+<nav class="navbar navbar-expand-lg navbar-light navbar-custom sticky-top px-3">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">
+      <img src="/static/images/logo-ca-phe-effoc.jpg" alt="Logo Tra Sua">
+      <span class="fw-bold text-success" style="font-size: 20px">Logo</span>
+    </a>
+
+    <form class="d-none d-md-flex mx-3 search-box" action="/products/search">
+      <input name="kw" value = "{{ keywords or '' }}" class="form-control rounded-pill" type="search" placeholder="Bạn muốn mua gì..." aria-label="Search">
+    </form>
+
+    <div class="ms-auto d-flex align-items-center">
+      <a href="#" class="btn btn-outline-success me-2 rounded-pill">
+        <i class="fas fa-truck"></i> Chọn Phương Thức Nhận Hàng
+      </a>
+      <a href="#" class="cart text-dark me-3">
+        <span class="cart-number"></span>
+        <i class="fa-solid fa-cart-shopping"></i>
+      </a>
+      <a href="#" class="text-dark me-3"><i class="fa-regular fa-envelope fs-5"></i></a>
+      <a href="/login" class="text-dark"><i class="fa-regular fa-user fs-5"></i></a>
+    </div>
+  </div>
+</nav>
+
+<!-- SUBMENU -->
+<div class="bg-white shadow-sm ">
+  <div class="container-fluid">
+    <ul class="nav justify-content-center py-1 px-2">
+      <li class="nav-item"><a class="nav-link text-dark" href="#">TRANG CHỦ</a></li>
+
+      <!-- MENU: TypeMenu = 1 -->
+      {% if menu|length > 0 %}
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle text-dark" href="#" id="menuDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          MENU
+        </a>
+        <div class="dropdown-menu p-2" aria-labelledby="menuDropdown" style="width: 800px;">
+          <div class="row">
+            {% for item in menu %}
+            <div class="col-md-3">
+              <h6 class="fw-bold text-success">{{ item.Title.upper() }}</h6>
+              <ul class="list-unstyled">
+                {% for sub_item in item.children %}
+                <li><a class="dropdown-item" href="/products/{{ sub_item.ID }}">{{ sub_item.Title }}</a></li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </li>
+      {% endif %}
+
+<!--       SẢN PHẨM ĐÓNG GÓI: TypeMenu = 2 -->
+      {% if menu|length > 1 %}
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle text-dark" href="#" id="SPDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          SẢN PHẨM ĐÓNG GÓI
+        </a>
+        <div class="dropdown-menu p-2" aria-labelledby="SPDropdown" style="width: 800px;">
+          <div class="row">
+            {% for item in product_package %}
+            <div class="col-md-3">
+              <h6 class="fw-bold text-success">{{ item.Title.upper() }}</h6>
+              <ul class="list-unstyled">
+                {% for sub_item in item.children %}
+                <li><a class="dropdown-item" href="/products/{{ sub_item.ID }}">{{ sub_item.Title }}</a></li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </li>
+      {% endif %}
+
+      <li class="nav-item"><a class="nav-link text-dark" href="#">KHUYẾN MÃI</a></li>
+      <li class="nav-item"><a class="nav-link text-dark" href="#">HỘI VIÊN</a></li>
+    </ul>
+  </div>
+</div>
+<script>
+  $(document).ready(function(){
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const cartNumber = $(".cart-number");
+    if (cartNumber.length > 0) {
+      cartNumber.text(cart.length);
+    }
+  })
+</script>
+

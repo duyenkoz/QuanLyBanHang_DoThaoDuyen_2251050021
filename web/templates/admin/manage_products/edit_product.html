@@ -1,0 +1,114 @@
+{% extends 'admin/layout_admin/base.html' %}
+{% block title %}Sửa sản phẩm{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Sửa sản phẩm</h4>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="/admin/manage-products/edit/{{ product.ID }}" enctype="multipart/form-data">
+                <div class="row">
+                    <!-- Tên sản phẩm -->
+                    <div class="col-md-8 mb-3">
+                        <label for="Title" class="form-label">Tên sản phẩm</label>
+                        <input type="text" class="form-control" id="Title" name="Title" value="{{ product.Title }}"
+                            required>
+                    </div>
+
+                    <!-- Giá -->
+                    <div class="col-md-4 mb-3">
+                        <label for="Price" class="form-label">Giá (VNĐ)</label>
+                        <input type="number" class="form-control" id="Price" name="Price" value="{{ product.Price }}"
+                            required>
+                    </div>
+
+                    <!-- Danh mục -->
+                    <div class="col-md-8 mb-3">
+                        <label for="CategoryID" class="form-label">Danh mục</label>
+                        <select class="form-select" id="CategoryID" name="CategoryID" required>
+                            {% for cate in categories %}
+                            <option value="{{ cate.ID }}" {% if cate.ID==product.CategoryID %}selected{% endif %}>
+                                {{ cate.Title }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Trạng thái -->
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Trạng thái</label>
+                        <div class="d-flex mt-2">
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="radio" name="Status" id="Status1" value="1" {% if
+                                    product.Status==1 %}checked{% endif %}>
+                                <label class="form-check-label" for="Status1">Hiện</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="Status" id="Status0" value="0" {% if
+                                    product.Status==0 %}checked{% endif %}>
+                                <label class="form-check-label" for="Status0">Ẩn</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mô tả -->
+                    <div class="col-12 mb-3">
+                        <label for="Description" class="form-label">Mô tả</label>
+                        <textarea class="form-control" id="Description" name="Description"
+                            rows="4">{{ product.Description }}</textarea>
+                    </div>
+
+                    <!-- Hình ảnh preview -->
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">Hình ảnh hiện tại</label>
+                        <div id="imagePreview" class="border rounded d-flex justify-content-center align-items-center"
+                            style="height: 150px;">
+                            {% if product.Img %}
+                            <img id="previewImage" src="{{ url_for('static', filename=product.Img) }}"
+                                alt="Ảnh sản phẩm" class="img-fluid h-100">
+                            {% else %}
+                            <span class="text-muted">Không có ảnh</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Upload file -->
+                    <div class="col-md-9 mb-3">
+                        <label for="Image" class="form-label">Chọn hình ảnh mới</label>
+                        <input class="form-control" type="file" id="Image" name="Image" accept="image/*"
+                            onchange="previewImage(event)">
+                    </div>
+                </div>
+
+                <!-- Nút -->
+                <div class="d-flex justify-content-end">
+                    <a href="{{ url_for('admin_prod_bp.admin_manage_products') }}" class="btn btn-secondary me-2">Quay
+                        lại</a>
+                    <button type="submit" class="btn btn-primary">Cập nhật</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Preview image script -->
+<script>
+    function previewImage(event) {
+        const preview = document.getElementById('imagePreview');
+        preview.innerHTML = '';
+        const file = event.target.files[0];
+        if (file) {
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(file);
+            img.style.maxHeight = '100%';
+            img.style.maxWidth = '100%';
+            img.classList.add('img-fluid');
+            preview.appendChild(img);
+        } else {
+            preview.innerHTML = '<span class="text-muted">Không có ảnh</span>';
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,153 @@
+{% extends 'admin/layout_admin/base.html' %}
+{% block title %}Thêm danh mục lớn{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Thêm danh mục lớn</h4>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="{{ url_for('admin_cate_bp.admin_manage_categories') }}"
+                enctype="multipart/form-data">
+                <div class="row">
+                    <!-- Tên danh mục -->
+                    <div class="col-md-6 mb-3">
+                        <label for="Title" class="form-label">Tên danh mục</label>
+                        <input type="text" class="form-control" id="Title" name="Title" required>
+                    </div>
+
+                    <!-- Loại -->
+                    <div class="col-md-3 mb-3">
+                        <label for="Type" class="form-label">Loại</label>
+                        <select class="form-select" id="Type" name="Type" required>
+                            <option value="">-- Chọn loại --</option>
+                            <option value="menu">Menu</option>
+                            <option value="package">Sản phẩm đóng gói</option>
+                        </select>
+                    </div>
+
+                    <!-- Trạng thái -->
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">Trạng thái</label>
+                        <div class="d-flex mt-2">
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="radio" name="Status" id="Status1" value="1"
+                                    checked>
+                                <label class="form-check-label" for="Status1">Hiện</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="Status" id="Status0" value="0">
+                                <label class="form-check-label" for="Status0">Ẩn</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nút -->
+                <div class="d-flex justify-content-end">
+                    <a href="{{ url_for('admin_cate_bp.admin_manage_categories') }}" class="btn btn-secondary me-2">Trở
+                        về</a>
+                    <a href="{{ url_for('admin_cate_bp.admin_manage_categories') }}"><button type="submit"
+                            class="btn btn-success me-2">Hoàn tất</button></a>
+                    <button type="button" class="btn btn-primary" onclick="toggleSubCategoryForm()">Thêm mới danh mục
+                        nhỏ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Form thêm danh mục nhỏ -->
+    <div id="subCategoryForm" class="card shadow-sm mt-4 d-none">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0">Thêm danh mục nhỏ</h5>
+        </div>
+        <div class="card-body">
+            <form id="subCateForm">
+                <div class="row">
+                    <!-- Tên danh mục nhỏ -->
+                    <div class="col-md-6 mb-3">
+                        <label for="SubTitle" class="form-label">Tên danh mục nhỏ</label>
+                        <input type="text" class="form-control" id="SubTitle" name="SubTitle" required>
+                    </div>
+
+                    <!-- Phân loại -->
+                    <div class="col-md-3 mb-3">
+                        <label for="SubType" class="form-label">Phân loại</label>
+                        <select class="form-select" id="SubType" name="SubType" required>
+                            <option value="">-- Chọn phân loại --</option>
+                            <option value="DRINK_SIZE_ONLY">Chỉ chọn size</option>
+                            <option value="DRINK_FULL">Đầy đủ lựa chọn</option>
+                            <option value="QUANTITY_ONLY">Chỉ chọn số lượng</option>
+
+                        </select>
+                    </div>
+
+                    <!-- Trạng thái -->
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">Trạng thái</label>
+                        <div class="d-flex mt-2">
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="radio" name="SubStatus" id="SubStatus1" value="1"
+                                    checked>
+                                <label class="form-check-label" for="SubStatus1">Hiện</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="SubStatus" id="SubStatus0" value="0">
+                                <label class="form-check-label" for="SubStatus0">Ẩn</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nút cho danh mục nhỏ -->
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-primary me-2" onclick="submitSubCategory()">Thêm</button>
+                    <a href="{{ url_for('admin_cate_bp.admin_manage_categories') }}" class="btn btn-success">Hoàn
+                        tất</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- JS xử lý -->
+<script>
+    function toggleSubCategoryForm() {
+        const form = document.getElementById('subCategoryForm');
+        form.classList.toggle('d-none');
+    }
+
+    function submitSubCategory() {
+        const title = document.getElementById('SubTitle').value;
+        const type = document.getElementById('SubType').value;
+        const status = document.querySelector('input[name="SubStatus"]:checked').value;
+
+        if (!title || !type) {
+            alert("Vui lòng điền đầy đủ thông tin danh mục nhỏ.");
+            return;
+        }
+
+        // Gửi dữ liệu bằng fetch (giả định có route xử lý riêng /admin/manage-categories/create-sub)
+        fetch('/admin/manage-categories/create-sub', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token() if csrf_token is defined }}'
+            },
+            body: JSON.stringify({
+                title: title,
+                type: type,
+                status: status
+            })
+        }).then(response => {
+            if (response.ok) {
+                alert("Thêm danh mục nhỏ thành công!");
+                document.getElementById('subCateForm').reset();
+            } else {
+                alert("Thêm thất bại!");
+            }
+        });
+    }
+</script>
+{% endblock %}

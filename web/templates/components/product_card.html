@@ -1,0 +1,18 @@
+<div class="product-card">
+    <div class="product-image">
+        <a href="{{ url_for('products.product_detail', product_id=product.ID) }}" class="product-card-link">
+            <img src="{{ url_for('static', filename='images/' + product.Img) }}" alt="{{ product.Title }}">
+        </a>
+    </div>
+    <div class="product-info">
+        <a href="{{ url_for('products.product_detail', product_id=product.ID) }}" class="product-card-link">
+            <h5 class="product-title">{{ product.Title }}</h5>
+        </a>
+        <p class="product-price">{{ "{:,.0f}".format(product.Price) }} ₫</p>
+        <div class="container-btn">
+            <div class="btn btn-buy" data-itemid="{{ product.ID }}" data-itemname="{{ product.Title }}" data-typecode="{{ product.category.TypeCode }}">
+                <i class="fas fa-shopping-cart"></i> Đặt mua
+            </div>
+        </div>
+    </div>
+</div>

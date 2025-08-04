@@ -1,0 +1,119 @@
+/* ==== NAVBAR CHÍNH ==== */
+.navbar-custom {
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.navbar-brand img {
+  height: 40px;
+}
+
+.search-box {
+  width: 400px;
+}
+
+/* ==== MENU CHÍNH TRONG SUBNAV ==== */
+/* .submenu-sticky {
+  position: sticky;
+  top: 72px; /* đúng chiều cao của navbar 
+  z-index: 1010;
+  background-color: white;
+}
+*/
+
+.nav.justify-content-center > .nav-item {
+  margin: 0 15px;
+}
+
+.nav.justify-content-center > .nav-item > .nav-link {
+  font-size: 13.5px;
+  font-weight: 400;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  padding: 8px 12px;
+}
+
+
+
+/* ==== ICON FONT AWESOME (navbar phải) ==== */
+.navbar i[class*="fa-"] {
+  color: #198754;
+  transition: color 0.2s ease-in-out;
+}
+.navbar .d-flex.align-items-center > * {
+  margin-left: 16px; /
+}
+
+/* Cách lề phải thêm */
+.navbar .d-flex.align-items-center {
+    padding-right: 24px;
+}
+.navbar .fa-truck:hover,
+.navbar .fa-envelope:hover,
+.navbar .fa-user:hover {
+  color: #146c43;
+}
+
+.navbar .cart {
+  position: relative;
+  color: #198754;
+  transition: color 0.2s ease-in-out;
+}
+.navbar span.cart-number {
+  position: absolute;
+  top: -12px;
+  right: -10px;
+  background-color: #198754;
+  color: #ffffff;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 8px;
+}
+
+/* ==== DROPDOWN MENU CHUNG ==== */
+.dropdown-menu {
+  position: absolute;
+  left: 0;
+  right: auto;
+  border-radius: 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+  padding: 1rem 1.2rem;
+  background-color: #ffffff;
+  z-index: 999;
+}
+
+/* Hiển thị dropdown khi hover */
+.nav-item.dropdown:hover .dropdown-menu {
+  display: block;
+  margin-top: 12px;
+}
+
+
+/* ==== NỘI DUNG DROPDOWN: CẤP 2 ==== */
+.dropdown-menu h6 {
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+  color: #198754;
+  text-transform: uppercase;
+}
+
+/* ==== NỘI DUNG DROPDOWN: CẤP 3 ==== */
+.dropdown-menu .dropdown-item {
+  font-size: 14px;
+  font-weight: 400;
+  padding: 3px 10px;
+  letter-spacing: 0.3px;
+  text-transform: none !important;
+  white-space: normal;
+  font-variant: normal;
+}
+
+.navbar-brand img {
+  height: 40px;
+  object-fit: contain;
+  max-width: 100%;
+}

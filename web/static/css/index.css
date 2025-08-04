@@ -1,0 +1,46 @@
+.banner-img {
+    height: 350px;
+    object-fit: cover;
+}
+
+#banner .carousel-control-prev {
+    left: -60px;
+}
+
+#banner .carousel-control-next {
+    right: -60px;
+}
+
+.about-title {
+    font-weight: 700;
+    color: #198754;
+    font-size: 1.9rem; 
+    margin-bottom: 0.5rem;
+}
+
+.about-title span {
+    color: #198754;
+}
+
+.about-subtitle {
+    font-weight: 600;
+    color: #198754;
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.about-text {
+    color: #198754;
+    font-size: 1.1rem;  
+    line-height: 1.5;
+    text-align: justify;
+    max-width: 90%;
+}
+
+.about-section img {
+    max-width: 90%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}

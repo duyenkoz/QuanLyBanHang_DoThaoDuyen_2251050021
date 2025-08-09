@@ -19,17 +19,107 @@ def get_categories(search=None, page=1, page_size=10):
 
     return categories, pagination, total_records
 
-def create_category(title, type_, status=1, parent_id=None):
-    """Hàm tạo danh mục (lớn hoặc nhỏ)."""
-    if not title:
-        raise ValueError("Tên danh mục không được để trống")
+def get_category_by_id(category_id):
+    return Category.query.filter_by(ID=category_id).first()
 
-    category = Category(
-        Title=title,
-        Type=type_,
-        Status=status,
-        ParentID=parent_id
-    )
-    db.session.add(category)
+
+def get_children_by_parent_id(parent_id):
+    return Category.query.filter_by(ParentID=parent_id).all()
+
+def get_all_parent_categories():
+    return Category.query.filter_by(ParentID=None).all()
+
+
+def update_category_status(category_id):
+    category = Category.query.get(category_id)
+    if not category:
+        return None
+
+    # Đảo ngược trạng thái
+    category.Status = 0 if category.Status == 1 else 1
+    new_status = category.Status
+    is_parent = category.ParentID is None
+
+    # Nếu là danh mục cha, cập nhật luôn các danh mục con
+    if is_parent:
+        children = Category.query.filter_by(ParentID=category.ID).all()
+        for child in children:
+            child.Status = new_status
+
     db.session.commit()
-    return category
+    return {
+        "new_status": new_status,
+        "is_parent": is_parent
+    }
+
+def create_child_category(title, parent_id, type, type_code, status):
+    try:
+        parent = get_category_by_id(parent_id)
+        if not parent:
+            raise Exception("Danh mục cha không tồn tại")
+
+        new_category = Category(
+            Title=title,
+            ParentID=parent_id,
+            Type=type,
+            TypeCode=type_code,
+            Status=status
+        )
+
+        db.session.add(new_category)
+        db.session.commit()
+
+        return {
+            "id": new_category.ID,
+            "title": new_category.Title,
+            "status": new_category.Status,
+            "type_code": new_category.TypeCode
+        }
+    except Exception as e:
+        db.session.rollback()
+        raise e
+    
+def update_inline_category_service(cate_id, title, type, is_parent):
+    category = Category.query.get(cate_id)
+    if not category:
+        return {"status_code": "ERROR", "message": "Danh mục không tồn tại"}
+
+    category.Title = title
+    if is_parent:
+        category.Type = int(type)
+    
+
+    db.session.commit()
+    return {"status_code": "SUCCESS"}
+
+def create_category(title, parent_id, type_value, type_code_value, status):
+    try:
+        if not parent_id:  # Danh mục cha
+            new_cate = Category(
+                Title=title,
+                ParentID=None,
+                Type=int(type_value),
+                TypeCode=None,
+                Status=int(status)
+            )
+        else:  # Danh mục con
+            # Lấy danh mục cha từ CSDL để lấy Type
+            parent_cate = Category.query.get(parent_id)
+            if not parent_cate:
+                return {"success": False, "error": "Danh mục cha không tồn tại"}
+
+            new_cate = Category(
+                Title=title,
+                ParentID=parent_id,
+                Type=parent_cate.Type,
+                TypeCode=type_code_value,
+                Status=int(status)
+            )
+
+        db.session.add(new_cate)
+        db.session.commit()
+        return {"success": True, "category": new_cate}
+
+    except Exception as e:
+        db.session.rollback()
+        return {"success": False, "error": str(e)}

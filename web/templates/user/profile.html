@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Thông tin cá nhân</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/profile.css') }}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+</head>
+
+<body>
+    {% include 'layout/navbar.html' %}
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 mb-3">
+                {% include 'user/sidebar.html' %}
+            </div>
+
+            <!-- Profile Form -->
+            <div class="col-md-9">
+                <div class="bg-white p-4 rounded shadow-sm">
+                    <h4 class="mb-4 text-success fw-bold">Thông tin cá nhân</h4>
+                    <form class="profile-form" method="POST" action="{{ url_for('user.update_profile') }}">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Họ & tên</label>
+                                <input type="text" class="form-control" name="full_name" value="{{ user.Name or '' }}"
+                                    readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Số điện thoại</label>
+                                <input type="text" class="form-control" name="phone" value="{{ user.Phone or '' }}"
+                                    readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" name="email" value="{{ user.Email or '' }}"
+                                    readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Tỉnh/Thành phố</label>
+                                <select class="form-select" name="province" id="provinceSelect"
+                                    data-selected="{{ user.Address.split(',')[-1]|trim if user.Address else '' }}"
+                                    disabled>
+                                    <option selected disabled>Chọn tỉnh/thành</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Quận/Huyện</label>
+                                <select class="form-select" name="district" id="districtSelect"
+                                    data-selected="{{ user.Address.split(',')[-2]|trim if user.Address else '' }}"
+                                    disabled>
+                                    <option selected disabled>Chọn quận/huyện</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Phường/Xã</label>
+                                <select class="form-select" name="ward" id="wardSelect"
+                                    data-selected="{{ user.Address.split(',')[-3]|trim if user.Address else '' }}"
+                                    disabled>
+                                    <option selected disabled>Chọn phường/xã</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Địa chỉ</label>
+                                <input type="text" class="form-control" name="address" value="{{ user.Address or '' }}"
+                                    readonly>
+                            </div>
+                            <div class="col-md-6 d-flex align-items-end justify-content-end">
+                                <button type="button" class="btn btn-primary" id="editSaveBtn">Cập nhật</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    const provinceSelect = document.querySelector('select[name="province"]');
+    const districtSelect = document.querySelector('select[name="district"]');
+    const wardSelect = document.querySelector('select[name="ward"]');
+
+    // Load tỉnh/thành
+    fetch("https://provinces.open-api.vn/api/?depth=1")
+        .then(res => res.json())
+        .then(provinces => {
+            provinces.forEach(p => {
+                const option = new Option(p.name, p.name);
+                provinceSelect.add(option);
+            });
+        });
+
+    // Khi chọn tỉnh -> load quận/huyện
+    provinceSelect.addEventListener("change", function () {
+        const provinceCode = this.value;
+        districtSelect.length = 1; // clear cũ, giữ lại option "Chọn quận/huyện"
+        wardSelect.length = 1;     // clear cũ
+
+        fetch(`https://provinces.open-api.vn/api/p/${provinceCode}?depth=2`)
+            .then(res => res.json())
+            .then(data => {
+                data.districts.forEach(d => {
+                    const option = new Option(d.name, d.name);
+                    districtSelect.add(option);
+                });
+            });
+    });
+
+    // Khi chọn quận/huyện -> load phường/xã
+    districtSelect.addEventListener("change", function () {
+        const districtCode = this.value;
+        wardSelect.length = 1;
+
+        fetch(`https://provinces.open-api.vn/api/d/${districtCode}?depth=2`)
+            .then(res => res.json())
+            .then(data => {
+                data.wards.forEach(w => {
+                    const option = new Option(w.name, w.name);
+                    wardSelect.add(option);
+                });
+            });
+    });
+
+    const btn = document.getElementById('editSaveBtn');
+    const form = document.querySelector('.profile-form');
+
+    btn.addEventListener('click', function () {
+        const isReadonly = form.querySelector('input[readonly], select[disabled]');
+
+        if (isReadonly) {
+            // Bật chỉnh sửa
+            form.querySelectorAll('input, select').forEach(el => {
+                if (el.name !== 'phone') { // Không cho sửa số điện thoại
+                    el.removeAttribute('readonly');
+                    el.removeAttribute('disabled');
+                }
+            });
+            btn.textContent = 'Lưu';
+            btn.classList.remove('btn-primary');
+            btn.classList.add('btn-success');
+
+        } else {
+            // Submit form
+            form.submit();
+        }
+    });
+</script>
+
+</html>

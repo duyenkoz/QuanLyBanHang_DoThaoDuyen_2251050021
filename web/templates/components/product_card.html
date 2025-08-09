@@ -1,7 +1,7 @@
 <div class="product-card">
     <div class="product-image">
         <a href="{{ url_for('products.product_detail', product_id=product.ID) }}" class="product-card-link">
-            <img src="{{ url_for('static', filename='images/' + product.Img) }}" alt="{{ product.Title }}">
+            <img src="{{ url_for('static', filename='images/' + product.Img if product.Img else 'default.png') }}" alt="{{ product.Title }}">
         </a>
     </div>
     <div class="product-info">

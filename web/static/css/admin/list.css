@@ -1,3 +1,8 @@
 .parent-row {
   background-color: #f2f6fc;
 }
+
+.btn-toggle-status.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}

@@ -26,12 +26,6 @@ def api_get_product_filter():
     keyword = request.args.get('kw')
     cateid = request.args.get('cateid')
     products, cursor = productService.get_product_filter(keyword=keyword, cate_id=cateid, cursor=cursor, top=top)
-    # products_dict= [{
-    #     "id": product.ID,
-    #     "title": product.Title,
-    #     "price": int(product.Price),
-    #     "image": product.Img
-    # } for product in products if products]
     template_html = ""
     for product in products:
         template_html += render_template("components/product_card.html", product=product)

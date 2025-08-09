@@ -1,0 +1,106 @@
+{% extends 'layout/base.html' %}
+{% block content %}
+<div id="cart-container">
+    <div class="row">
+        <div class="payment-info col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title">Thông tin nhận hàng</div>
+                    <hr />
+                    <form>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <input type="text" class="form-control" id="name" placeholder="Họ tên" value=""
+                                    required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="text" class="form-control" id="phonenumber" placeholder="SĐT" value=""
+                                    required>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <button id="btn-choose-location" class="btn btn-primary">
+                                    Chọn địa điểm
+                                </button>
+                                <input type="text" class="form-control" id="address" placeholder="Địa chỉ" value=""
+                                    required>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <textarea type="text" class="form-control" id="note" rows="3" placeholder="Ghi chú cho cửa hàng"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="cart-info col-md-6">
+            <div class="container clearfix">
+                <div class="card">
+                    <div class="card-body" style="max-height: 60vh; overflow: auto;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-map" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title fs-5" id="staticBackdropLabel">Địa chỉ</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modal-map-body">
+                <input type="text" id="search-location" class="form-control mb-2" placeholder="Nhập địa điểm...">
+                <div id="map" style="height: 400px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        $.ajax({
+            url: "/api/cart",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({ cart: cart }),
+            success: function (response) {
+                var container = $(".cart-info .card-body");
+                if (container) {
+                    container.html(response.data);
+                }
+            },
+            error: function (error) {
+                toastError("Lấy giỏ hàng thất bại!!!");
+            }
+        });
+
+        $("#btn-choose-location").on("click", function () {
+            loadMap(() => {
+                $("#modal-map").modal("show");
+            });
+
+        })
+    });
+
+    function loadMap(callback) {
+        let map, marker, selectedLatLong = null;
+        if (!map) {
+            map = L.map('map').setView([10.762622, 106.660172], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+            }).addTo(map);
+
+            // Click trên map để chọn vị trí
+            map.on('click', function (e) {
+                selectedLatLng = e.latlng;
+                if (marker) marker.remove();
+                marker = L.marker(selectedLatLng).addTo(map);
+            });
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% if cart_items|length > 0 %}
+<div class="card-body">
+    <div class="card-title">Giỏ hàng của bạn đang có <strong class="text-success">{{total_item}}</strong> sản phẩm</div>
+    <hr />
+    {% for product in cart_items %}
+    <div class="row align-items-center border-bottom py-2">
+        <!-- Ảnh sản phẩm -->
+        <div class="col-auto">
+            <img src="{{ url_for('static', filename=product.image if product.image else 'default.png') }}"
+                alt="{{product.title}}" class="img-fluid rounded" style="width: 80px;">
+        </div>
+
+        <!-- Thông tin sản phẩm -->
+        <div class="col">
+            <h6 class="mb-1 text-success fw-bold">{{product.title}}</h6>
+            <p class="mb-1 text-muted small">
+                Kích cỡ: M, Ngọt: Bình thường, Trà: Bình thường, Đá: Bình thường
+            </p>
+            <div class="fw-bold text-success">{{product.price}} <span class="text-lowercase">đ</span></div>
+        </div>
+
+        <!-- Nút edit/delete -->
+        <div class="col-auto text-center">
+            <button class="btn btn-link p-0 text-success">
+                <i class="bi bi-pencil-fill"></i>
+            </button>
+            <button class="btn btn-link p-0 text-danger">
+                <i class="bi bi-trash-fill"></i>
+            </button>
+        </div>
+
+        <!-- Nút số lượng -->
+        <div class="col-auto">
+            <div class="d-flex align-items-center">
+                <button class="btn btn-success btn-sm">-</button>
+                <span class="mx-2">{{product.quantity}}</span>
+                <button class="btn btn-success btn-sm">+</button>
+            </div>
+        </div>
+    </div>
+
+    {% endfor %}
+</div>
+<!-- / Shopping cart table -->
+
+<div class="d-flex flex-wrap justify-content-between align-items-center pb-4">
+    <div class="d-flex">
+        <div class="text-right mt-4 ">
+            <label class="text-muted font-weight-normal m-0">Tổng tiền</label>
+            <div class="text-large"><strong></strong></div>
+        </div>
+    </div>
+</div>
+
+<div class="float-right">
+    <button type="button" class="btn btn-pay btn-danger mt-2" style="float:right ;">Thanh toán</button>
+    <a type="button" class="btn btn-lg btn-default md-btn-flat mt-2 mr-3" style="float: left;">Trở lại</a>
+</div>
+
+{% endif %}

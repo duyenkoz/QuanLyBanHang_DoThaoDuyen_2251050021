@@ -87,7 +87,7 @@
 /* Hiển thị dropdown khi hover */
 .nav-item.dropdown:hover .dropdown-menu {
   display: block;
-  margin-top: 12px;
+  margin-top: 15px;
 }
 
 
@@ -116,4 +116,39 @@
   height: 40px;
   object-fit: contain;
   max-width: 100%;
+}
+
+li::marker {
+  display: none;
+  content: "";
+}
+
+.user-dropdown-toggle::after {
+  display: none !important; /* Ẩn mũi tên của Bootstrap */
+}
+
+.custom-dropdown {
+  min-width: 220px;
+  border-radius: 12px;
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15);
+  padding: 0.5rem 0;
+}
+
+.custom-dropdown .dropdown-item {
+  font-size: 0.95rem;
+  padding: 0.55rem 1rem;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.custom-dropdown .dropdown-item i {
+  font-size: 1.1rem;
+}
+
+.custom-dropdown .dropdown-item:hover {
+  background-color: #f8f9fa;
+  color: #212529;
+}
+
+.dropdown-user {
+  margin-left: 0px !important;
 }

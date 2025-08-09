@@ -1,0 +1,155 @@
+{% extends 'admin/layout_admin/base.html' %}
+{% block title %}Thêm danh mục con{% endblock %}
+{% block content %}
+<!-- Form Thêm danh mục con -->
+<div class="card shadow-sm mt-4">
+  <div class="card-header bg-secondary text-white">
+    <h5 class="mb-0">Thêm danh mục con cho: {{ parent.Title }}</h5>
+  </div>
+  <div class="card-body">
+    <form id="childCategoryForm" method="POST">
+      <div class="row">
+        <!-- Tên danh mục -->
+        <div class="col-md-6 mb-3">
+          <label for="Title" class="form-label">Tên danh mục</label>
+          <input type="text" class="form-control" id="Title" name="Title" required>
+        </div>
+
+        <!-- Phân loại -->
+        <div class="col-md-3 mb-3">
+          <label for="TypeCode" class="form-label">Phân loại</label>
+          <select class="form-select" id="TypeCode" name="TypeCode" required>
+            <option value="">-- Chọn phân loại --</option>
+            <option value="DRINK_SIZE_ONLY">Chỉ chọn size</option>
+            <option value="DRINK_FULL">Đầy đủ lựa chọn</option>
+            <option value="QUANTITY_ONLY">Chỉ chọn số lượng</option>
+          </select>
+        </div>
+
+        <!-- Trạng thái -->
+        <div class="col-md-3 mb-3">
+          <label class="form-label">Trạng thái</label>
+          <div class="d-flex mt-2">
+            <div class="form-check me-3">
+              <input class="form-check-input" type="radio" name="Status" id="Status1" value="1" {% if parent.Status==0
+                %}disabled{% endif %} data-bs-toggle="tooltip" data-bs-placement="top"
+                title="{% if parent.Status == 0 %}Không thể chọn 'Hiện' vì danh mục cha đang bị ẩn.{% endif %}">
+              <label class="form-check-label" for="Status1">Hiện</label>
+            </div>
+
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="Status" id="Status0" value="0" {% if parent.Status==0
+                %}checked{% endif %}>
+              <label class="form-check-label" for="Status0">Ẩn</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end gap-2">
+        <a href="{{ url_for('admin_cate_bp.admin_manage_categories') }}" class="btn btn-secondary">Trở về</a>
+        <button type="submit" class="btn btn-primary">Thêm danh mục con</button>
+      </div>
+      <input type="hidden" name="Type" value="{{ parent.Type }}">
+    </form>
+  </div>
+</div>
+
+<!-- Danh sách danh mục con -->
+<div class="card card-body border-0 shadow table-wrapper table-responsive mt-4">
+  <h5 class="mb-3">Danh sách danh mục con</h5>
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th class="border-gray-200">ID</th>
+        <th class="border-gray-200">Tiêu đề</th>
+        <th class="border-gray-200">Trạng thái</th>
+        <th class="border-gray-200">Phân loại</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for child in children %}
+      <tr>
+        <td><span class="fw-bold">{{ child.ID }}</span></td>
+        <td><span class="fw-normal">{{ child.Title }}</span></td>
+        <td>
+          <span class="badge {{ 'bg-success' if child.Status == 1 else 'bg-danger' }}">
+            {{ 'Hiển thị' if child.Status == 1 else 'Ẩn' }}
+          </span>
+        </td>
+        <td>
+          {% if child.TypeCode == 'DRINK_SIZE_ONLY' %}
+          Chọn size
+          {% elif child.TypeCode == 'DRINK_FULL' %}
+          Đủ lựa chọn
+          {% elif child.TypeCode == 'QUANTITY_ONLY' %}
+          Chọn số lượng
+          {% else %}
+          Không xác định
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<script>
+  document.getElementById("childCategoryForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+    const parentId = "{{ parent.ID }}";
+
+    fetch(`/admin/api/manage-categories/${parentId}/children`, {
+      method: "POST",
+      body: formData,
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status_code === "SUCCESS") {
+          const child = data.data;
+
+          const tableBody = document.querySelector("table tbody");
+          const newRow = document.createElement("tr");
+
+          newRow.innerHTML = `
+          <td><span class="fw-bold">${child.id}</span></td>
+          <td><span class="fw-normal">${child.title}</span></td>
+          <td>
+            <span class="badge ${child.status == 1 ? 'bg-success' : 'bg-danger'}">
+              ${child.status == 1 ? 'Hiển thị' : 'Ẩn'}
+            </span>
+          </td>
+          <td>
+            ${child.type_code === 'DRINK_SIZE_ONLY' ? 'Chọn size' :
+              child.type_code === 'DRINK_FULL' ? 'Đủ lựa chọn' :
+                child.type_code === 'QUANTITY_ONLY' ? 'Chọn số lượng' :
+                  'Không xác định'
+            }
+          </td>
+        `;
+
+          tableBody.prepend(newRow);
+          form.reset();
+        } else {
+          alert("Lỗi: " + data.message);
+        }
+      })
+      .catch(err => {
+        alert("Lỗi server");
+        console.error(err);
+      });
+  });
+
+  // Kích hoạt Bootstrap Tooltip
+  document.addEventListener("DOMContentLoaded", function () {
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+      new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+  });
+</script>
+
+{% endblock %}

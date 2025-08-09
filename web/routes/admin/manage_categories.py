@@ -1,6 +1,14 @@
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask import Blueprint, flash, jsonify, redirect, render_template, request, url_for
 
-from web.services.admin.manage_categories import get_categories, create_category
+from web.services.admin.manage_categories import (
+    get_categories, 
+    get_category_by_id, 
+    get_children_by_parent_id, 
+    update_category_status,
+    create_child_category,
+    update_inline_category_service,
+    get_all_parent_categories,
+    create_category)
 
 
 admin_cate_bp = Blueprint("admin_cate_bp", __name__, url_prefix="/admin")
@@ -25,37 +33,85 @@ def admin_manage_categories():
         pagination=pagination,
     )
 
-@admin_cate_bp.route("/manage-categories/create", methods=["GET"])
-def create_parent_category():
-    return render_template("admin/manage_categories/create_category.html")
+@admin_cate_bp.route("/manage-categories/<int:parent_id>/children", methods=["GET"])
+def manage_child_categories(parent_id):
+    parent = get_category_by_id(parent_id)
+    if not parent:
+        flash("Không tìm thấy danh mục cha.", "danger")
+        return redirect(url_for("admin_cate_bp.admin_manage_categories"))
 
-@admin_cate_bp.route("/manage-categories/create", methods=["POST"])
-def handle_create_parent_category():
+    children = get_children_by_parent_id(parent_id)
+
+    return render_template(
+        "admin/manage_categories/create_child.html",
+        parent=parent,
+        children=children
+    )
+
+@admin_cate_bp.route("/manage-categories/create", methods=["GET", "POST"])
+def admin_create_category():
+    if request.method == "POST":
+        title = request.form.get("Title")
+        parent_id = request.form.get("ParentID") or None  # Nếu rỗng thì None
+        status = request.form.get("Status")
+        type_value = request.form.get("Type")  # Chỉ có khi là danh mục cha
+        type_code_value = request.form.get("TypeCode")  # Chỉ có khi là danh mục con
+
+        result = create_category(title, parent_id, type_value, type_code_value, status)
+
+        if result["success"]:
+            flash("Thêm danh mục thành công", "success")
+            return redirect(url_for("admin_cate_bp.admin_manage_categories"))
+        else:
+            flash(f"Lỗi: {result['error']}", "danger")
+
+    parent_categories = get_all_parent_categories()
+    return render_template("admin/manage_categories/create_category.html", parent_categories=parent_categories)
+    
+#API
+@admin_cate_bp.route("/api/manage-categories/update-status/<int:category_id>", methods=["POST"])
+def api_update_category_status(category_id):
+
+    result = update_category_status(category_id)
+    if result:
+        return {
+            "status_code": "SUCCESS",
+            "message": "Cập nhật trạng thái thành công",
+            "data": result
+        }
+    else:
+        return {
+            "status_code": "ERROR",
+            "message": "Không tìm thấy danh mục"
+        }, 404
+    
+@admin_cate_bp.route("/api/manage-categories/<int:parent_id>/children", methods=["POST"])
+def api_create_child_category(parent_id):
     try:
         title = request.form.get("Title")
-        type_ = request.form.get("Type")
+        type_code = request.form.get("TypeCode")
+        type = request.form.get("Type")
         status = int(request.form.get("Status", 1))
 
-        create_category(title, type_, status)
-        flash("Thêm danh mục lớn thành công!", "success")
-        return redirect(url_for("admin_cate_bp.admin_manage_categories"))
+        result = create_child_category(title, parent_id, type, type_code, status)
 
+        return {
+            "status_code": "SUCCESS",
+            "message": "Thêm danh mục con thành công",
+            "data": result
+        }
     except Exception as e:
-        flash(str(e), "danger")
-        return redirect(request.url)
-    
-@admin_cate_bp.route("/manage-categories/create-sub", methods=["POST"])
-def create_sub_category():
-    try:
-        title = request.form.get("SubTitle")
-        type_ = request.form.get("SubType")
-        status = int(request.form.get("SubStatus", 1))
-        parent_id = int(request.form.get("ParentID"))
+        return {
+            "status_code": "ERROR",
+            "message": str(e)
+        }, 500
 
-        create_category(title, type_, status, parent_id)
-        flash("Thêm danh mục nhỏ thành công!", "success")
-        return redirect(url_for("admin_cate_bp.admin_manage_categories"))
+@admin_cate_bp.route("/api/manage-categories/update-inline/<int:cate_id>", methods=["POST"])
+def update_inline_category(cate_id):
+    data = request.get_json()
+    title = data.get("title")
+    type = data.get("type")
+    is_parent = data.get("is_parent")
 
-    except Exception as e:
-        flash(str(e), "danger")
-        return redirect(request.referrer)
+    result = update_inline_category_service(cate_id, title, type, is_parent)
+    return jsonify(result)

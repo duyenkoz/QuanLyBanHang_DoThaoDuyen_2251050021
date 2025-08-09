@@ -1,7 +1,7 @@
 import hashlib
 from .category import Category
 from .product import Product
-from .user import Users, UserRole
+from .user import UserRole, User
 from web import db, app
 
         

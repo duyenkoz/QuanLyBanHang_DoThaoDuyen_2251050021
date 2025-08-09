@@ -1,21 +1,22 @@
-from web import db
-from flask_login import UserMixin
-from sqlalchemy import Column, Integer, String, Enum
-from enum import Enum as RoleEnum
+from sqlalchemy import Column, Integer, String, Enum, TIMESTAMP, func
+from sqlalchemy.ext.declarative import declarative_base
+import enum
 
-class UserRole(RoleEnum):
-    ADMIN = 1
-    USER = 2
+Base = declarative_base()
 
+class UserRole(enum.Enum):
+    staff = 'staff'
+    admin = 'admin'
+    user = 'user'
 
-class Users(db.Model, UserMixin):
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String(50))
-    username = Column(String(50), nullable=False, unique=True)
-    password = Column(String(50), nullable=False)
-    avatar = Column(String(100),
-                    default='https://res.cloudinary.com/dxxwcby8l/image/upload/v1679134375/ckvdo90ltnfns77zf1xb.jpg')
-    user_role = Column(Enum(UserRole), default=UserRole.USER)
+class User(Base):
+    __tablename__ = 'users'
 
-    def __str__(self):
-        return self.username
+    Id = Column(Integer, primary_key=True, autoincrement=True)
+    Phone = Column(String(20), unique=True, nullable=False)
+    Password = Column(String(255), nullable=False)
+    Role = Column(Enum(UserRole), default=UserRole.user)
+    Name = Column(String(100))
+    Email = Column(String(100))
+    Address = Column(String(255))
+    Created_at = Column(TIMESTAMP, server_default=func.now())

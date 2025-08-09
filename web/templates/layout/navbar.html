@@ -8,7 +8,8 @@
     </a>
 
     <form class="d-none d-md-flex mx-3 search-box" action="/products/search">
-      <input name="kw" value = "{{ keywords or '' }}" class="form-control rounded-pill" type="search" placeholder="Bạn muốn mua gì..." aria-label="Search">
+      <input name="kw" value="{{ keywords or '' }}" class="form-control rounded-pill" type="search"
+        placeholder="Bạn muốn mua gì..." aria-label="Search">
     </form>
 
     <div class="ms-auto d-flex align-items-center">
@@ -20,7 +21,47 @@
         <i class="fa-solid fa-cart-shopping"></i>
       </a>
       <a href="#" class="text-dark me-3"><i class="fa-regular fa-envelope fs-5"></i></a>
+      {% if session.get('user_phone') %}
+      <div class="">
+        <a href="#" class="" id="userDropdown"
+          role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fa-regular fa-user fs-5"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end custom-dropdown" aria-labelledby="userDropdown">
+          <li>
+            <a class="dropdown-item d-flex align-items-center" href="/profile">
+              <i class="fa-regular fa-user me-2"></i> Hồ sơ
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item d-flex align-items-center" href="/settings">
+              <i class="fa-solid fa-gear me-2"></i> Cài đặt
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item d-flex align-items-center" href="/messages">
+              <i class="fa-regular fa-envelope me-2"></i> Tin nhắn
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item d-flex align-items-center" href="/support">
+              <i class="fa-regular fa-circle-question me-2"></i> Hỗ trợ
+            </a>
+          </li>
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+          <li>
+            <a class="dropdown-item d-flex align-items-center text-danger" href="/logout">
+              <i class="fa-solid fa-right-from-bracket me-2"></i> Đăng xuất
+            </a>
+          </li>
+        </ul>
+      </div>
+      {% else %}
       <a href="/login" class="text-dark"><i class="fa-regular fa-user fs-5"></i></a>
+      {% endif %}
+
     </div>
   </div>
 </nav>
@@ -34,7 +75,8 @@
       <!-- MENU: TypeMenu = 1 -->
       {% if menu|length > 0 %}
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle text-dark" href="#" id="menuDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <a class="nav-link dropdown-toggle text-dark" href="#" id="menuDropdown" role="button" data-bs-toggle="dropdown"
+          aria-expanded="false">
           MENU
         </a>
         <div class="dropdown-menu p-2" aria-labelledby="menuDropdown" style="width: 800px;">
@@ -54,10 +96,11 @@
       </li>
       {% endif %}
 
-<!--       SẢN PHẨM ĐÓNG GÓI: TypeMenu = 2 -->
+      <!--       SẢN PHẨM ĐÓNG GÓI: TypeMenu = 2 -->
       {% if menu|length > 1 %}
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle text-dark" href="#" id="SPDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <a class="nav-link dropdown-toggle text-dark" href="#" id="SPDropdown" role="button" data-bs-toggle="dropdown"
+          aria-expanded="false">
           SẢN PHẨM ĐÓNG GÓI
         </a>
         <div class="dropdown-menu p-2" aria-labelledby="SPDropdown" style="width: 800px;">
@@ -83,7 +126,7 @@
   </div>
 </div>
 <script>
-  $(document).ready(function(){
+  $(document).ready(function () {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
     const cartNumber = $(".cart-number");
     if (cartNumber.length > 0) {
@@ -91,4 +134,3 @@
     }
   })
 </script>
-

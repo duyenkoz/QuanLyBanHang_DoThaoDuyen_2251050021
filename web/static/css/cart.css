@@ -1,0 +1,137 @@
+.payment-section {
+    padding: 15px;
+    border-top: 1px solid #ddd;
+    background: #fff;
+}
+
+.payment-section h5 {
+    color: #006b3f;
+    font-weight: bold;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+.payment-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+}
+
+.payment-row.total {
+    font-weight: bold;
+}
+
+.text-success {
+    color: #006b3f;
+}
+
+.discount-link {
+    color: #006b3f;
+    cursor: pointer;
+}
+
+.payment-methods label {
+    display: block;
+    margin: 5px 0;
+}
+
+.terms {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.terms a {
+    color: #006b3f;
+}
+
+.btn-pay {
+    width: 100%;
+    background: #0b6b3b;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    margin-top: 15px;
+    font-size: 16px;
+}
+
+.btn-pay.active {
+    background: #006b3f;
+    cursor: pointer;
+}
+
+/* cart.css */
+.cart-header {
+    flex: 0 0 auto;
+    /* không giãn, luôn nằm trên */
+    background: #ffffff;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0;
+    /* padding cho .card-body đã có */
+}
+
+.card-title {
+    color: #0b6b3b;
+    /* xanh chủ đạo */
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 6px 0;
+}
+
+.cart-divider {
+    margin: 0;
+    border: 0;
+    border-top: solid #e6e6e6;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Vùng danh sách có scrollbar riêng */
+.cart-list {
+    flex: 1 1 auto;
+    /* chiếm phần còn lại */
+    box-sizing: border-box;
+    padding-top: 0.5rem;
+    padding-bottom: 0.25rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Tối ưu hiển thị scrollbar trên các trình duyệt: không ảnh hưởng tới header */
+.cart-list::-webkit-scrollbar {
+    width: 10px;
+}
+
+.cart-list::-webkit-scrollbar-thumb {
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.payment-section {
+    background: #fff;
+    padding: 12px;
+    border: #f0f0f0;
+}
+
+.payment-row {
+    padding: 8px 0;
+}
+
+.payment-row.total {
+    font-size: 1.05rem;
+}
+
+/* Ẩn scrollbar trên Chrome, Edge, Safari */
+.hidden-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Ẩn scrollbar trên Firefox */
+.hidden-scrollbar {
+  scrollbar-width: none;
+}
+
+/* Ẩn scrollbar trên IE, Edge cũ */
+.hidden-scrollbar {
+  -ms-overflow-style: none;
+}

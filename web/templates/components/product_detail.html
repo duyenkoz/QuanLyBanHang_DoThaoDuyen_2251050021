@@ -62,11 +62,11 @@
         <div class="my-3">
           <label class="fw-semibold">Chọn mức đường:</label>
           <select class="form-select form-select-sm" name="sugar">
-            <option value="100%">100%</option>
-            <option value="70%">70%</option>
-            <option value="50%">50%</option>
-            <option value="30%">30%</option>
-            <option value="0%">Không đường</option>
+            <option value="100" selected>100%</option>
+            <option value="70">70%</option>
+            <option value="50">50%</option>
+            <option value="30">30%</option>
+            <option value="0">Không đường</option>
           </select>
         </div>
 
@@ -74,11 +74,11 @@
         <div class="my-3">
           <label class="fw-semibold">Chọn mức đá:</label>
           <select class="form-select form-select-sm" name="ice">
-            <option value="100%">100%</option>
-            <option value="70%">70%</option>
-            <option value="50%">50%</option>
-            <option value="30%">30%</option>
-            <option value="0%">Không đá</option>
+            <option value="100" selected>100%</option>
+            <option value="70">70%</option>
+            <option value="50">50%</option>
+            <option value="30">30%</option>
+            <option value="0">Không đá</option>
           </select>
         </div>
 
@@ -91,10 +91,10 @@
               type="checkbox"
               name="topping"
               value="Trân châu"
-              id="tc"
+              id="1"
               data-topping-price="5000"
             />
-            <label class="form-check-label" for="tc"
+            <label class="form-check-label" for="1"
               >Trân châu +{{ "{:,.0f}".format(5000) }} ₫</label
             >
           </div>
@@ -104,10 +104,10 @@
               type="checkbox"
               name="topping"
               value="Thạch dừa"
-              id="td"
+              id="2"
               data-topping-price="5000"
             />
-            <label class="form-check-label" for="td"
+            <label class="form-check-label" for="2"
               >Thạch dừa +{{ "{:,.0f}".format(5000) }} ₫</label
             >
           </div>
@@ -117,10 +117,10 @@
               type="checkbox"
               name="topping"
               value="Pudding"
-              id="pd"
+              id="3"
               data-topping-price="5000"
             />
-            <label class="form-check-label" for="pd"
+            <label class="form-check-label" for="3"
               >Pudding +{{ "{:,.0f}".format(5000) }} ₫</label
             >
           </div>
@@ -194,16 +194,20 @@
       const name = $(this).data("itemname");
       const quantity = parseInt($("#quantity").val()) || 1;
       const size = $("input[name='size']:checked").val() || "M";
-      const sugar = $("select[name='sugar']").val() || "100%";
-      const ice = $("select[name='ice']").val() || "100%";
+      const sugar = $("select[name='sugar']").val() || "100";
+      const ice = $("select[name='ice']").val() || "100";
       const toppings = [];
       $("input[name='topping']:checked").each(function () {
         toppings.push($(this).val());
       });
-      addToCart(id, name, quantity, function () {
+      // addToCart(id, name, quantity, function () {
+      //   console.log("Thêm vào giỏ hàng thành công");
+      //   $("#modal-product-detail").modal("hide");
+      // });
+      addToCartWithDetails(id, name, quantity, size, sugar, ice, toppings, function () {
         console.log("Thêm vào giỏ hàng thành công");
         $("#modal-product-detail").modal("hide");
-      });
+      }); 
     } catch (e) {
       toastError("Có lỗi xảy ra khi thêm vào giỏ hàng");
     }

@@ -3,21 +3,41 @@ from web.models.product import Product
 
 
 def get_products_in_cart(cart: list[dict[int, int]]):
-    ids = [item["id"] for item in cart]
-    products: list[Product] = Product.query.filter(Product.ID.in_(ids)).all()
+    """Hàm lấy danh sách sản phẩm trong giỏ hàng"""
+    list_cart_dto: list[CartDTO] = []
+    for item in cart:
+        product: Product = Product.query.get(item["productid"])
+        if not product:
+            continue
+        qty = item.get("quantity", 1)
+        size = item.get("size", None)
+        toppings = item.get("toppings", [])
+        sugar = item.get("sugar", None)
+        ice = item.get("ice", None)
 
-    list_cart_dto = []
-    for product in products:
-        qty = next(item["quantity"] for item in cart if item["id"] == product.ID)
+        price = product.Price
+        
+        if size == "L":
+            price += 7000
+        
+        topping_price = len(toppings) * 5000
+        price += topping_price
+        total_price = price * qty
+
         dto = CartDTO(
-            id=product.ID,
+            id=item["id"],
+            productid=product.ID,
             quantity=qty,
-            price=product.Price,
+            price=price,
             title=product.Title,
             image=f"images/{product.Img}" if product.Img and not product.Img.startswith("images/") else product.Img,
-            total_price=product.Price * qty
+            total_price=total_price,
+            size=size,
+            sugar=sugar,
+            ice=ice,
+            toppings=toppings
         )
         list_cart_dto.append(dto)
-    total_item = len(products)
+    total_item = len(list_cart_dto)
     total_price = sum(dto.total_price for dto in list_cart_dto)
     return list_cart_dto, total_item, total_price

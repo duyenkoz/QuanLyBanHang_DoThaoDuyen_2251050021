@@ -31,20 +31,20 @@ $(document).ready(function () {
 
 $(document).on("click", ".btn-buy", function () {
     try {
-        const id = $(this).data("itemid");
+        const productid = $(this).data("itemid");
         const name = $(this).data("itemname");
         const typeCode = $(this).data("typecode");
-        handleClickBuy(id, name, typeCode);
+        handleClickBuy(productid, name, typeCode);
     }
     catch (e) {
         toastError("Có lỗi xảy ra khi thêm vào giỏ hàng");
     }
 });
 
-function handleClickBuy(id, name, typeCode) {
+function handleClickBuy(productid, name, typeCode) {
     if (typeCode === "DRINK_SIZE_ONLY" || typeCode === "DRINK_FULL") {
         $.ajax({
-            url: `/api/products/detail/${id}`,
+            url: `/api/products/detail/${productid}`,
             method: "GET",
             success: function (response) {
                 $("#modal-product-detail-body").html(response);
@@ -55,18 +55,19 @@ function handleClickBuy(id, name, typeCode) {
             }
         });
     } else {
-        addToCart(id, name, 1);
+        addToCart(productid, name, 1);
     }
 }
 
-function addToCart(id, name, quantity, callback) {
+function addToCart(productid, name, quantity, callback) {
     var cart = JSON.parse(localStorage.getItem("cart")) || [];
-    const existingItem = cart.find(item => item.id === id);
+    const existingItem = cart.find(item => item.productid === productid);
     if (existingItem) {
         existingItem.quantity += quantity;
     } else {
         const item = {
-            id: id,
+            id: generateTempCartID(),
+            productid: productid,
             quantity: quantity || 1,
         };
         cart.push(item);
@@ -84,9 +85,9 @@ function addToCart(id, name, quantity, callback) {
     }
 }
 
-function addToCartWithDetails(id, name, quantity, size, sugar, ice, toppings) {
+function addToCartWithDetails(productid, name, quantity, size, sugar, ice, toppings, callback) {
     var cart = JSON.parse(localStorage.getItem("cart")) || [];
-    const existingItem = cart.find(item => item.id === id);
+    const existingItem = cart.find(item => item.productid === productid && item.size === size && item.sugar === sugar && item.ice === ice && JSON.stringify(item.toppings) === JSON.stringify(toppings));
     if (existingItem) {
         existingItem.quantity += quantity;
         existingItem.size = size;
@@ -95,7 +96,8 @@ function addToCartWithDetails(id, name, quantity, size, sugar, ice, toppings) {
         existingItem.toppings = toppings;
     } else {
         const item = {
-            id: id,
+            id: generateTempCartID(),
+            productid: productid,
             name: name,
             quantity: quantity || 1,
             size: size,
@@ -107,4 +109,14 @@ function addToCartWithDetails(id, name, quantity, size, sugar, ice, toppings) {
     }
     localStorage.setItem("cart", JSON.stringify(cart));
     toastSuccess(`Thêm "${name}" vào giỏ hàng thành công`);
+
+    const cartNumber = $(".cart-number");
+
+    if (cartNumber.length > 0) {
+        cartNumber.text(cart.length);
+    }
+
+    if (callback) {
+        callback();
+    }
 }

@@ -10,7 +10,7 @@ def get_products_in_cart(cart: list[dict[int, int]]):
     for product in products:
         qty = next(item["quantity"] for item in cart if item["id"] == product.ID)
         dto = CartDTO(
-            id==product.ID,
+            id=product.ID,
             quantity=qty,
             price=product.Price,
             title=product.Title,
@@ -19,4 +19,5 @@ def get_products_in_cart(cart: list[dict[int, int]]):
         )
         list_cart_dto.append(dto)
     total_item = len(products)
-    return list_cart_dto, total_item
+    total_price = sum(dto.total_price for dto in list_cart_dto)
+    return list_cart_dto, total_item, total_price

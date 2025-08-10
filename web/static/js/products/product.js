@@ -83,3 +83,28 @@ function addToCart(id, name, quantity, callback) {
         callback();
     }
 }
+
+function addToCartWithDetails(id, name, quantity, size, sugar, ice, toppings) {
+    var cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const existingItem = cart.find(item => item.id === id);
+    if (existingItem) {
+        existingItem.quantity += quantity;
+        existingItem.size = size;
+        existingItem.sugar = sugar;
+        existingItem.ice = ice;
+        existingItem.toppings = toppings;
+    } else {
+        const item = {
+            id: id,
+            name: name,
+            quantity: quantity || 1,
+            size: size,
+            sugar: sugar,
+            ice: ice,
+            toppings: toppings
+        };
+        cart.push(item);
+    }
+    localStorage.setItem("cart", JSON.stringify(cart));
+    toastSuccess(`Thêm "${name}" vào giỏ hàng thành công`);
+}

@@ -30,3 +30,14 @@ function toastWarning(text){
         position: 'bottom-right',
     })
 }
+
+function updateCartCount() {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let count = cart.length;
+    $(".cart-number").text(count);
+
+    // Update number in the cart page
+    if($(".cart-count-item")){
+        $(".cart-count-item").text(count);
+    }
+}

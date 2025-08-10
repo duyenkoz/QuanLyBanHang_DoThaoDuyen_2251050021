@@ -1,5 +1,4 @@
-{% extends 'layout/base.html' %}
-{% block content %}
+{% extends 'layout/base.html' %} {% block content %}
 <div id="cart-container">
     <div class="row">
         <div class="payment-info col-md-6">
@@ -11,21 +10,22 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <input type="text" class="form-control" id="name" placeholder="Họ tên" value=""
-                                    required>
+                                    required />
                             </div>
                             <div class="col-md-6 mb-3">
                                 <input type="text" class="form-control" id="phonenumber" placeholder="SĐT" value=""
-                                    required>
+                                    required />
                             </div>
                             <div class="col-md-12 mb-3">
                                 <button id="btn-choose-location" class="btn btn-primary">
                                     Chọn địa điểm
                                 </button>
                                 <input type="text" class="form-control" id="address" placeholder="Địa chỉ" value=""
-                                    required>
+                                    required />
                             </div>
                             <div class="col-md-12 mb-3">
-                                <textarea type="text" class="form-control" id="note" rows="3" placeholder="Ghi chú cho cửa hàng"></textarea>
+                                <textarea type="text" class="form-control" id="note" rows="3"
+                                    placeholder="Ghi chú cho cửa hàng"></textarea>
                             </div>
                         </div>
                     </form>
@@ -35,8 +35,7 @@
         <div class="cart-info col-md-6">
             <div class="container clearfix">
                 <div class="card">
-                    <div class="card-body" style="max-height: 60vh; overflow: auto;">
-                    </div>
+                    <div class="card-body"></div>
                 </div>
             </div>
         </div>
@@ -52,8 +51,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="modal-map-body">
-                <input type="text" id="search-location" class="form-control mb-2" placeholder="Nhập địa điểm...">
-                <div id="map" style="height: 400px;"></div>
+                <input type="text" id="search-location" class="form-control mb-2" placeholder="Nhập địa điểm..." />
+                <div id="map" style="height: 400px"></div>
             </div>
         </div>
     </div>
@@ -61,6 +60,7 @@
 
 <script>
     $(document).ready(function () {
+        //Load page
         const cart = JSON.parse(localStorage.getItem("cart")) || [];
         $.ajax({
             url: "/api/cart",
@@ -68,39 +68,101 @@
             contentType: "application/json",
             data: JSON.stringify({ cart: cart }),
             success: function (response) {
-                var container = $(".cart-info .card-body");
+                var container = $(".cart-info .card");
                 if (container) {
                     container.html(response.data);
                 }
             },
             error: function (error) {
                 toastError("Lấy giỏ hàng thất bại!!!");
+            },
+        });
+
+        //Event
+        // $("#btn-choose-location").on("click", function () {
+        //     loadMap(() => {
+        //         $("#modal-map").modal("show");
+        //     });
+        // });
+
+        $(document).on("click", ".btn-increase", function () {
+            var id = $(this).closest(".item-handle-quantity").data("id");
+            var price = $(this).closest(".item-handle-quantity").data("price");
+            var cart = JSON.parse(localStorage.getItem("cart")) || [];
+            const existingItem = cart.find((item) => item.id === id);
+            if (existingItem) {
+                existingItem.quantity += 1;
+                changeCartItemUI(this, id, existingItem.quantity, price, "increase");
+                localStorage.setItem("cart", JSON.stringify(cart));
+                updateCartCount();
             }
         });
 
-        $("#btn-choose-location").on("click", function () {
-            loadMap(() => {
-                $("#modal-map").modal("show");
-            });
-
-        })
+        $(document).on("click", ".btn-decrease", function () {
+            var id = $(this).closest(".item-handle-quantity").data("id");
+            var price = $(this).closest(".item-handle-quantity").data("price");
+            var cart = JSON.parse(localStorage.getItem("cart")) || [];
+            const existingItem = cart.find((item) => item.id === id);
+            if (existingItem && existingItem.quantity > 1) {
+                existingItem.quantity -= 1;
+            } else {
+                // Remove item if quantity is 1
+                cart = cart.filter((item) => item.id !== id);
+                $(this).closest(".row").remove();
+            }
+            changeCartItemUI(this, id, existingItem.quantity, price, "decrease");
+            localStorage.setItem("cart", JSON.stringify(cart));
+            updateCartCount();
+        });
     });
 
-    function loadMap(callback) {
-        let map, marker, selectedLatLong = null;
-        if (!map) {
-            map = L.map('map').setView([10.762622, 106.660172], 13);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-            }).addTo(map);
+    function changeCartItemUI(ele, id, quantity, price, type = "increase") {
+        
+        //Set quanity
+        var spanQuantityElement = $(ele).siblings(".item-quantity");
+        spanQuantityElement.text(quantity);
 
-            // Click trên map để chọn vị trí
-            map.on('click', function (e) {
-                selectedLatLng = e.latlng;
-                if (marker) marker.remove();
-                marker = L.marker(selectedLatLng).addTo(map);
-            });
+        //Set total price for item
+        var totalPriceItem = quantity * price;
+        var itemTotalPriceElement = $("#item-total-price-" + id);
+        var spanPriceElement = itemTotalPriceElement.find(".price");
+        if (spanPriceElement && quantity > 0) {
+            spanPriceElement.text(totalPriceItem.toLocaleString('en-US', { minimumFractionDigits: 0 }));
         }
+
+        //Set total price for cart
+        var totalPriceCart = $("#hdf-cart-total-price").val() || 0;
+        if (type === "increase") {
+            totalPriceCart = +totalPriceCart + price;
+        } else {
+            totalPriceCart = +totalPriceCart - price;
+        }
+        $("#hdf-cart-total-price").val(totalPriceCart);
+        $(".cart-total-price").text(totalPriceCart.toLocaleString('en-US', { minimumFractionDigits: 0 }));
+
+        //Set total payment
+        var totalPayment = totalPriceCart + 0; // Assuming 0 is the shipping fee
+        $(".cart-total-payment").text(totalPayment.toLocaleString('en-US', { minimumFractionDigits: 0 }));
     }
+    
+
+    // function loadMap(callback) {
+    //     let map,
+    //         marker,
+    //         selectedLatLong = null;
+    //     if (!map) {
+    //         map = L.map("map").setView([10.762622, 106.660172], 13);
+    //         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    //             maxZoom: 19,
+    //         }).addTo(map);
+
+    //         // Click trên map để chọn vị trí
+    //         map.on("click", function (e) {
+    //             selectedLatLng = e.latlng;
+    //             if (marker) marker.remove();
+    //             marker = L.marker(selectedLatLng).addTo(map);
+    //         });
+    //     }
+    // }
 </script>
 {% endblock %}

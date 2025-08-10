@@ -1,129 +1,247 @@
 <div class="container py-4">
-    <div class="row g-4 justify-content-center">
-
-        <!-- Ảnh sản phẩm -->
-        <div class="col-md-6">
-            <div class="bg-light p-4 text-center rounded">
-                <img src="{{ url_for('static', filename='images/' + product.Img) }}" alt="{{ product.Title }}"
-                    class="img-fluid">
-            </div>
-        </div>
-
-        <!-- Thông tin sản phẩm -->
-        <div class="col-md-6">
-            <h3 class="text-success fw-bold">{{ product.Title }}</h3>
-            <p class="text-muted" style="font-size: 0.9rem;"> {{ product.Description }} </p>
-            <h5 class="text-success fw-semibold product-price" style="font-size: 1.2rem;">
-                {{ "{:,.0f}".format(product.Price) }} ₫
-            </h5>
-
-            <form id="form-detail">
-                {% set type_code = product.category.TypeCode %}
-
-                {% if type_code in ['DRINK_FULL', 'DRINK_SIZE_ONLY'] %}
-                <!-- Kích cỡ -->
-                <div class="my-3">
-                    <label class="fw-semibold">Chọn kích cỡ:</label>
-                    <div class="btn-group" role="group">
-                        <input type="radio" class="btn-check" name="size" id="size-m" value="M" checked>
-                        <label class="btn btn-outline-secondary btn-sm" for="size-m">M</label>
-
-                        <input type="radio" class="btn-check" name="size" id="size-l" value="L">
-                        <label class="btn btn-outline-secondary btn-sm" for="size-l">L</label>
-                    </div>
-                </div>
-                {% endif %}
-
-                {% if type_code == 'DRINK_FULL' %}
-                <!-- Đường -->
-                <div class="my-3">
-                    <label class="fw-semibold">Chọn mức đường:</label>
-                    <select class="form-select form-select-sm" name="sugar">
-                        <option value="100%">100%</option>
-                        <option value="70%">70%</option>
-                        <option value="50%">50%</option>
-                        <option value="30%">30%</option>
-                        <option value="0%">Không đường</option>
-                    </select>
-                </div>
-
-                <!-- Đá -->
-                <div class="my-3">
-                    <label class="fw-semibold">Chọn mức đá:</label>
-                    <select class="form-select form-select-sm" name="ice">
-                        <option value="100%">100%</option>
-                        <option value="70%">70%</option>
-                        <option value="50%">50%</option>
-                        <option value="30%">30%</option>
-                        <option value="0%">Không đá</option>
-                    </select>
-                </div>
-
-                <!-- Topping -->
-                <div class="my-3">
-                    <label class="fw-semibold">Chọn topping:</label>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="topping" value="Trân châu" id="tc">
-                        <label class="form-check-label" for="tc">Trân châu</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="topping" value="Thạch dừa" id="td">
-                        <label class="form-check-label" for="td">Thạch dừa</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="topping" value="Pudding" id="pd">
-                        <label class="form-check-label" for="pd">Pudding</label>
-                    </div>
-                </div>
-                {% endif %}
-
-                <!-- Số lượng -->
-                <div class="my-4 d-flex align-items-center">
-                    <label class="me-3 fw-semibold">Số lượng:</label>
-                    <button type="button" class="btn btn-outline-success btn-sm me-2"
-                        onclick="changeQuantity(-1)">−</button>
-                    <input type="number" name="quantity" id="quantity" value="1" min="1"
-                        class="form-control form-control-sm w-auto text-center" style="width: 60px;">
-                    <button type="button" class="btn btn-outline-success btn-sm ms-2"
-                        onclick="changeQuantity(1)">+</button>
-                </div>
-
-                <!-- Nút thêm giỏ hàng -->
-            </form>
-        </div>
-        <button type="button" class="btn btn-buy-detail btn-success btn-sm w-100" style="font-size: 0.9rem;" data-itemid="{{ product.ID }}" data-itemname="{{ product.Title }}"">
-            🛒 Thêm vào giỏ hàng : {{ "{:,.0f}".format(product.Price) }} ₫
-        </button>
+  <div class="row g-4 justify-content-center">
+    <!-- Ảnh sản phẩm -->
+    <div class="col-md-6">
+      <div class="bg-light p-4 text-center rounded">
+        <img
+          src="{{ url_for('static', filename='images/' + product.Img) }}"
+          alt="{{ product.Title }}"
+          class="img-fluid"
+        />
+      </div>
     </div>
+
+    <!-- Thông tin sản phẩm -->
+    <div class="col-md-6">
+      <h3 class="text-success fw-bold">{{ product.Title }}</h3>
+      <p class="text-muted" style="font-size: 0.9rem">
+        {{ product.Description }}
+      </p>
+      <h5
+        class="text-success fw-semibold product-price"
+        style="font-size: 1.2rem"
+      >
+        <span>{{ "{:,.0f}".format(product.Price) }}</span> ₫
+      </h5>
+
+      <form id="form-detail">
+        {% set type_code = product.category.TypeCode %} {% if type_code in
+        ['DRINK_FULL', 'DRINK_SIZE_ONLY'] %}
+        <!-- Kích cỡ -->
+        <div class="my-3">
+          <label class="fw-semibold">Chọn kích cỡ:</label>
+          <div class="btn-group" role="group">
+            <input
+              type="radio"
+              class="btn-check"
+              name="size"
+              id="size-m"
+              value="M"
+              data-size-price="0"
+              checked
+            />
+            <label class="btn btn-outline-secondary btn-sm" for="size-m"
+              >M +{{ "{:,.0f}".format(0) }} ₫</label
+            >
+
+            <input
+              type="radio"
+              class="btn-check"
+              name="size"
+              id="size-l"
+              value="L"
+              data-size-price="7000"
+            />
+            <label class="btn btn-outline-secondary btn-sm" for="size-l"
+              >L +{{ "{:,.0f}".format(7000) }} ₫</label
+            >
+          </div>
+        </div>
+        {% endif %} {% if type_code == 'DRINK_FULL' %}
+        <!-- Đường -->
+        <div class="my-3">
+          <label class="fw-semibold">Chọn mức đường:</label>
+          <select class="form-select form-select-sm" name="sugar">
+            <option value="100%">100%</option>
+            <option value="70%">70%</option>
+            <option value="50%">50%</option>
+            <option value="30%">30%</option>
+            <option value="0%">Không đường</option>
+          </select>
+        </div>
+
+        <!-- Đá -->
+        <div class="my-3">
+          <label class="fw-semibold">Chọn mức đá:</label>
+          <select class="form-select form-select-sm" name="ice">
+            <option value="100%">100%</option>
+            <option value="70%">70%</option>
+            <option value="50%">50%</option>
+            <option value="30%">30%</option>
+            <option value="0%">Không đá</option>
+          </select>
+        </div>
+
+        <!-- Topping -->
+        <div class="my-3">
+          <label class="fw-semibold">Chọn topping:</label>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              name="topping"
+              value="Trân châu"
+              id="tc"
+              data-topping-price="5000"
+            />
+            <label class="form-check-label" for="tc"
+              >Trân châu +{{ "{:,.0f}".format(5000) }} ₫</label
+            >
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              name="topping"
+              value="Thạch dừa"
+              id="td"
+              data-topping-price="5000"
+            />
+            <label class="form-check-label" for="td"
+              >Thạch dừa +{{ "{:,.0f}".format(5000) }} ₫</label
+            >
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              name="topping"
+              value="Pudding"
+              id="pd"
+              data-topping-price="5000"
+            />
+            <label class="form-check-label" for="pd"
+              >Pudding +{{ "{:,.0f}".format(5000) }} ₫</label
+            >
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Số lượng -->
+        <div class="my-4 d-flex align-items-center">
+          <label class="me-3 fw-semibold">Số lượng:</label>
+          <button
+            type="button"
+            class="btn btn-outline-success btn-sm me-2"
+            onclick="changeQuantity(-1)"
+          >
+            −
+          </button>
+          <input
+            type="number"
+            name="quantity"
+            id="quantity"
+            value="1"
+            min="1"
+            class="form-control form-control-sm w-auto text-center"
+            style="width: 60px"
+          />
+          <button
+            type="button"
+            class="btn btn-outline-success btn-sm ms-2"
+            onclick="changeQuantity(1)"
+          >
+            +
+          </button>
+        </div>
+
+        <!-- Nút thêm giỏ hàng -->
+      </form>
+    </div>
+    <button
+      type="button"
+      class="btn btn-buy-detail btn-success btn-sm w-100"
+      style="font-size: 0.9rem"
+      data-itemid="{{ product.ID }}"
+      data-itemname="{{ product.Title }}"
+    >
+      🛒 Thêm vào giỏ hàng :
+      <span class="price">{{ "{:,.0f}".format(product.Price) }}</span> ₫
+    </button>
+  </div>
+  <input type="hidden" id="hdf-base-price" value="{{ product.Price }}" />
 </div>
 
 <script>
-    $(document).ready(function () {
-        $('#form-detail').on('submit', function (e) {
-            e.preventDefault();
-        });
+  $(document).ready(function () {
+    $("#form-detail").on("submit", function (e) {
+      e.preventDefault();
     });
 
-    $(".btn-buy-detail").on("click", function(){
-        try {
-            console.log("Thêm vào giỏ hàng");
-            const id = $(this).data("itemid");
-            const name = $(this).data("itemname");
-            const quantity = parseInt($("#quantity").val()) || 1;
-            addToCart(id, name, quantity, function(){
-                console.log("Thêm vào giỏ hàng thành công");
-                $("#modal-product-detail").modal("hide");
-            });
+    //Onchage size then update price
+    $("input[name='size']").on("change", updatePrice);
 
-        } catch (e) {
-            toastError("Có lỗi xảy ra khi thêm vào giỏ hàng");
-        }
-    });
+    //Onchage topping then update price
+    $("input[name='topping']").on("change", updatePrice);
 
-    function changeQuantity(delta) {
-        const qty = $('#quantity');
-        let value = parseInt(qty.val());
-        value = isNaN(value) ? 1 : value + delta;
-        qty.val(value < 1 ? 1 : value);
+    //Onchange quantity then update price
+    $("#quantity").on("input", updatePrice);
+  });
+
+  $(".btn-buy-detail").on("click", function () {
+    try {
+      const id = $(this).data("itemid");
+      const name = $(this).data("itemname");
+      const quantity = parseInt($("#quantity").val()) || 1;
+      const size = $("input[name='size']:checked").val() || "M";
+      const sugar = $("select[name='sugar']").val() || "100%";
+      const ice = $("select[name='ice']").val() || "100%";
+      const toppings = [];
+      $("input[name='topping']:checked").each(function () {
+        toppings.push($(this).val());
+      });
+      addToCart(id, name, quantity, function () {
+        console.log("Thêm vào giỏ hàng thành công");
+        $("#modal-product-detail").modal("hide");
+      });
+    } catch (e) {
+      toastError("Có lỗi xảy ra khi thêm vào giỏ hàng");
     }
+  });
+
+  function changeQuantity(delta) {
+    const qty = $("#quantity");
+    let value = parseInt(qty.val());
+    value = isNaN(value) ? 1 : value + delta;
+    qty.val(value < 1 ? 1 : value);
+  }
+
+  function updatePrice() {
+    const basePrice = parseFloat($("#hdf-base-price").val()) || 0;
+    const quantity = parseInt($("#quantity").val()) || 1;
+
+    // Giá cộng thêm từ size
+    const upsizePrice =
+      parseFloat($("input[name='size']:checked").data("size-price")) || 0;
+
+    // Giá cộng thêm từ topping
+    let toppingExtra = 0;
+    $("input[name='topping']:checked").each(function () {
+      toppingExtra += parseFloat($(this).data("topping-price")) || 0;
+    });
+
+    // Giá 1 sản phẩm sau khi cộng size & topping
+    const pricePerItem = basePrice + upsizePrice + toppingExtra;
+
+    // Tổng giá = giá 1 sản phẩm * số lượng
+    const totalPrice = pricePerItem * quantity;
+
+    // Cập nhật UI
+    $(".product-price > span").text(
+      pricePerItem.toLocaleString("en-US", { minimumFractionDigits: 0 })
+    );
+    $(".btn-buy-detail .price").text(
+      totalPrice.toLocaleString("en-US", { minimumFractionDigits: 0 })
+    );
+  }
 </script>

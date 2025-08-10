@@ -41,3 +41,9 @@ function updateCartCount() {
         $(".cart-count-item").text(count);
     }
 }
+
+function generateTempCartID() {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const countCart = cart.length;
+    return "ITEM_" + (countCart + 1);
+}

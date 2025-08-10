@@ -7,6 +7,7 @@
   </div>
   <hr />
   {% for product in cart_items %}
+  
   <div class="row align-items-center border-bottom py-2">
     <!-- Ảnh sản phẩm -->
     <div class="col-auto">
@@ -22,8 +23,19 @@
     <div class="col">
       <h6 class="mb-1 text-success fw-bold">{{product.title}}</h6>
       <p class="mb-1 text-muted small">
-        Kích cỡ: M, Ngọt: Bình thường, Trà: Bình thường, Đá: Bình thường
+        {% if product.size %}
+          Kích cỡ: {{product.size}},
+        {% endif %}
+        {% if product.sugar %}
+          Ngọt: {{product.sugar}}%,
+        {% endif %}
+        {% if product.ice %}
+          Đá: {{product.ice}}%,
+        {% endif %}
       </p>
+      {% if product.toppings and product.toppings|length > 0 %}
+          <p class="mb-1 text-muted small">Toppings: {{product.toppings|join(', ')}}</p>
+      {% endif %}
       <div id="item-total-price-{{product.id}}" class="fw-bold text-success">
         <span class="price">{{"{:,.0f}".format(product.total_price) }}</span>
         <span class="text-lowercase">đ</span>

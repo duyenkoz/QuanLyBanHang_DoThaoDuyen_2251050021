@@ -38,4 +38,5 @@ def api_get_product_filter():
 @products_bp.route('/api/products/detail/<int:product_id>', methods=['GET'])
 def api_get_product_detail(product_id):
     product = productService.get_product_by_id(product_id)
-    return render_template("components/product_detail.html", product=product)
+    toppings = productService.get_toppings()
+    return render_template("components/product_detail.html", product=product, toppings=toppings)

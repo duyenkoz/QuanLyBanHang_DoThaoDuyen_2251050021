@@ -18,14 +18,14 @@
                                     required />
                             </div>
                             <div class="col-md-12 mb-3">
-                                <button id="btn-choose-location" class="btn btn-primary">
+                                <!-- <button id="btn-choose-location" class="btn btn-primary">
                                     Chọn địa điểm
-                                </button>
+                                </button> -->
                                 <input type="text" class="form-control" id="address" placeholder="Địa chỉ" value=""
                                     required />
                             </div>
                             <div class="col-md-12 mb-3">
-                                <textarea type="text" class="form-control" id="note" rows="3"
+                                <textarea type="text" class="form-control" id="notes" rows="3"
                                     placeholder="Ghi chú cho cửa hàng"></textarea>
                             </div>
                         </div>
@@ -115,6 +115,47 @@
             localStorage.setItem("cart", JSON.stringify(cart));
             updateCartCount();
         });
+
+        $(document).on("click", "#btn-payment", function() {
+            if (!validateShipForm()) {
+                return;
+            }
+
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+            const totalPrice = $("#hdf-cart-total-price").val() || 0;
+            const name = $("#name").val().trim();
+            const phoneNumber = $("#phonenumber").val().trim();
+            const address = $("#address").val().trim();
+            const notes = $("#notes").val() ? $("#notes").val().trim() : "";
+
+            $.ajax({
+                url: "/api/cart/checkout",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    cart: cart,
+                    total_price: +totalPrice, //Dấu + để chuyển sang số
+                    total_payment: +totalPrice + 0,
+                    name: name,
+                    phone_number: phoneNumber,
+                    address: address,
+                    notes: notes,
+                    payment_type: $("input[name='payment']:checked").val() || "COD",
+                }),
+                success: function (response) {
+                    if (response.status_code === "SUCCESS") {
+                        toastSuccess("Đặt hàng thành công!");
+                        localStorage.removeItem("cart");
+                        window.location.href = "/cart";
+                    } else {
+                        toastError("Đặt hàng thất bại, vui lòng thử lại sau.");
+                    }
+                },
+                error: function (error) {
+                    toastError("Đặt hàng thất bại, vui lòng thử lại sau.");
+                }
+            });
+        });
     });
 
     function changeCartItemUI(ele, id, quantity, price, type = "increase") {
@@ -146,7 +187,23 @@
         $(".cart-total-payment").text(totalPayment.toLocaleString('en-US', { minimumFractionDigits: 0 }));
     }
     
+    function validateShipForm() {
+        const name = $("#name").val().trim();
+        const phoneNumber = $("#phonenumber").val().trim();
+        const address = $("#address").val().trim();
+        const countCart = JSON.parse(localStorage.getItem("cart")) || [];
 
+        if (countCart.length === 0) {
+            toastError("Giỏ hàng của bạn đang trống.");
+            return false;
+        }
+
+        if (!name || !phoneNumber || !address) {
+            toastError("Vui lòng điền đầy đủ thông tin nhận hàng.");
+            return false;
+        }
+        return true;
+    }
     // function loadMap(callback) {
     //     let map,
     //         marker,

@@ -85,45 +85,23 @@
         <!-- Topping -->
         <div class="my-3">
           <label class="fw-semibold">Chọn topping:</label>
-          <div class="form-check">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              name="topping"
-              value="Trân châu"
-              id="1"
-              data-topping-price="5000"
-            />
-            <label class="form-check-label" for="1"
-              >Trân châu +{{ "{:,.0f}".format(5000) }} ₫</label
-            >
-          </div>
-          <div class="form-check">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              name="topping"
-              value="Thạch dừa"
-              id="2"
-              data-topping-price="5000"
-            />
-            <label class="form-check-label" for="2"
-              >Thạch dừa +{{ "{:,.0f}".format(5000) }} ₫</label
-            >
-          </div>
-          <div class="form-check">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              name="topping"
-              value="Pudding"
-              id="3"
-              data-topping-price="5000"
-            />
-            <label class="form-check-label" for="3"
-              >Pudding +{{ "{:,.0f}".format(5000) }} ₫</label
-            >
-          </div>
+          {% if toppings|length > 0%}
+            {% for topping in toppings %}
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  name="topping"
+                  value="{{ topping.ID }}"
+                  id="{{ topping.ID }}"
+                  data-topping-price="{{ topping.Price }}"
+                />
+                <label class="form-check-label" for="{{ topping.ID }}"
+                  >{{topping.Name}} +{{ "{:,.0f}".format(topping.Price) }} ₫</label
+                >
+              </div>
+            {% endfor %}
+          {% endif %}          
         </div>
         {% endif %}
 

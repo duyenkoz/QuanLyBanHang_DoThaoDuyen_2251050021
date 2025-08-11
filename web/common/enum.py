@@ -1,0 +1,16 @@
+from enum import Enum
+
+class OrderStatusEnum(Enum):
+    WAITING_CONFIRM = "WAITING_CONFIRM"
+    CONFIRMED = "CONFIRMED"
+    SHIPPING = "SHIPPING"
+    DELIVERED = "DELIVERED"
+    CANCELED = "CANCELED"
+    WAITING_PAYMENT = "WAITING_PAYMENT"
+    FAILED = "FAILED"
+
+class SaveOrderStatusEnum(Enum):
+    SUCCESS = "SUCCESS"
+    FAILED = "FAILED"
+    DIFF_PRICE = "DIFF_PRICE"
+    NOT_FOUND_CART = "NOT_FOUND_CART"

@@ -55,7 +55,7 @@
   color: #146c43;
 }
 
-.navbar .cart {
+.navbar .cart-icon {
   position: relative;
   color: #198754;
   transition: color 0.2s ease-in-out;

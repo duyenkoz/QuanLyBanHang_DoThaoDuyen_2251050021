@@ -34,13 +34,16 @@ def get_products(search=None, page=1, page_size=10):
     
 
 def create_product(title, price, description=None, status=None, category_id=None, image_filename=None):
-    """Hàm tạo sản phẩm mới"""
     try:
+        # Nếu không có ảnh, gán ảnh mặc định
+        if not image_filename:
+            image_filename = "no_image.jpg"
+
         new_product = Product(
             Title=title,
             Price=price,
             Description=description,
-            Img=f"{image_filename}" if image_filename else None,
+            Img=f"{image_filename}",
             Status=status,
             CategoryID=category_id,
         )
@@ -70,9 +73,14 @@ def update_product(product_id, title, price, description=None, status=None, cate
     product.Description = description
     product.Status = status
     product.CategoryID = category_id
+
+    # Nếu có upload ảnh mới
     if image_filename:
         product.Img = f"{image_filename}"
+    else:
+        # Nếu trước đó không có ảnh hoặc ảnh bị xóa → gán ảnh mặc định
+        if not product.Img or product.Img.strip() == "":
+            product.Img = "no_image.jpg"
 
     db.session.commit()
     return True
-

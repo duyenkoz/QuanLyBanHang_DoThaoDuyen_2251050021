@@ -363,34 +363,43 @@
     const btn = $(this);
     const id = btn.data('id');
     const isParent = btn.data('is-parent') == 1;
-    const isChildren = !isParent;
     const row = btn.closest('tr');
 
-    // Lấy dữ liệu từ các cột
+    // --- Lấy dữ liệu tiêu đề ---
     const titleCell = row.find('td:nth-child(2)');
     const title = titleCell.text().trim();
-
-    // Nếu là cha thì lấy thêm loại
-    const typeCell = isParent ? row.find('td:nth-child(3)') : null;
-    const type = isParent ? typeCell.text().trim() : null;
-
-    // Hiện input
     titleCell.html(`<input type="text" class="form-control form-control-sm" value="${title}">`);
+
     if (isParent) {
+      // --- Nếu là danh mục cha → Sửa cột Loại ---
+      const typeCell = row.find('td:nth-child(3)');
+      const type = typeCell.text().trim();
       const select = `
-        <select class="form-select form-select-sm">
-          <option value="1" ${type === 'Menu' ? 'selected' : ''}>Menu</option>
-          <option value="2" ${type === 'Sản phẩm đóng gói' ? 'selected' : ''}>Sản phẩm đóng gói</option>
-        </select>`;
+            <select class="form-select form-select-sm">
+                <option value="1" ${type === 'Menu' ? 'selected' : ''}>Menu</option>
+                <option value="2" ${type === 'Sản phẩm đóng gói' ? 'selected' : ''}>Sản phẩm đóng gói</option>
+            </select>`;
       typeCell.html(select);
+    } else {
+      // --- Nếu là danh mục con → Sửa cột Phân loại ---
+      const classifyCell = row.find('td:nth-child(5)');
+      const classify = classifyCell.text().trim();
+      const selectClassify = `
+            <select class="form-select form-select-sm">
+                <option value="DRINK_SIZE_ONLY" ${classify === 'Chọn size' ? 'selected' : ''}>Chọn size</option>
+                <option value="DRINK_FULL" ${classify === 'Đủ lựa chọn' ? 'selected' : ''}>Đủ lựa chọn</option>
+                <option value="QUANTITY_ONLY" ${classify === 'Chọn số lượng' ? 'selected' : ''}>Chọn số lượng</option>
+            </select>`;
+      classifyCell.html(selectClassify);
     }
-      // Thêm nút "Lưu" và "Hủy"
-      const actionCell = row.find('td:nth-child(6)');
-      actionCell.html(`
-      <button class="btn btn-sm btn-success btn-save" data-id="${id}" data-is-parent="${isParent}">Lưu</button>
-      <button class="btn btn-sm btn-secondary btn-cancel">Hủy</button>
+
+    // --- Thay đổi cột Thao tác ---
+    const actionCell = row.find('td:nth-child(6)');
+    actionCell.html(`
+        <button class="btn btn-sm btn-success btn-save" data-id="${id}" data-is-parent="${isParent}">Lưu</button>
+        <button class="btn btn-sm btn-secondary btn-cancel">Hủy</button>
     `);
-    });
+  });
 
   $(document).on('click', '.btn-save', function () {
     const btn = $(this);
@@ -400,6 +409,7 @@
 
     const newTitle = row.find('td:nth-child(2) input').val();
     const newType = isParent ? row.find('td:nth-child(3) select').val() : null;
+    const newTypeCode = !isParent ? row.find('td:nth-child(5) select').val() : null; // Lấy TypeCode cho child
 
     $.ajax({
       url: `/admin/api/manage-categories/update-inline/${id}`,
@@ -408,23 +418,29 @@
       data: JSON.stringify({
         title: newTitle,
         type: newType,
+        type_code: newTypeCode, // Gửi luôn type_code nếu là child
         is_parent: isParent
       }),
       success: function (res) {
         if (res.status_code === "SUCCESS") {
-          // Cập nhật lại UI
           row.find('td:nth-child(2)').text(newTitle);
+
           if (isParent) {
             row.find('td:nth-child(3)').text(
               newType == 1 ? "Menu" :
                 newType == 2 ? "Sản phẩm đóng gói" : "Không xác định"
             );
+          } else {
+            row.find('td:nth-child(5)').text(
+              newTypeCode == 'DRINK_SIZE_ONLY' ? "Chọn size" :
+                newTypeCode == 'DRINK_FULL' ? "Đủ lựa chọn" :
+                  newTypeCode == 'QUANTITY_ONLY' ? "Chọn số lượng" :
+                    "Không xác định"
+            );
           }
 
           toastSuccess("Cập nhật thành công!");
-
-          // Khôi phục nút thao tác
-          location.reload(); // hoặc render lại actionCell nếu muốn giữ nguyên
+          location.reload();
         } else {
           toastError("Cập nhật thất bại!");
         }
@@ -436,7 +452,7 @@
   });
 
   $(document).on('click', '.btn-cancel', function () {
-    location.reload(); // đơn giản nhất là reload lại trang
+    location.reload();
   });
 
 </script>

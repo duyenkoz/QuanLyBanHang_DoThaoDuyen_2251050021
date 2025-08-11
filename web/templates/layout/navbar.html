@@ -7,7 +7,7 @@
       <span class="fw-bold text-success" style="font-size: 20px">Logo</span>
     </a>
 
-    <form class="d-none d-md-flex mx-3 search-box" action="/products/search">
+    <form class="d-none d-md-flex mx-3 search-box" action="/products">
       <input name="kw" value="{{ keywords or '' }}" class="form-control rounded-pill" type="search"
         placeholder="Bạn muốn mua gì..." aria-label="Search">
     </form>
@@ -16,7 +16,7 @@
       <a href="#" class="btn btn-outline-success me-2 rounded-pill">
         <i class="fas fa-truck"></i> Chọn Phương Thức Nhận Hàng
       </a>
-      <a href="/cart" class="cart text-dark me-3">
+      <a href="/cart" class="cart-icon text-dark me-3">
         <span class="cart-number"></span>
         <i class="fa-solid fa-cart-shopping"></i>
       </a>

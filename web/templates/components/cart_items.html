@@ -1,7 +1,5 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/cart.css') }}">
 {% if cart_items|length > 0 %}
-<div class=""> 
-  <!-- card-body là một cột dọc, có chiều cao cố định (60vh) -->
   <div class="card-body d-flex flex-column" style="height:60vh; box-sizing:border-box; padding:1rem;">
     
     <!-- HEADER: giữ nguyên vị trí, không bị cuộn -->
@@ -59,10 +57,9 @@
         </div>
       </div>
       {% endfor %}
-    </div> <!-- /.cart-list -->
+    </div> 
 
-  </div> <!-- /.card-body -->
-</div> <!-- /.card -->
+  </div> 
 
 <!-- / Shopping cart table -->
 

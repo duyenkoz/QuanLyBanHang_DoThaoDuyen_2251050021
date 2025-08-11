@@ -112,6 +112,7 @@ def update_inline_category(cate_id):
     title = data.get("title")
     type = data.get("type")
     is_parent = data.get("is_parent")
+    type_code = data.get("type_code")  # Lấy thêm cho child
 
-    result = update_inline_category_service(cate_id, title, type, is_parent)
+    result = update_inline_category_service(cate_id, title, type, is_parent, type_code)
     return jsonify(result)

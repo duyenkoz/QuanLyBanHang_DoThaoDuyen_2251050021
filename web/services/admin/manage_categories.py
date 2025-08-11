@@ -79,18 +79,28 @@ def create_child_category(title, parent_id, type, type_code, status):
         db.session.rollback()
         raise e
     
-def update_inline_category_service(cate_id, title, type, is_parent):
+def update_inline_category_service(cate_id, title, type, is_parent, type_code=None):
     category = Category.query.get(cate_id)
     if not category:
         return {"status_code": "ERROR", "message": "Danh mục không tồn tại"}
 
     category.Title = title
+
     if is_parent:
         category.Type = int(type)
-    
+
+        # Cập nhật tất cả danh mục con theo cha
+        children = Category.query.filter_by(ParentID=cate_id).all()
+        for child in children:
+            child.Type = int(type)
+    else:
+        # Nếu là child thì cập nhật TypeCode (nếu có truyền vào)
+        if type_code:
+            category.TypeCode = type_code
 
     db.session.commit()
     return {"status_code": "SUCCESS"}
+
 
 def create_category(title, parent_id, type_value, type_code_value, status):
     try:

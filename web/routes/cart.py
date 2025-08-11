@@ -30,3 +30,22 @@ def api_get_product_filter():
         total_price=total_price,
     )
     return jsonify(response.to_dict())
+
+@cart_bp.post("/api/cart/checkout")
+def api_checkout():
+    data_payment = request.get_json()
+    cart = data_payment.get("cart", None)
+    response = APIResponse()
+    if not cart:
+        response.status_code = ResponseStatus.ERROR.value
+        response.message = "Không tìm thấy giỏ hàng"
+        return jsonify(response.to_dict())
+
+    checkout_result = cartService.save_order(data_payment)
+    if checkout_result == "SUCCESS":
+        response.status_code = ResponseStatus.SUCCESS.value
+    else:
+        response.status_code = ResponseStatus.ERROR.value
+        response.message = checkout_result
+
+    return jsonify(response.to_dict())

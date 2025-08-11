@@ -1,4 +1,5 @@
-from web.models import Product, Category
+from web.models import Product
+from web.models import Topping
 
 def get_all_products():
     products = Product.query.all()
@@ -32,3 +33,7 @@ def get_product_by_id(product_id: int):
 def get_product_by_title(product_title: str):
     products = Product.query.filter(Product.Title.like(f'%{product_title}%')).all()
     return products
+
+def get_toppings():
+    toppings = Topping.query.all()
+    return toppings

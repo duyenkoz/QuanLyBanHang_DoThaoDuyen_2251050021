@@ -1,4 +1,7 @@
-<link rel="stylesheet" href="{{ url_for('static', filename='css/cart.css') }}">
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/cart.css') }}"
+/>
 {% if cart_items|length > 0 %}
   <div class="card-body d-flex flex-column" style="height:60vh; box-sizing:border-box; padding:1rem;">
     
@@ -6,7 +9,8 @@
     <div class="cart-header">
       <div class="card-title mb-0">
         Giỏ hàng của bạn đang có
-        <strong class="cart-count-item text-success">{{ total_item }}</strong> sản phẩm
+        <strong class="cart-count-item text-success">{{ total_item }}</strong>
+        sản phẩm
       </div>
       <hr class="cart-divider my-2" />
     </div>
@@ -15,41 +19,48 @@
       {% for item in cart_items %}
       <div class="row align-items-center border-bottom py-2">
         <div class="col-auto">
-          <img src="{{ url_for('static', filename=item.image if item.image else 'default.png') }}"
-               alt="{{item.title}}"
-               class="img-fluid rounded" style="width:80px" />
+          <img
+            src="{{ url_for('static', filename=item.image if item.image else 'default.png') }}"
+            alt="{{item.title}}"
+            class="img-fluid rounded"
+            style="width: 80px"
+          />
         </div>
 
-    <!-- Thông tin sản phẩm -->
-    <div class="col">
-      <h6 class="mb-1 text-success fw-bold">{{item.title}}</h6>
-      <p class="mb-1 text-muted small">
-        {% if item.size %}
-          Kích cỡ: {{item.size}},
-        {% endif %}
-        {% if item.sugar %}
-          Ngọt: {{item.sugar}}%,
-        {% endif %}
-        {% if item.ice %}
-          Đá: {{item.ice}}%,
-        {% endif %}
-      </p>
-      {% if item.toppings and item.toppings|length > 0 %}
-          <p class="mb-1 text-muted small">Toppings: {{item.toppings|join(', ')}}</p>
-      {% endif %}
-      <div id="item-total-price-{{item.id}}" class="fw-bold text-success">
-        <span class="price">{{"{:,.0f}".format(item.total_price) }}</span>
-        <span class="text-lowercase">đ</span>
-      </div>
-    </div>
+        <!-- Thông tin sản phẩm -->
+        <div class="col">
+          <h6 class="mb-1 text-success fw-bold">{{item.title}}</h6>
+          <p class="mb-1 text-muted small">
+            {% if item.size %} Kích cỡ: {{item.size}}, {% endif %} {% if
+            item.sugar %} Ngọt: {{item.sugar}}%, {% endif %} {% if item.ice %}
+            Đá: {{item.ice}}%, {% endif %}
+          </p>
+          {% if item.toppings and item.toppings|length > 0 %}
+          <p class="mb-1 text-muted small">
+            Toppings: {{item.toppings|join(', ')}}
+          </p>
+          {% endif %}
+          <div id="item-total-price-{{item.id}}" class="fw-bold text-success">
+            <span class="price">{{"{:,.0f}".format(item.total_price) }}</span>
+            <span class="text-lowercase">đ</span>
+          </div>
+        </div>
 
         <div class="col-auto text-center">
-          <button class="btn btn-link p-0 text-success"><i class="bi bi-pencil-fill"></i></button>
-          <button class="btn btn-link p-0 text-danger"><i class="bi bi-trash-fill"></i></button>
+          <button class="btn btn-link p-0 text-success">
+            <i class="bi bi-pencil-fill"></i>
+          </button>
+          <button class="btn btn-link p-0 text-danger">
+            <i class="bi bi-trash-fill"></i>
+          </button>
         </div>
 
         <div class="col-auto">
-          <div class="d-flex align-items-center item-handle-quantity" data-id="{{item.id}}" data-price="{{item.price}}">
+          <div
+            class="d-flex align-items-center item-handle-quantity"
+            data-id="{{item.id}}"
+            data-price="{{item.price}}"
+          >
             <button class="btn btn-decrease btn-danger btn-sm">-</button>
             <span class="mx-2 item-quantity">{{item.quantity}}</span>
             <button class="btn btn-increase btn-success btn-sm">+</button>
@@ -67,7 +78,10 @@
   <h5>Thông tin thanh toán</h5>
   <div class="payment-row">
     <span>Tổng tiền tạm tính</span>
-    <span><span class="cart-total-price">{{"{:,.0f}".format(total_price)}}</span> đ</span>
+    <span
+      ><span class="cart-total-price">{{"{:,.0f}".format(total_price)}}</span>
+      đ</span
+    >
   </div>
   <div class="payment-row">
     <span>Phí vận chuyển</span>
@@ -75,15 +89,19 @@
   </div>
   <div class="payment-row total">
     <span>Tổng tiền (Đã có VAT)</span>
-    <span class="text-success"><span class="cart-total-payment">{{"{:,.0f}".format(total_price)}}</span> đ</span>
+    <span class="text-success"
+      ><span class="cart-total-payment">{{"{:,.0f}".format(total_price)}}</span>
+      đ</span
+    >
   </div>
 
   <h5>Phương thức thanh toán</h5>
   <div class="payment-methods">
-    <label><input type="radio" name="payment" checked> Thanh toán tiền mặt (COD)</label>
+    <label>
+      <input type="radio" name="payment" value="COD" checked /> Thanh toán tiền mặt (COD)</label>
   </div>
 
-  <button class="btn btn-pay">Đặt hàng</button>
+  <button id="btn-payment" class="btn btn-pay">Đặt hàng</button>
 </div>
 
 <input type="hidden" id="hdf-cart-total-price" value="{{total_price}}" />

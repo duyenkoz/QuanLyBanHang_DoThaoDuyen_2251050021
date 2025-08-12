@@ -14,13 +14,15 @@ def get_product_filter(keyword: str = None, cate_id: int = None, cursor: int = N
     if cursor:
         products_query = products_query.filter(Product.ID < cursor)
 
-    products_query = products_query.order_by(Product.ID.desc()).limit(top)
+    products_query = products_query.order_by(Product.ID.desc()).limit(top + 1)
 
     products = products_query.all()
-    last_cursor = None
-    if products:
-        last_cursor = products[-1].ID
-    return products, last_cursor
+    
+    has_load_more = len(products) > top
+    products = products[:top]
+    last_cursor = products[-1].ID if products else None
+        
+    return products, last_cursor, has_load_more
 
 def get_products_by_cate_id(cate_id: int):
     products = Product.query.filter_by(CategoryID=cate_id).all()

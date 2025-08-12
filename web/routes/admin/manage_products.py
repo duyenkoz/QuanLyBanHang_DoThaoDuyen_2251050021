@@ -14,11 +14,13 @@ from web.services import category as cateService
 from werkzeug.utils import secure_filename
 import os
 from web.common.api_response import APIResponse, ResponseStatus
+from web.common.auth import admin_required
 
 admin_prod_bp = Blueprint("admin_prod_bp", __name__, url_prefix="/admin")
 
 
 @admin_prod_bp.route("/manage-products", methods=["GET"])
+@admin_required
 def admin_manage_products():
     search = request.args.get("search", "")
     page = request.args.get("pageIndex", 1, type=int)
@@ -38,6 +40,7 @@ def admin_manage_products():
     )
 
 @admin_prod_bp.route("/manage-products/create", methods=["GET", "POST"])
+@admin_required
 def bp_create_product():
     if request.method == "POST":
         title = request.form.get("Title")
@@ -75,6 +78,7 @@ def bp_create_product():
 
 
 @admin_prod_bp.route("/manage-products/edit/<int:product_id>", methods=["GET"])
+@admin_required
 def edit_product_get(product_id):
     product = get_product_by_id(product_id)
 
@@ -93,6 +97,7 @@ def edit_product_get(product_id):
 
 
 @admin_prod_bp.route("/manage-products/edit/<int:product_id>", methods=["POST"])
+@admin_required
 def edit_product_post(product_id):
     product = check_product_exists(product_id)
     if not product:
@@ -135,6 +140,7 @@ def edit_product_post(product_id):
 @admin_prod_bp.route(
     "api/manage-products/update-status/<int:product_id>", methods=["POST"]
 )
+@admin_required
 def bp_update_product_status(product_id):
     result = update_product_status(product_id)
     response = APIResponse()

@@ -10,24 +10,26 @@
                     <form>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <input type="text" class="form-control" id="name" placeholder="Họ tên" value=""
+                                <label for="name" class="form-label text-primary fw-bold">Họ tên</label>
+                                <input type="text" class="form-control" id="name" placeholder="Nhập họ tên" value=""
                                     required />
                             </div>
                             <div class="col-md-6 mb-3">
-                                <input type="text" class="form-control" id="phonenumber" placeholder="SĐT" value=""
+                                <label for="phonenumber" class="form-label text-primary fw-bold">Số điện thoại</label>
+                                <input type="text" class="form-control" id="phonenumber"
+                                    placeholder="Nhập số điện thoại" value="" required />
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label for="address" class="form-label text-primary fw-bold">Địa chỉ</label>
+                                <input type="text" class="form-control" id="address" placeholder="Nhập địa chỉ" value=""
                                     required />
                             </div>
                             <div class="col-md-12 mb-3">
-                                <!-- <button id="btn-choose-location" class="btn btn-primary">
-                                    Chọn địa điểm
-                                </button> -->
-                                <input type="text" class="form-control" id="address" placeholder="Địa chỉ" value=""
-                                    required />
-                            </div>
-                            <div class="col-md-12 mb-3">
+                                <label for="notes" class="form-label text-primary fw-bold">Ghi chú cho cửa hàng</label>
                                 <textarea type="text" class="form-control" id="notes" rows="3"
-                                    placeholder="Ghi chú cho cửa hàng"></textarea>
+                                    placeholder="Nhập ghi chú"></textarea>
                             </div>
+
                         </div>
                     </form>
                 </div>
@@ -128,7 +130,7 @@
             updateCartCount();
         });
 
-        $(document).on("click", "#btn-payment", function() {
+        $(document).on("click", "#btn-payment", function () {
             if (!validateShipForm()) {
                 return;
             }
@@ -198,7 +200,7 @@
         var totalPayment = totalPriceCart + 0; // Assuming 0 is the shipping fee
         $(".cart-total-payment").text(totalPayment.toLocaleString('en-US', { minimumFractionDigits: 0 }));
     }
-    
+
     function validateShipForm() {
         const name = $("#name").val().trim();
         const phoneNumber = $("#phonenumber").val().trim();

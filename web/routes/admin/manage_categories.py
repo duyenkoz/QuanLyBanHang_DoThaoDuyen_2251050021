@@ -12,9 +12,10 @@ from web.services.admin.manage_categories import (
 
 
 admin_cate_bp = Blueprint("admin_cate_bp", __name__, url_prefix="/admin")
-
+from web.common.auth import admin_required
 
 @admin_cate_bp.route("/manage-categories", methods=["GET"])
+@admin_required
 def admin_manage_categories():
     search = request.args.get("search", "")
     page = request.args.get("pageIndex", 1, type=int)
@@ -34,6 +35,7 @@ def admin_manage_categories():
     )
 
 @admin_cate_bp.route("/manage-categories/<int:parent_id>/children", methods=["GET"])
+@admin_required
 def manage_child_categories(parent_id):
     parent = get_category_by_id(parent_id)
     if not parent:
@@ -49,6 +51,7 @@ def manage_child_categories(parent_id):
     )
 
 @admin_cate_bp.route("/manage-categories/create", methods=["GET", "POST"])
+@admin_required
 def admin_create_category():
     if request.method == "POST":
         title = request.form.get("Title")
@@ -70,6 +73,7 @@ def admin_create_category():
     
 #API
 @admin_cate_bp.route("/api/manage-categories/update-status/<int:category_id>", methods=["POST"])
+@admin_required
 def api_update_category_status(category_id):
 
     result = update_category_status(category_id)
@@ -86,6 +90,7 @@ def api_update_category_status(category_id):
         }, 404
     
 @admin_cate_bp.route("/api/manage-categories/<int:parent_id>/children", methods=["POST"])
+@admin_required
 def api_create_child_category(parent_id):
     try:
         title = request.form.get("Title")
@@ -107,6 +112,7 @@ def api_create_child_category(parent_id):
         }, 500
 
 @admin_cate_bp.route("/api/manage-categories/update-inline/<int:cate_id>", methods=["POST"])
+@admin_required
 def update_inline_category(cate_id):
     data = request.get_json()
     title = data.get("title")

@@ -74,6 +74,7 @@
     font-size: 1rem;
     font-weight: 600;
     padding: 6px 0;
+    color:#024502;
 }
 
 .cart-divider {
@@ -132,4 +133,8 @@
 /* Ẩn scrollbar trên IE, Edge cũ */
 .hidden-scrollbar {
   -ms-overflow-style: none;
+}
+
+.text-primary {
+    color: #006400 !important; /* màu xanh đậm chủ đạo */
 }

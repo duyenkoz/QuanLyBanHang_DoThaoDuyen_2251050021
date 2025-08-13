@@ -1,0 +1,252 @@
+<div class="container py-4">
+    <div class="row g-4 justify-content-center">
+
+        <!-- Ảnh sản phẩm -->
+        <div class="col-md-6">
+            <div class="bg-light p-4 text-center rounded">
+                <img src="{{ url_for('static', filename='images/' + product.Img) }}" alt="{{ product.Title }}"
+                    class="img-fluid" />
+            </div>
+        </div>
+
+        <!-- Thông tin sản phẩm -->
+        <div class="col-md-6">
+            <h3 class="text-success fw-bold">{{ product.Title }}</h3>
+            <p class="text-muted" style="font-size: 0.9rem">
+                {{ product.Description }}
+            </p>
+
+            <!-- Giá sản phẩm (giá 1 ly) -->
+            <h5 class="text-success fw-semibold product-price" style="font-size: 1.2rem">
+                <span>{{ "{:,.0f}".format(product.Price) }}</span> ₫
+            </h5>
+
+            <form id="form-detail">
+                {% set type_code = product.category.TypeCode %}
+
+                {% if type_code in ['DRINK_FULL', 'DRINK_SIZE_ONLY'] %}
+                <!-- Kích cỡ -->
+                <div class="my-3">
+                    <label class="fw-semibold">Chọn kích cỡ:</label>
+                    <div class="btn-group" role="group">
+                        <input type="radio" class="btn-check" name="size" id="size-m" value="M" data-size-price="0" {%
+                            if cart_item.size=='M' %}checked{% endif %} />
+                        <label class="btn btn-outline-secondary btn-sm" for="size-m">
+                            M +0 ₫
+                        </label>
+
+                        <input type="radio" class="btn-check" name="size" id="size-l" value="L" data-size-price="7000"
+                            {% if cart_item.size=='L' %}checked{% endif %} />
+                        <label class="btn btn-outline-secondary btn-sm" for="size-l">
+                            L +7,000 ₫
+                        </label>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if type_code == 'DRINK_FULL' %}
+                <!-- Đường -->
+                <div class="my-3">
+                    <label class="fw-semibold">Chọn mức đường:</label>
+                    <select class="form-select form-select-sm" name="sugar">
+                        {% for val in ["100", "70", "50", "30", "0"] %}
+                        <option value="{{ val }}" {% if cart_item.sugar==val %}selected{% endif %}>
+                            {% if val != "0" %} {{val}}%{% else %} Không đường{% endif %}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Đá -->
+                <div class="my-3">
+                    <label class="fw-semibold">Chọn mức đá:</label>
+                    <select class="form-select form-select-sm" name="ice">
+                        {% for val in ["100", "70", "50", "30", "0"] %}
+                        <option value="{{ val }}" {% if cart_item.ice==val %}selected{% endif %}>
+                            {% if val != "0" %} {{ val }}%{% else %} Không đá{% endif %}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Topping -->
+                <div class="my-3">
+                    <label class="fw-semibold">Chọn topping:</label>
+                    {% if toppings|length > 0 %}
+                    {% for topping in toppings %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="topping" value="{{ topping.ID }}"
+                            id="topping-{{ topping.ID }}" data-topping-price="{{ topping.Price }}" {% if
+                            topping.ID|string in cart_item.toppings %}checked{% endif %} />
+                        <label class="form-check-label" for="topping-{{ topping.ID }}">
+                            {{ topping.Name }} +{{ "{:,.0f}".format(topping.Price) }} ₫
+                        </label>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <!-- Số lượng -->
+                <div class="my-4 d-flex align-items-center">
+                    <label class="me-3 fw-semibold">Số lượng:</label>
+                    <button type="button" class="btn btn-outline-success btn-sm me-2"
+                        onclick="changeQuantity(-1)">−</button>
+                    <input type="number" name="quantity" id="quantity" value="{{ cart_item.quantity }}" min="1"
+                        class="form-control form-control-sm w-auto text-center" style="width: 60px" />
+                    <button type="button" class="btn btn-outline-success btn-sm ms-2"
+                        onclick="changeQuantity(1)">+</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Nút cập nhật -->
+        <button type="button" class="btn btn-buy-detail btn-success btn-sm w-100" style="font-size: 0.9rem"
+            data-itemid="{{ product.ID }}" data-itemname="{{ product.Title }}" data-cart-item-id="{{ cart_item.id }}">
+            💾 Cập nhật giỏ hàng :
+            <span class="price">{{ "{:,.0f}".format(cart_item.total_price) }}</span> ₫
+        </button>
+
+    </div>
+
+    <!-- Giá gốc để JS tính toán -->
+    <input type="hidden" id="hdf-base-price" value="{{ product.Price }}" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#form-detail").on("submit", function (e) {
+            e.preventDefault();
+        });
+
+        //Onchage size then update price
+        $("input[name='size']").on("change", updatePrice);
+
+        //Onchage topping then update price
+        $("input[name='topping']").on("change", updatePrice);
+
+        //Onchange quantity then update price
+        $("#quantity").on("input", updatePrice);
+    });
+
+    $(".btn-buy-detail").on("click", function () {
+        try {
+            const id = $(this).data("itemid");
+            const name = $(this).data("itemname");
+            const quantity = parseInt($("#quantity").val()) || 1;
+            const size = $("input[name='size']:checked").val() || "M";
+            const sugar = $("select[name='sugar']").val() || "100";
+            const ice = $("select[name='ice']").val() || "100";
+            const toppings = [];
+            $("input[name='topping']:checked").each(function () {
+                toppings.push($(this).val());
+            });
+            // addToCart(id, name, quantity, function () {
+            //   console.log("Thêm vào giỏ hàng thành công");
+            //   $("#modal-product-detail").modal("hide");
+            // });
+            updateToCartWithDetails(id, name, quantity, size, sugar, ice, toppings, function () {
+                
+                updateCartCount();
+
+                const basePrice = parseFloat($("#hdf-base-price").val()) || 0;
+                const quantity = parseInt($("#quantity").val()) || 1;
+
+                // Giá cộng thêm từ size
+                const upsizePrice =
+                    parseFloat($("input[name='size']:checked").data("size-price")) || 0;
+
+                // Giá cộng thêm từ topping
+                let toppingExtra = 0;
+                $("input[name='topping']:checked").each(function () {
+                    toppingExtra += parseFloat($(this).data("topping-price")) || 0;
+                });
+
+                // Giá 1 sản phẩm sau khi cộng size & topping
+                const pricePerItem = basePrice + upsizePrice + toppingExtra;
+
+                // Tổng giá = giá 1 sản phẩm * số lượng
+                const totalPrice = pricePerItem * quantity;
+
+                var totalPriceCart = $("#hdf-cart-total-price").val() || 0;
+                var itemPrice = $(this).closest(".item-info").data("total-price") || 0;
+                totalPriceCart = +totalPriceCart - itemPrice;
+                $("#hdf-cart-total-price").val(totalPriceCart);
+
+                $(".cart-total-price").text(totalPriceCart.toLocaleString('en-US', { minimumFractionDigits: 0 }));
+                // Cập nhật tổng thanh toán
+                var totalPayment = totalPriceCart + 0; // Assuming 0 is the shipping
+                $(".cart-total-payment").text(totalPayment.toLocaleString('en-US', { minimumFractionDigits: 0 }));
+
+                $("#modal-product-detail").modal("hide");
+            });
+        } catch (e) {
+            toastError("Có lỗi xảy ra khi thêm vào giỏ hàng");
+        }
+    });
+
+    function changeQuantity(delta) {
+        const qty = $("#quantity");
+        let value = parseInt(qty.val());
+        value = isNaN(value) ? 1 : value + delta;
+        qty.val(value < 1 ? 1 : value);
+        updatePrice();
+    }
+
+    function updatePrice() {
+        const basePrice = parseFloat($("#hdf-base-price").val()) || 0;
+        const quantity = parseInt($("#quantity").val()) || 1;
+
+        // Giá cộng thêm từ size
+        const upsizePrice =
+            parseFloat($("input[name='size']:checked").data("size-price")) || 0;
+
+        // Giá cộng thêm từ topping
+        let toppingExtra = 0;
+        $("input[name='topping']:checked").each(function () {
+            toppingExtra += parseFloat($(this).data("topping-price")) || 0;
+        });
+
+        // Giá 1 sản phẩm sau khi cộng size & topping
+        const pricePerItem = basePrice + upsizePrice + toppingExtra;
+
+        // Tổng giá = giá 1 sản phẩm * số lượng
+        const totalPrice = pricePerItem * quantity;
+
+        // Cập nhật UI
+        $(".product-price > span").text(
+            pricePerItem.toLocaleString("en-US", { minimumFractionDigits: 0 })
+        );
+        $(".btn-buy-detail .price").text(
+            totalPrice.toLocaleString("en-US", { minimumFractionDigits: 0 })
+        );
+    }
+
+
+    function updateToCartWithDetails(id, productid, name, quantity, size, sugar, ice, toppings, callback) {
+        var cart = JSON.parse(localStorage.getItem("cart") || "[]");
+        const existingItem = cart.find(item => item.id === id);
+        if (!existingItem) {
+            toastError(`Không tìm thấy sản phẩm "${name}" trong giỏ hàng`);
+            return;
+        }
+        existingItem.quantity = quantity;
+        existingItem.size = size;
+        existingItem.sugar = sugar;
+        existingItem.ice = ice;
+        existingItem.toppings = toppings;
+        
+        localStorage.setItem("cart", JSON.stringify(cart));
+        toastSuccess(`Cập nhật sản phẩm "${name}" thành công`);
+
+        const cartNumber = $(".cart-number");
+
+        if (cartNumber.length > 0) {
+            cartNumber.text(cart.length);
+        }
+
+        if (callback) {
+            callback();
+        }
+    }
+</script>

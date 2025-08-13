@@ -17,7 +17,11 @@
 
     <div class="cart-list hidden-scrollbar">
       {% for item in cart_items %}
-      <div class="row align-items-center border-bottom py-2">
+      <div class="row align-items-center border-bottom py-2 item-info" data-id="{{item.id}}" data-price="{{item.price}}" data-total-price="{{item.total_price}}" data-productid="{{item.productid}}">
+        <div class="d-flex justify-content-between">
+          <span class="d-inline-flex btn-delete-item"><i role="button" class="fa-solid fa-xmark text-danger"></i></span>
+          <span class="d-inline-flex btn-edit-item"><i role="button" class="fa-solid fa-pen-to-square text-success"></i></span>
+        </div>
         <div class="col-auto">
           <img
             src="{{ url_for('static', filename=item.image if item.image else 'default.png') }}"
@@ -57,9 +61,7 @@
 
         <div class="col-auto">
           <div
-            class="d-flex align-items-center item-handle-quantity"
-            data-id="{{item.id}}"
-            data-price="{{item.price}}"
+            class="d-flex align-items-center"     
           >
             <button class="btn btn-decrease btn-danger btn-sm">-</button>
             <span class="mx-2 item-quantity">{{item.quantity}}</span>

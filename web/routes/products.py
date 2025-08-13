@@ -58,10 +58,14 @@ def api_get_product_filter():
     return json.dumps(result, ensure_ascii=False)
 
 
-@products_bp.route("/api/products/detail/<int:product_id>", methods=["GET"])
+@products_bp.get("/api/products/detail/<int:product_id>")
 def api_get_product_detail(product_id):
     product = productService.get_product_by_id(product_id)
     toppings = productService.get_toppings()
+        
     return render_template(
-        "components/product_detail.html", product=product, toppings=toppings
+        "components/product_detail.html", 
+        product=product, 
+        toppings=toppings, 
     )
+

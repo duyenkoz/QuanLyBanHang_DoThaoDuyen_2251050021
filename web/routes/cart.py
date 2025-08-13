@@ -1,6 +1,8 @@
 from flask import Blueprint, jsonify, render_template, request
+from web.models.topping import Topping
 from web.services import cart as cartService
 from web.common.api_response import APIResponse, ResponseStatus
+from web.services import product as productService
 
 cart_bp = Blueprint("cart", __name__)
 
@@ -49,3 +51,43 @@ def api_checkout():
         response.message = checkout_result
 
     return jsonify(response.to_dict())
+
+@cart_bp.post("/api/cart/edit/<int:product_id>")
+def api_edit_detail(product_id):
+    product = productService.get_product_by_id(product_id)
+    if not product:
+        return jsonify(APIResponse(status_code=ResponseStatus.ERROR.value, message="Sản phẩm không tồn tại"))
+    toppings = productService.get_toppings()
+    data = request.get_json()
+    cart_item = data.get("cart_item", {})
+    size = cart_item.get("size", "M")
+    qty = cart_item.get("quantity", 1)
+    topping_ids = cart_item.get("toppings", [])
+    price = product.Price
+        
+    if size == "L":
+        price += 7000
+    
+    topping_price = 0
+    topping_names = []
+
+    if topping_ids:
+        for t_id in topping_ids:
+            topping = next((tp for tp in toppings if tp.ID == int(t_id)), None)
+            print(f"Adding topping: {topping}")
+            if topping:
+                topping_price += topping.Price
+                topping_names.append(topping.Name)
+
+    price += topping_price
+    total_price = price * qty
+    product.Price = price
+    cart_item["total_price"] = total_price
+        
+    return render_template(
+        "components/product_cart_detail.html", 
+        product=product, 
+        toppings=toppings,
+        cart_item=cart_item
+    )
+

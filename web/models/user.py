@@ -4,14 +4,12 @@ from sqlalchemy.ext.declarative import declarative_base
 import enum
 from web import db
 
-Base = declarative_base()
-
 class UserRole(enum.Enum):
     staff = 'staff'
     admin = 'admin'
     user = 'user'
 
-class User(Base):
+class User(db.Model):
     __tablename__ = 'users'
 
     Id = Column(Integer, primary_key=True, autoincrement=True)
@@ -24,12 +22,16 @@ class User(Base):
     Created_at = Column(TIMESTAMP, server_default=func.now())
 
 def seed_data():
-    if not User.query.first():
+    admin_user = User.query.filter_by(Role=UserRole.admin).first()
+    if not admin_user:
         admin = User(
-            name="Admin",
-            username="admin",
-            password=str(hashlib.md5('admin'.encode('utf-8')).hexdigest()),
-            user_role=UserRole.ADMIN
+            Phone="0123456789",  # số điện thoại mặc định
+            Password=hashlib.md5('admin'.encode('utf-8')).hexdigest(),
+            Role=UserRole.admin,
+            Name="Admin",
         )
         db.session.add(admin)
         db.session.commit()
+        print("✅ Seeded default admin account")
+    else:
+        print("⚠️ Admin account already exists")

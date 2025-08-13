@@ -32,7 +32,7 @@ function toastWarning(text){
 }
 
 function updateCartCount() {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let cart = JSON.parse(localStorage.getItem("cart") || "[]");
     let count = cart.length;
     $(".cart-number").text(count);
 
@@ -43,7 +43,7 @@ function updateCartCount() {
 }
 
 function generateTempCartID() {
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
     const countCart = cart.length;
     return "ITEM_" + (countCart + 1);
 }

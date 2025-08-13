@@ -66,7 +66,7 @@ function handleClickBuy(productid, name, typeCode) {
 }
 
 function addToCart(productid, name, quantity, callback) {
-    var cart = JSON.parse(localStorage.getItem("cart")) || [];
+    var cart = JSON.parse(localStorage.getItem("cart") || "[]");
     const existingItem = cart.find(item => item.productid === productid);
     if (existingItem) {
         existingItem.quantity += quantity;
@@ -92,7 +92,7 @@ function addToCart(productid, name, quantity, callback) {
 }
 
 function addToCartWithDetails(productid, name, quantity, size, sugar, ice, toppings, callback) {
-    var cart = JSON.parse(localStorage.getItem("cart")) || [];
+    var cart = JSON.parse(localStorage.getItem("cart") || "[]");
     const existingItem = cart.find(item => item.productid === productid && item.size === size && item.sugar === sugar && item.ice === ice && JSON.stringify(item.toppings) === JSON.stringify(toppings));
     if (existingItem) {
         existingItem.quantity += quantity;

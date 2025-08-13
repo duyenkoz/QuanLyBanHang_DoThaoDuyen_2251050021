@@ -16,12 +16,14 @@ def login():
         if user:
             session["user_phone"] = user.Phone
             session["user_id"] = user.Id
+            session["role"] = str(user.Role)
             return redirect(url_for("home"))
 
         flash("Số điện thoại hoặc mật khẩu không đúng.", "danger")
         return redirect(url_for("auth.login"))
 
     return render_template("auth/login.html")
+
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':

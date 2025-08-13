@@ -67,7 +67,7 @@
 <script>
     $(document).ready(function () {
         //Load page
-        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const cart = JSON.parse(localStorage.getItem("cart") || "[]");
 
         if (cart.length === 0) {
             $(".no-item-container").removeClass("hidden");
@@ -103,7 +103,7 @@
         $(document).on("click", ".btn-increase", function () {
             var id = $(this).closest(".item-handle-quantity").data("id");
             var price = $(this).closest(".item-handle-quantity").data("price");
-            var cart = JSON.parse(localStorage.getItem("cart")) || [];
+            var cart = JSON.parse(localStorage.getItem("cart") || "[]");
             const existingItem = cart.find((item) => item.id === id);
             if (existingItem) {
                 existingItem.quantity += 1;
@@ -116,7 +116,7 @@
         $(document).on("click", ".btn-decrease", function () {
             var id = $(this).closest(".item-handle-quantity").data("id");
             var price = $(this).closest(".item-handle-quantity").data("price");
-            var cart = JSON.parse(localStorage.getItem("cart")) || [];
+            var cart = JSON.parse(localStorage.getItem("cart") || "[]");
             const existingItem = cart.find((item) => item.id === id);
             if (existingItem && existingItem.quantity > 1) {
                 existingItem.quantity -= 1;
@@ -135,7 +135,7 @@
                 return;
             }
 
-            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+            const cart = JSON.parse(localStorage.getItem("cart") || "[]");
             const totalPrice = $("#hdf-cart-total-price").val() || 0;
             const name = $("#name").val().trim();
             const phoneNumber = $("#phonenumber").val().trim();
@@ -205,7 +205,7 @@
         const name = $("#name").val().trim();
         const phoneNumber = $("#phonenumber").val().trim();
         const address = $("#address").val().trim();
-        const countCart = JSON.parse(localStorage.getItem("cart")) || [];
+        const countCart = JSON.parse(localStorage.getItem("cart") || "[]");
 
         if (countCart.length === 0) {
             toastError("Giỏ hàng của bạn đang trống.");

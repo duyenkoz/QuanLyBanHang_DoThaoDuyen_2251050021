@@ -3,18 +3,27 @@
 {% block content %}
 
 {% if products|length > 0 %}
-{% set current_cate = products[0].category %}
-{% set parent_cate = current_cate.parent %}
+{% set current_cate = category_info %}
+{% if current_cate is not none %}
+  {% set parent_cate = current_cate.parent %}
+{% else %}
+  {% set parent_cate = None %}
+{% endif %}
 
 <!-- Đường dẫn định vị (breadcrumb) -->
 <div class="mb-3">
     <p class="text-muted" style="font-size: 0.9rem;">
-        {% if parent_cate.ID in [1, 2] %}
-        Menu / {{ parent_cate.Title }}
-        {% elif parent_cate.ID in [3, 4] %}
-        Sản phẩm đóng gói / {{ parent_cate.Title }}
+        <a href="/">Trang chủ</a> /
+        {% if parent_cate is not none %}
+          {% if parent_cate.Type == 1 %}
+          Menu / {{ parent_cate.Title }}
+          {% elif parent_cate.Type == 2 %}
+          Sản phẩm đóng gói / {{ parent_cate.Title }}
+          {% else %}
+          {{ current_cate.Title }}
+          {% endif %}
         {% else %}
-        {{ current_cate.Title }}
+          Sản phẩm
         {% endif %}
     </p>
 </div>
@@ -29,11 +38,14 @@
     {% include 'components/product_card.html' %}
     {% endfor %}
 </div>
-<button id="btn-loadmore" type="button" class="btn btn-outline-primary">Load more</button>
+{% if has_load_more %}
+  <button id="btn-loadmore" type="button" class="btn btn-outline-primary">Load more</button>
+{% endif %}
 
 <!-- Hidden fields -->
 <input type="hidden" id="product-cursor" value="{{ cursor }}">
 <input type="hidden" id="product-cateid" value="{{ current_cate.ID }}">
+<input type="hidden" id="has_load_more" value="{{ has_load_more }}">
 
 <!-- Modal -->
 <div class="modal fade" id="modal-product-detail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -55,7 +67,7 @@
 </div>
 
 {% else %}
-<div class="no-product-container">
+<div class="no-item-container">
     <h4>Không tìm thấy sản phẩm nào</h4>
     <p>Xin lỗi, thông tin bạn tìm kiếm không có trong hệ thống. Vui lòng thử lại hoặc quay về trang chủ.</p>
     <a href="/" class="btn btn-success">Trang chủ</a>

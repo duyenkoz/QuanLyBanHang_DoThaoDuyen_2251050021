@@ -29,3 +29,6 @@ def get_grouped_categories():
             'parents': parents
         })
     return results
+
+def get_category_by_id(category_id: int) -> Category:
+    return Category.query.get(category_id)

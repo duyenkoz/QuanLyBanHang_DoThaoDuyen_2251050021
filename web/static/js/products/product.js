@@ -1,7 +1,7 @@
 $(document).ready(function () {
     var cursor = $("#product-cursor").val();
     var cateid = $("#product-cateid").val();
-    var top = 1;
+    var top = 2;
     $("#btn-loadmore").click(function () {
         if (!cateid) {
             cateid = "";
@@ -16,7 +16,13 @@ $(document).ready(function () {
                     container.append(data.products_html)
                 }
                 cursor = data.cursor;
+                has_load_more = data.has_load_more;
                 $("#product-cursor").val(cursor);
+                if (has_load_more) {
+                    $("#btn-loadmore").show();
+                } else {
+                    $("#btn-loadmore").hide();
+                }
                 if (!cursor) {
                     $("#btn-loadmore").hide();
                 }

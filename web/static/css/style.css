@@ -4,3 +4,35 @@
     padding: 0;
     /* font-family: 'Be Vietnam Pro', sans-serif; */
 }
+
+.hidden {
+    display: none;
+}
+
+.no-item-container {
+    text-align: center;
+    margin: 80px auto;
+    padding: 20px;
+    max-width: 600px;
+}
+
+.no-item-container h4 {
+    font-weight: bold;
+    color: #006633; /* Màu xanh giống Phúc Long */
+    margin-bottom: 15px;
+}
+
+.no-item-container p {
+    color: #555;
+    margin-bottom: 25px;
+}
+
+.no-item-container .btn-success {
+    background-color: #006633;
+    border-color: #006633;
+}
+
+.no-item-container .btn-success:hover {
+    background-color: #004d26;
+    border-color: #004d26;
+}

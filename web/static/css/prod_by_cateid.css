@@ -89,30 +89,4 @@
   color: inherit;
   display: inline-block;
 }
-.no-product-container {
-    text-align: center;
-    margin: 80px auto;
-    padding: 20px;
-    max-width: 600px;
-}
 
-.no-product-container h4 {
-    font-weight: bold;
-    color: #006633; /* Màu xanh giống Phúc Long */
-    margin-bottom: 15px;
-}
-
-.no-product-container p {
-    color: #555;
-    margin-bottom: 25px;
-}
-
-.no-product-container .btn-success {
-    background-color: #006633;
-    border-color: #006633;
-}
-
-.no-product-container .btn-success:hover {
-    background-color: #004d26;
-    border-color: #004d26;
-}

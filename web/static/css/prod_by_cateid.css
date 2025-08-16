@@ -82,6 +82,9 @@
 #btn-loadmore {
   display: block;
   margin: 0 auto;
+  color:#145a18;
+  border-color: #145a18;
+  margin-top: 10px;
 }
 
 .product-card-link {

@@ -3,6 +3,7 @@ from sqlalchemy import Column, Integer, String, Enum, TIMESTAMP, func
 from sqlalchemy.ext.declarative import declarative_base
 import enum
 from web import db
+from werkzeug.security import generate_password_hash
 
 class UserRole(enum.Enum):
     staff = 'staff'
@@ -25,13 +26,13 @@ def seed_data():
     admin_user = User.query.filter_by(Role=UserRole.admin).first()
     if not admin_user:
         admin = User(
-            Phone="0123456789",  # số điện thoại mặc định
-            Password=hashlib.md5('admin'.encode('utf-8')).hexdigest(),
+            Phone="0123456789", 
+            Password=generate_password_hash("admin"),
             Role=UserRole.admin,
             Name="Admin",
         )
         db.session.add(admin)
         db.session.commit()
-        print("✅ Seeded default admin account")
+        print("Seeded default admin account")
     else:
-        print("⚠️ Admin account already exists")
+        print("Admin account already exists")

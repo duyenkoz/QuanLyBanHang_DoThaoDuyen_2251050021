@@ -1,0 +1,249 @@
+{% extends 'admin/layout_admin/base.html' %}
+{% block title %}Quản lý sản phẩm{% endblock %}
+{% block content %}
+<div class="">
+    <div class="table-wrapper">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+            <div class="d-block mb-4 mb-md-0">
+                <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
+                    <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
+                        <!-- breadcrumb chinh lai sau -->
+                        <li class="breadcrumb-item">
+                            <a href="#">
+                                <svg class="icon icon-xxs" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+                                    </path>
+                                </svg>
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item"><a href="#">Volt</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Transactions</li>
+                    </ol>
+                </nav>
+                <h2 class="h4">Danh sách người dùng</h2>
+                <p class="mb-0">Hiển thị danh sách người dùng</p>
+            </div>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                {% if session.get('role') == 'admin' %}
+                <a href="" class="btn btn-sm btn-gray-800 d-inline-flex align-items-center" data-bs-toggle="modal"
+                    data-bs-target="#addUserModal">
+                    <svg class="icon icon-xs me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    Thêm
+                </a>
+                {% endif %}
+                <div class="btn-group ms-2 ms-lg-3">
+                    <button type="button" class="btn btn-sm btn-outline-gray-600">Chia sẻ</button>
+                    <button type="button" class="btn btn-sm btn-outline-gray-600">Xuất</button>
+                </div>
+            </div>
+        </div>
+        <div class="table-settings mb-4">
+            <div class="row align-items-center justify-content-between">
+                <div class="col col-md-6 col-lg-3 col-xl-4">
+                    <div class="input-group me-2 me-lg-3 fmxw-400">
+                        <span class="input-group-text">
+                            <svg class="icon icon-xs" x-description="Heroicon name: solid/search"
+                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                aria-hidden="true">
+                                <path fill-rule="evenodd"
+                                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                        </span>
+                        <input type="text" class="form-control" placeholder="Tìm kiếm">
+                    </div>
+                </div>
+                <div class="col-4 col-md-2 col-xl-1 ps-md-0 text-end">
+                    <div class="dropdown">
+                        <button class="btn btn-link text-dark dropdown-toggle dropdown-toggle-split m-0 p-1"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <svg class="icon icon-sm" fill="currentColor" viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="visually-hidden">Toggle Dropdown</span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-xs dropdown-menu-end pb-0 dropdown-pageSize">
+                            <span class="small ps-3 fw-bold text-dark">Hiển thị</span>
+                            <a class="dropdown-item d-flex align-items-center fw-bold" href="#" data-value="10">
+                                10
+                            </a>
+                            <a class="dropdown-item d-flex align-items-center fw-bold" href="#" data-value="20">20</a>
+                            <a class="dropdown-item d-flex align-items-center fw-bold" href="#" data-value="30">30</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% set current_role = session.get('role') %}
+        {% if current_role == 'admin' %}
+        {% set filtered_users = products|selectattr('Role', 'equalto', 'staff')|list %}
+        {% elif current_role == 'staff' %}
+        {% set filtered_users = products|selectattr('Role', 'equalto', 'user')|list %}
+        {% else %}
+        {% set filtered_users = [] %}
+        {% endif %}
+        <!-- TABLE -->
+        <div class="card card-body border-0 shadow table-wrapper table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th class="border-gray-200">ID</th>
+                        <th class="border-gray-200">Tên người dùng</th>
+                        <th class="border-gray-200">Số điện thọai</th>
+                        <th class="border-gray-200">Email</th>
+                        <th class="border-gray-200">Địa chỉ</th>
+                        <th class="border-gray-200">Ngày tạo</th>
+                        {% if current_role == 'admin' %}
+                        <th class="border-gray-200">Action</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody id="userTableBody">
+                    {% if filtered_users|length > 0 %}
+                    {% for user in filtered_users %}
+                    <tr>
+                        <td><a href="#" class="fw-bold">{{ user.ID }}</a></td>
+                        <td><span class="fw-normal">{{ user.Name }}</span></td>
+                        <td><span class="fw-normal">{{ user.Phone }}</span></td>
+                        <td><span class="fw-normal">{{ user.Email }}</span></td>
+                        <td><span class="fw-normal">{{ user.Address }}</span></td>
+                        <td><span class="fw-normal">{{ user.CreatedAt.strftime('%d-%m-%Y') }}</span></td>
+                        {% if current_role == 'admin' %}
+                        <td>
+
+                            <a class="dropdown-item rounded" href="#">
+                                <span class="fas fa-trash-alt me-2"></span>Xóa
+                            </a>
+
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <tr id="noDataRow">
+                        <td colspan="{% if current_role == 'admin' %}7{% else %}6{% endif %}"
+                            class="text-center text-muted">
+                            Không có dữ liệu
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% if current_role == 'admin' %}
+    <!-- Modal Thêm người dùng -->
+    <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form id="addUserForm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addUserModalLabel">Thêm người dùng</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Số điện thoại</label>
+                            <input type="text" class="form-control" name="phone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Mật khẩu</label>
+                            <input type="password" class="form-control" name="password" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Thêm</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- PHÂN TRANG -->
+    <div class="pagination">
+        <nav aria-label="Pagination">
+            <ul class="pagination justify-content-center">
+                <li class="page-item {% if currentPage == 1 %}disabled{% endif %}">
+                    <a class="page-link" href="?pageIndex={{ currentPage - 1 }}&search={{ search }}">Trước</a>
+                </li>
+
+                {% for page in pagination %}
+                {% if page == '...' %}
+                <li class="page-item disabled"><span class="page-link">...</span></li>
+                {% else %}
+                <li class="page-item {% if page == currentPage %}active{% endif %}">
+                    <a class="page-link" href="?pageIndex={{ page }}&search={{ search }}">{{ page }}</a>
+                </li>
+                {% endif %}
+                {% endfor %}
+
+                <li class="page-item {% if currentPage == totalPage %}disabled{% endif %}">
+                    <a class="page-link" href="?pageIndex={{ currentPage + 1 }}&search={{ search }}">Sau</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+</div>
+
+<script>
+    // document.getElementById('addUserForm').addEventListener('submit', function (e) {
+    //     e.preventDefault();
+
+    //     let formData = new FormData(this);
+
+    //     fetch("/admin/manage-users/add-user", {
+    //         method: "POST",
+    //         body: formData
+    //     })
+    //         .then(res => res.json())
+    //         .then(data => {
+    //             alert(data.message);
+    //             if (data.success) {
+    //                 // Lấy modal và đóng
+    //                 var modalEl = document.getElementById('addUserModal');
+    //                 var modalInstance = bootstrap.Modal.getInstance(modalEl);
+    //                 if (!modalInstance) modalInstance = new bootstrap.Modal(modalEl);
+    //                 modalInstance.hide();
+
+    //                 // Xóa row "Không có dữ liệu" nếu có
+    //                 var noDataRow = document.getElementById('noDataRow');
+    //                 if (noDataRow) noDataRow.remove();
+
+    //                 // Thêm row mới
+    //                 let tbody = document.getElementById('userTableBody');
+    //                 let newRow = document.createElement('tr');
+    //                 newRow.innerHTML = `
+    //             <td><a href="#" class="fw-bold">${data.new_user.ID}</a></td>
+    //             <td><span class="fw-normal"></span></td>
+    //             <td><span class="fw-normal">${formData.get('phone')}</span></td>
+    //             <td><span class="fw-normal"></span></td>
+    //             <td><span class="fw-normal"></span></td>
+    //             <td><span class="fw-normal">${new Date().toLocaleDateString('vi-VN')}</span></td>
+    //             <td>
+    //                 <a class="dropdown-item rounded" href="#"><span class="fas fa-trash-alt me-2"></span>Xóa</a>
+    //             </td>
+    //         `;
+    //                 tbody.appendChild(newRow);
+
+    //                 // Reset form sau khi modal đóng
+    //                 setTimeout(() => this.reset(), 200);
+    //             }
+    //         })
+    //         .catch(err => console.error(err));
+    // });
+</script>
+
+{% endblock %}

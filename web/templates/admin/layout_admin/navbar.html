@@ -39,12 +39,13 @@
             <div class="media d-flex align-items-center">
               <img class="avatar rounded-circle" alt="Image placeholder" src="/static/images/user-avatar-male.png">
               <div class="media-body ms-2 text-dark align-items-center d-none d-lg-block">
-                <span class="mb-0 font-small fw-bold text-gray-900">Bonnie Green</span>
+                <span class="mb-0 font-small fw-bold text-gray-900">{{ session.get('user_name') }}</span>
               </div>
             </div>
           </a>
           <div class="dropdown-menu dashboard-dropdown dropdown-menu-end mt-2 py-1">
-            <a class="dropdown-item d-flex align-items-center" href="#">
+            <a class="dropdown-item d-flex align-items-center" href="#" data-bs-toggle="modal"
+              data-bs-target="#accountModal" id="openAccountModal">
               <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20"
                 xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd"
@@ -53,35 +54,8 @@
               </svg>
               Tài khoản
             </a>
-            <a class="dropdown-item d-flex align-items-center" href="#">
-              <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd"
-                  d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
-                  clip-rule="evenodd"></path>
-              </svg>
-              Cài đặt
-            </a>
-            <a class="dropdown-item d-flex align-items-center" href="#">
-              <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd"
-                  d="M5 3a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V5a2 2 0 00-2-2H5zm0 2h10v7h-2l-1 2H8l-1-2H5V5z"
-                  clip-rule="evenodd"></path>
-              </svg>
-              Thông báo
-            </a>
-            <a class="dropdown-item d-flex align-items-center" href="#">
-              <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd"
-                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-2 0c0 .993-.241 1.929-.668 2.754l-1.524-1.525a3.997 3.997 0 00.078-2.183l1.562-1.562C15.802 8.249 16 9.1 16 10zm-5.165 3.913l1.58 1.58A5.98 5.98 0 0110 16a5.976 5.976 0 01-2.516-.552l1.562-1.562a4.006 4.006 0 001.789.027zm-4.677-2.796a4.002 4.002 0 01-.041-2.08l-.08.08-1.53-1.533A5.98 5.98 0 004 10c0 .954.223 1.856.619 2.657l1.54-1.54zm1.088-6.45A5.974 5.974 0 0110 4c.954 0 1.856.223 2.657.619l-1.54 1.54a4.002 4.002 0 00-2.346.033L7.246 4.668zM12 10a2 2 0 11-4 0 2 2 0 014 0z"
-                  clip-rule="evenodd"></path>
-              </svg>
-              Hỗ trợ
-            </a>
             <div role="separator" class="dropdown-divider my-1"></div>
-            <a class="dropdown-item d-flex align-items-center" href="#">
+            <a class="dropdown-item d-flex align-items-center" href="/logout">
               <svg class="dropdown-icon text-danger me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -96,3 +70,142 @@
     </div>
   </div>
 </nav>
+<!-- Modal thông tin tài khoản -->
+<div class="modal fade" id="accountModal" tabindex="-1" aria-labelledby="accountModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-success fw-bold" id="accountModalLabel">Thông tin tài khoản</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="accountForm">
+          <div class="mb-3">
+            <label class="form-label">Họ & tên</label>
+            <input type="text" class="form-control" id="name" name="name"
+              value="{{ session.get('user_name') or session.get('role') }}" readonly>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Số điện thoại</label>
+            <input type="text" class="form-control" id="phone" name="phone" value="{{ session.get('user_phone') }}"
+              readonly>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" name="email" value="{{ user.Email if user else '' }}"
+              readonly>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="accountEditBtn">Cập nhật</button>
+        <button type="button" class="btn btn-success d-none" id="accountSaveBtn">Lưu</button>
+        <button type="button" class="btn btn-secondary d-none" id="accountCancelBtn">Hủy</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const accountModal = document.getElementById("accountModal");
+    const nameInput = document.getElementById("name");
+    const phoneInput = document.getElementById("phone");
+    const emailInput = document.getElementById("email");
+
+    const editBtn = document.getElementById("accountEditBtn");
+    const saveBtn = document.getElementById("accountSaveBtn");
+    const cancelBtn = document.getElementById("accountCancelBtn");
+
+    const avatarNameSpan = document.querySelector(".media-body span"); // Tên hiển thị cạnh avatar
+
+    let originalData = {};
+
+    saveBtn.focus();
+
+    // Khi mở modal -> load dữ liệu từ server
+    accountModal.addEventListener("show.bs.modal", function () {
+      fetch("/admin/get_profile")
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            originalData = { ...data.user };
+            nameInput.value = data.user.name;
+            phoneInput.value = data.user.phone;
+            emailInput.value = data.user.email;
+            setReadOnly(true);
+            toggleButtons("view");
+          }
+        });
+    });
+
+    editBtn.addEventListener("click", function () {
+      setReadOnly(false);
+      phoneInput.readOnly = true; // SĐT luôn không chỉnh
+      toggleButtons("edit");
+      
+    });
+
+    // Nút Hủy
+    cancelBtn.addEventListener("click", function () {
+      nameInput.value = originalData.name;
+      phoneInput.value = originalData.phone;
+      emailInput.value = originalData.email;
+      setReadOnly(true);
+      toggleButtons("view");
+    });
+
+    // Nút Lưu
+    saveBtn.addEventListener("click", function () {
+      const formData = new FormData();
+      formData.append("name", nameInput.value.trim());
+      formData.append("phone", phoneInput.value.trim());
+      formData.append("email", emailInput.value.trim());
+
+      fetch("/admin/update_profile", {
+        method: "POST",
+        body: formData
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            // Lưu lại dữ liệu mới
+            originalData = { ...data.user };
+
+            // Set form về readonly
+            setReadOnly(true);
+
+            // Đổi nút về chế độ xem
+            toggleButtons("view");
+
+            // Cập nhật tên ở avatar
+            avatarNameSpan.textContent = data.user.name;
+          } else {
+            alert(data.message || "Lỗi khi cập nhật");
+          }
+        })
+        .catch(() => alert("Có lỗi xảy ra khi lưu thông tin"));
+    });
+    // Hàm set readonly cho form
+    function setReadOnly(readonly) {
+      nameInput.readOnly = readonly;
+      emailInput.readOnly = readonly;
+      phoneInput.readOnly = true; // luôn readonly
+    }
+
+    // Hàm đổi nút hiển thị
+    function toggleButtons(mode) {
+      if (mode === "view") {
+        editBtn.classList.remove("d-none");
+        saveBtn.classList.add("d-none");
+        cancelBtn.classList.add("d-none");
+      } else if (mode === "edit") {
+        editBtn.classList.add("d-none");
+        saveBtn.classList.remove("d-none");
+        cancelBtn.classList.remove("d-none");
+      }
+    }
+  });
+</script>

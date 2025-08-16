@@ -53,6 +53,69 @@
               </svg>
             </span>
             <input type="text" class="form-control" placeholder="Tìm kiếm">
+            <button class="btn" type="button" id="btn-filter">
+              <svg class="icon icon-xs" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L15 13.414V19a1 1 0 01-1.447.894l-4-2A1 1 0 019 17v-3.586L3.293 6.707A1 1 0 013 6V4z" />
+              </svg>
+            </button>
+            <div id="filter-dropdown" class="dropdown-menu p-3 shadow"
+              class="dropdown-menu p-3 shadow" style="display:none; position:absolute; top:100%; right:0; z-index:100; width:250px; max-height:200px; overflow-y:auto;">
+              <!-- Trạng thái -->
+              <div class="mb-3">
+                <strong>Trạng thái:</strong><br>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="statusFilter" id="status-all" value="" checked>
+                  <label class="form-check-label" for="status-all">Tất cả</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="statusFilter" id="status-hidden" value="0">
+                  <label class="form-check-label" for="status-hidden">Ẩn</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="statusFilter" id="status-visible" value="1">
+                  <label class="form-check-label" for="status-visible">Hiển thị</label>
+                </div>
+              </div>
+              <hr>
+              <!-- Phân loại -->
+              <div class="mb-3">
+                <strong>Phân loại:</strong><br>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="classifyFilter" id="classify-all" value="" checked>
+                  <label class="form-check-label" for="classify-all">Tất cả</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="classifyFilter" id="classify-size"
+                    value="DRINK_SIZE_ONLY">
+                  <label class="form-check-label" for="classify-size">Chọn size</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="classifyFilter" id="classify-full"
+                    value="DRINK_FULL">
+                  <label class="form-check-label" for="classify-full">Đủ lựa chọn</label>
+                </div>
+              </div>
+              <hr>
+              <!-- Loại -->
+              <div class="mb-3">
+                <strong>Loại:</strong><br>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="typeFilter" id="type-all" value="" checked>
+                  <label class="form-check-label" for="type-all">Tất cả</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="typeFilter" id="type-menu" value="1">
+                  <label class="form-check-label" for="type-menu">Menu</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="typeFilter" id="type-pack" value="2">
+                  <label class="form-check-label" for="type-pack">Sản phẩm đóng gói</label>
+                </div>
+              </div>
+              <button class="btn btn-primary btn-sm" id="apply-filter">Áp dụng</button>
+            </div>
           </div>
         </div>
         <div class="col-4 col-md-2 col-xl-1 ps-md-0 text-end">
@@ -88,19 +151,24 @@
       <table class="table table-hover">
         <thead>
           <tr>
+            <th></th>
             <th>ID</th>
             <th>Tiêu đề</th>
             <th>Loại</th>
             <th>Trạng thái</th>
             <th>Phân loại</th>
             <th>Thao tác</th>
-            <th></th>
           </tr>
         </thead>
         <tbody>
           {% for cate in categories %}
           {% if not cate.ParentID %}
           <tr class="category-row parent-row" data-id="{{ cate.ID }}">
+            <td>
+              <button class="btn btn-sm btn-toggle" data-id="{{ cate.ID }}">
+                <i class="fas fa-chevron-down"></i>
+              </button>
+            </td>
             <td>{{ cate.ID }}
             </td>
             <td>{{ cate.Title }}</td>
@@ -149,14 +217,10 @@
                     class="fa-solid fa-plus me-2"></span></a>
               </div>
             </td>
-            <td>
-              <button class="btn btn-sm btn-toggle" data-id="{{ cate.ID }}">
-                <i class="fas fa-chevron-down"></i>
-              </button>
-            </td>
           </tr>
           {% for child in cate.children %}
-          <tr data-parent-id="{{ cate.ParentID }}" class="child-row child-of-{{ cate.ID }} d-none">
+          <tr data-parent-id="{{ cate.ParentID }}" class="child-row child-of-{{ cate.ID }} ">
+            <td></td>
             <td>{{ child.ID }}</td>
             <td>{{ child.Title }}</td>
             <td>-</td>
@@ -209,7 +273,6 @@
 
     </div>
     </td>
-    <td></td>
     </tr>
     {% endfor %}
     {% endif %}
@@ -266,6 +329,15 @@
 {% endwith %}
 
 <script>
+  $('.dropdown-pageSize>a').on('click', function (e) {
+        e.preventDefault();
+        var selectedSize = $(this).data('value');
+        var url = new URL(window.location.href);
+        url.searchParams.set('pageIndex', 1);
+        url.searchParams.set('pageSize', selectedSize);
+        window.location.href = url.toString();
+    });
+    
   document.querySelectorAll('.btn-toggle').forEach(btn => {
     btn.addEventListener('click', () => {
       const parentId = btn.getAttribute('data-id');
@@ -453,6 +525,31 @@
 
   $(document).on('click', '.btn-cancel', function () {
     location.reload();
+  });
+  const btnFilter = document.getElementById('btn-filter');
+  const dropdown = document.getElementById('filter-dropdown');
+
+  btnFilter.addEventListener('click', function (e) {
+    e.stopPropagation();
+    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+  });
+
+  // Đóng khi click ra ngoài
+  document.addEventListener('click', function (e) {
+    if (!dropdown.contains(e.target) && e.target !== btnFilter) {
+      dropdown.style.display = 'none';
+    }
+  });
+
+  // Xử lý nút áp dụng filter
+  document.getElementById('apply-filter').addEventListener('click', function () {
+    const status = document.querySelector('input[name="statusFilter"]:checked').value;
+    const classify = document.querySelector('input[name="classifyFilter"]:checked').value;
+    const type = document.querySelector('input[name="typeFilter"]:checked').value;
+
+    // Có thể gửi ajax hoặc reload url với query params
+    console.log({ status, classify, type });
+    dropdown.style.display = 'none';
   });
 
 </script>

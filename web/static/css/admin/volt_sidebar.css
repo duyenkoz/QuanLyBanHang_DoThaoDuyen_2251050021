@@ -28004,13 +28004,14 @@ label {
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.07), 0 0 0 0.18rem rgba(31, 41, 55, 0.25);
 }
 
+
 .dataTable-input::placeholder {
     color: #4B5563;
     opacity: 1;
 }
 
 .dataTable-input:disabled, .dataTable-input[readonly] {
-    background-color: #E5E7EB;
+    background-color: #E5E7EB !important;
     opacity: 1;
 }
 
@@ -28781,3 +28782,16 @@ article .h1, article .h2, article .h3, article .h4, article .h5, article .h6 {
     z-index: 9999;
 }
 /*# sourceMappingURL=volt.css.map */
+
+/*# css tu tao */
+#sidebarMenu {
+    scrollbar-width: none; /* Ẩn scrollbar trên Firefox */
+    -ms-overflow-style: none; /* Ẩn trên IE, Edge */
+}
+
+#sidebarMenu::-webkit-scrollbar {
+    display: none; /* Ẩn scrollbar trên Chrome, Safari */
+}
+.sidebar-inner {
+    padding-bottom: 80px; /* Chừa khoảng cho nút Về trang web */
+}

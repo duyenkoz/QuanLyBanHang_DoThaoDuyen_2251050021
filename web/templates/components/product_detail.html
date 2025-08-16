@@ -25,8 +25,8 @@
       </h5>
 
       <form id="form-detail">
-        {% set type_code = product.category.TypeCode %} {% if type_code in
-        ['DRINK_FULL', 'DRINK_SIZE_ONLY'] %}
+        {% set type_code = product.category.TypeCode %} 
+        {% if type_code in ['DRINK_FULL', 'DRINK_SIZE_ONLY'] %}
         <!-- Kích cỡ -->
         <div class="my-3">
           <label class="fw-semibold">Chọn kích cỡ:</label>
@@ -140,7 +140,7 @@
       type="button"
       class="btn btn-buy-detail btn-success btn-sm w-100"
       style="font-size: 0.9rem"
-      data-itemid="{{ product.ID }}"
+      data-productid="{{ product.ID }}"
       data-itemname="{{ product.Title }}"
     >
       🛒 Thêm vào giỏ hàng :
@@ -168,7 +168,7 @@
 
   $(".btn-buy-detail").on("click", function () {
     try {
-      const id = $(this).data("itemid");
+      const productid = $(this).data("productid");
       const name = $(this).data("itemname");
       const quantity = parseInt($("#quantity").val()) || 1;
       const size = $("input[name='size']:checked").val() || "M";
@@ -182,7 +182,7 @@
       //   console.log("Thêm vào giỏ hàng thành công");
       //   $("#modal-product-detail").modal("hide");
       // });
-      addToCartWithDetails(id, name, quantity, size, sugar, ice, toppings, function () {
+      addToCartWithDetails(productid, name, quantity, size, sugar, ice, toppings, function () {
         console.log("Thêm vào giỏ hàng thành công");
         $("#modal-product-detail").modal("hide");
       }); 
@@ -196,6 +196,7 @@
     let value = parseInt(qty.val());
     value = isNaN(value) ? 1 : value + delta;
     qty.val(value < 1 ? 1 : value);
+    updatePrice();
   }
 
   function updatePrice() {

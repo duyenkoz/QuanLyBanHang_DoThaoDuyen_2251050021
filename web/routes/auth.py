@@ -16,8 +16,15 @@ def login():
         if user:
             session["user_phone"] = user.Phone
             session["user_id"] = user.Id
-            session["role"] = str(user.Role)
-            return redirect(url_for("home"))
+            session["role"] = user.Role.value
+
+            # Nếu DB chưa có tên thì lấy role
+            session["user_name"] = user.Name.strip() if user.Name and user.Name.strip() else user.Role.value
+
+            if session.get("role") == "admin":
+                return redirect(url_for("admin.admin_dashboard"))
+            else:
+                return redirect(url_for("home"))
 
         flash("Số điện thoại hoặc mật khẩu không đúng.", "danger")
         return redirect(url_for("auth.login"))

@@ -22,23 +22,74 @@
                     <span class="sidebar-text">Dashboard</span>
                 </a>
             </li>
-            <li class="nav-item ">
-                <a href="" class="nav-link">
-                    <span class="sidebar-icon">
-                        <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20"
+            <li class="nav-item">
+                <span class="nav-link collapsed d-flex justify-content-between align-items-center"
+                    data-bs-toggle="collapse" data-bs-target="#submenu-orders" aria-expanded="true">
+                    <span>
+                        <span class="sidebar-icon">
+                            <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M5 4a3 3 0 00-3 3v6a3 3 0 003 3h10a3 3 0 003-3V7a3 3 0 00-3-3H5zm-1 9v-1h5v2H5a1 1 0 01-1-1zm7 1h4a1 1 0 001-1v-1h-5v2zm0-4h5V8h-5v2zM9 8H4v2h5V8z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                        </span>
+                        <span class="sidebar-text">Danh sách đơn</span>
+                    </span>
+                    <span class="link-arrow">
+                        <svg class="icon icon-sm" fill="currentColor" viewBox="0 0 20 20"
                             xmlns="http://www.w3.org/2000/svg">
-                            <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"></path>
                             <path fill-rule="evenodd"
-                                d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z"
+                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
                                 clip-rule="evenodd"></path>
                         </svg>
                     </span>
-                    <span class="sidebar-text">Đơn hàng</span>
-                </a>
+                </span>
+
+                <div class="multi-level collapse" role="list" id="submenu-orders" aria-expanded="false">
+                    <ul class="flex-column nav">
+                        <li class="nav-item {% if not request.args.get('status') %}active{% endif %}">
+                            <a class="nav-link" href="{{ url_for('admin_order_bp.admin_manage_orders') }}">
+                                <span class="sidebar-text">Tất cả</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {% if request.args.get('status') == 'WAITING_CONFIRM' %}active{% endif %}">
+                            <a class="nav-link"
+                                href="{{ url_for('admin_order_bp.admin_manage_orders', status='WAITING_CONFIRM') }}">
+                                <span class="sidebar-text">Đơn mới</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {% if request.args.get('status') == 'CONFIRMED' %}active{% endif %}">
+                            <a class="nav-link"
+                                href="{{ url_for('admin_order_bp.admin_manage_orders', status='CONFIRMED') }}">
+                                <span class="sidebar-text">Đợi giao hàng</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {% if request.args.get('status') == 'SHIPPING' %}active{% endif %}">
+                            <a class="nav-link"
+                                href="{{ url_for('admin_order_bp.admin_manage_orders', status='SHIPPING') }}">
+                                <span class="sidebar-text">Đang giao hàng</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {% if request.args.get('status') == 'DELIVERED' %}active{% endif %}">
+                            <a class="nav-link"
+                                href="{{ url_for('admin_order_bp.admin_manage_orders', status='DELIVERED') }}">
+                                <span class="sidebar-text">Hoàn thành</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {% if request.args.get('status') == 'CANCELED' %}active{% endif %}">
+                            <a class="nav-link"
+                                href="{{ url_for('admin_order_bp.admin_manage_orders', status='CANCELED') }}">
+                                <span class="sidebar-text">Đơn hủy</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </li>
+
             <li class="nav-item">
                 <span class="nav-link  collapsed  d-flex justify-content-between align-items-center"
-                    data-bs-toggle="collapse" data-bs-target="#submenu-app">
+                    data-bs-toggle="collapse" data-bs-target="#submenu-app" aria-expanded="true">
                     <span>
                         <span class="sidebar-icon">
                             <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20"
@@ -59,18 +110,20 @@
                         </svg>
                     </span>
                 </span>
-                <div class="multi-level collapse " role="list" id="submenu-app" aria-expanded="false">
+                <div class="multi-level collapse show" role="list" id="submenu-app" aria-expanded="false">
                     <ul class="flex-column nav">
-                        <li class="nav-item ">
+                        <li
+                            class="nav-item {% if request.path == url_for('admin_prod_bp.admin_manage_products') %}active{% endif %}">
                             <a class="nav-link" href="{{ url_for('admin_prod_bp.admin_manage_products') }}">
                                 <span class="sidebar-text">Sản phẩm</span>
                             </a>
                         </li>
                     </ul>
                 </div>
-                <div class="multi-level collapse " role="list" id="submenu-app" aria-expanded="false">
+                <div class="multi-level collapse show" role="list" id="submenu-app" aria-expanded="false">
                     <ul class="flex-column nav">
-                        <li class="nav-item ">
+                        <li
+                            class="nav-item {% if request.path == url_for('admin_cate_bp.admin_manage_categories') %}active{% endif %}">
                             <a class="nav-link" href="{{ url_for('admin_cate_bp.admin_manage_categories') }}">
                                 <span class="sidebar-text">Danh mục</span>
                             </a>
@@ -78,6 +131,25 @@
                     </ul>
                 </div>
             </li>
+
+            <li class="nav-item">
+                <a href="{{ url_for('admin_user_bp.admin_manage_users') }}" class="nav-link">
+                    <span class="sidebar-icon">
+                        <!-- Icon user, 1 path -->
+                        <svg class="icon icon-xs me-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                            fill="currentColor">
+                            <path
+                                d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z" />
+                        </svg>
+                    </span>
+                    {% if session.get('role') == 'admin' %}
+                    <span class="sidebar-text">Người dùng</span>
+                    {% else %}
+                    <span class="sidebar-text">Khách hàng</span>
+                    {% endif %}
+                </a>
+            </li>
+
             <li class="nav-item">
                 <a href="../../pages/transactions.html" class="nav-link">
                     <span class="sidebar-icon">
@@ -136,8 +208,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="../../pages/upgrade-to-pro.html"
-                    class="btn btn-secondary d-flex align-items-center justify-content-center btn-upgrade-pro">
+                <a href="/" class="btn btn-secondary d-flex align-items-center justify-content-center btn-upgrade-pro">
                     <span class="sidebar-icon d-inline-flex align-items-center justify-content-center">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                             class="icon icon-xs me-2">

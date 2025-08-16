@@ -74,14 +74,13 @@ def api_edit_detail(product_id):
     if topping_ids:
         for t_id in topping_ids:
             topping = next((tp for tp in toppings if tp.ID == int(t_id)), None)
-            print(f"Adding topping: {topping}")
             if topping:
                 topping_price += topping.Price
                 topping_names.append(topping.Name)
 
     price += topping_price
     total_price = price * qty
-    product.Price = price
+    cart_item["price_item"] = price
     cart_item["total_price"] = total_price
         
     return render_template(

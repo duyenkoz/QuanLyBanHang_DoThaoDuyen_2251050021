@@ -17,7 +17,7 @@
 
     <div class="cart-list hidden-scrollbar">
       {% for item in cart_items %}
-      <div class="row align-items-center border-bottom py-2 item-info" data-id="{{item.id}}" data-price="{{item.price}}" data-total-price="{{item.total_price}}" data-productid="{{item.productid}}">
+      <div class="row align-items-center border-bottom py-2 item-info" id="item-info-{{item.id}}" data-id="{{item.id}}" data-price="{{item.price}}" data-total-price="{{item.total_price}}" data-productid="{{item.productid}}">
         <div class="d-flex justify-content-between">
           <span class="d-inline-flex btn-delete-item"><i role="button" class="fa-solid fa-xmark text-danger"></i></span>
           <span class="d-inline-flex btn-edit-item"><i role="button" class="fa-solid fa-pen-to-square text-success"></i></span>

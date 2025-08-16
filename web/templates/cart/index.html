@@ -81,31 +81,7 @@
 <script>
     $(document).ready(function () {
         //Load page
-        const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-
-        if (cart.length === 0) {
-            $(".no-item-container").removeClass("hidden");
-            $("#cart-container .row").addClass("hidden");
-        }else{
-            $(".no-item-container").addClass("hidden");
-            $("#cart-container .row").removeClass("hidden");
-        }
-
-        $.ajax({
-            url: "/api/cart",
-            method: "POST",
-            contentType: "application/json",
-            data: JSON.stringify({ cart: cart }),
-            success: function (response) {
-                var container = $(".cart-info .card");
-                if (container) {
-                    container.html(response.data);
-                }
-            },
-            error: function (error) {
-                toastError("Lấy giỏ hàng thất bại!!!");
-            },
-        });
+        loadCart();
 
         //Event
         // $("#btn-choose-location").on("click", function () {
@@ -231,6 +207,34 @@
         });
     });
 
+    function loadCart() {
+        const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+        if (cart.length === 0) {
+            $(".no-item-container").removeClass("hidden");
+            $("#cart-container .row").addClass("hidden");
+        }else{
+            $(".no-item-container").addClass("hidden");
+            $("#cart-container .row").removeClass("hidden");
+        }
+
+        $.ajax({
+            url: "/api/cart",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({ cart: cart }),
+            success: function (response) {
+                var container = $(".cart-info .card");
+                if (container) {
+                    container.html(response.data);
+                }
+            },
+            error: function (error) {
+                toastError("Lấy giỏ hàng thất bại!!!");
+            },
+        });
+    }
+    
     function changeCartItemUI(ele, id, quantity, price, type = "increase") {
 
         //Set quanity

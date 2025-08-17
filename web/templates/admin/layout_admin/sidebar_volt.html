@@ -133,7 +133,7 @@
             </li>
 
             <li class="nav-item">
-                <a href="{{ url_for('admin_user_bp.admin_manage_users') }}" class="nav-link">
+                <a href="{{ url_for('admin_user_bp.user_list') }}" class="nav-link">
                     <span class="sidebar-icon">
                         <!-- Icon user, 1 path -->
                         <svg class="icon icon-xs me-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
@@ -142,13 +142,24 @@
                                 d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z" />
                         </svg>
                     </span>
-                    {% if session.get('role') == 'admin' %}
-                    <span class="sidebar-text">Người dùng</span>
-                    {% else %}
                     <span class="sidebar-text">Khách hàng</span>
-                    {% endif %}
                 </a>
             </li>
+            {% if session.get('role') == 'admin' %}
+            <li class="nav-item">
+                <a href="{{ url_for('admin_user_bp.staff_list') }}" class="nav-link">
+                    <span class="sidebar-icon">
+                        <!-- Icon user, 1 path -->
+                        <svg class="icon icon-xs me-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                            fill="currentColor">
+                            <path
+                                d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z" />
+                        </svg>
+                    </span>
+                   <span class="sidebar-text">Người dùng</span>
+                </a>
+            </li>
+            {% endif %}           
 
             <li class="nav-item">
                 <a href="../../pages/transactions.html" class="nav-link">

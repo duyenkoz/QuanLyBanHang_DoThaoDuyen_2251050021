@@ -26,9 +26,9 @@
                 <p class="mb-0">Hiển thị danh sách người dùng</p>
             </div>
             <div class="btn-toolbar mb-2 mb-md-0">
-                {% if session.get('role') == 'admin' %}
+                {% if request.path == '/admin/staff' %}
                 <a href="" class="btn btn-sm btn-gray-800 d-inline-flex align-items-center" data-bs-toggle="modal"
-                    data-bs-target="#addUserModal">
+                    data-bs-target="#addStaffModal">
                     <svg class="icon icon-xs me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -83,14 +83,6 @@
                 </div>
             </div>
         </div>
-        {% set current_role = session.get('role') %}
-        {% if current_role == 'admin' %}
-        {% set filtered_users = products|selectattr('Role', 'equalto', 'staff')|list %}
-        {% elif current_role == 'staff' %}
-        {% set filtered_users = products|selectattr('Role', 'equalto', 'user')|list %}
-        {% else %}
-        {% set filtered_users = [] %}
-        {% endif %}
         <!-- TABLE -->
         <div class="card card-body border-0 shadow table-wrapper table-responsive">
             <table class="table table-hover">
@@ -108,29 +100,55 @@
                     </tr>
                 </thead>
                 <tbody id="userTableBody">
-                    {% if filtered_users|length > 0 %}
-                    {% for user in filtered_users %}
+                    {% if users|length > 0 %}
+                    {% for user in users %}
                     <tr>
-                        <td><a href="#" class="fw-bold">{{ user.ID }}</a></td>
-                        <td><span class="fw-normal">{{ user.Name }}</span></td>
-                        <td><span class="fw-normal">{{ user.Phone }}</span></td>
-                        <td><span class="fw-normal">{{ user.Email }}</span></td>
-                        <td><span class="fw-normal">{{ user.Address }}</span></td>
-                        <td><span class="fw-normal">{{ user.CreatedAt.strftime('%d-%m-%Y') }}</span></td>
-                        {% if current_role == 'admin' %}
+                        <td><a href="#" class="fw-bold">{{ user.Id }}</a></td>
                         <td>
+                            {% if user.Name %}
+                            <span class="fw-normal">{{ user.Name }}</span>
+                            {% else %}
+                            <span class="fw-normal text-muted">Chưa có dữ liệu</span>
+                            {% endif %}
+                        </td>
+                        <td><span class="fw-normal">{{ user.Phone }}</span></td>
+                        <td>
+                            {% if user.Email %}
+                            <span class="fw-normal">{{ user.Email }}</span>
+                            {% else %}
+                            <span class="fw-normal text-muted">Chưa có dữ liệu</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if user.Address %}
+                            <span class="fw-normal">{{ user.Address }}</span>
+                            {% else %}
+                            <span class="fw-normal text-muted">Chưa có dữ liệu</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="fw-normal">
+                                {% if user.Created_at %}
+                                {{ user.Created_at.strftime('%Y-%m-%d %H:%M') }}
+                                {% else %}
+                                Chưa có dữ liệu
+                                {% endif %}
+                            </span>
+                        </td>
 
-                            <a class="dropdown-item rounded" href="#">
-                                <span class="fas fa-trash-alt me-2"></span>Xóa
-                            </a>
-
+                        {% if session.get('role') == 'admin' %}
+                        <td>
+                            <button class="btn btn-sm btn-danger btn-delete-staff" data-id="{{ user.Id }}"
+                                data-phone="{{ user.Phone }}">
+                                Xóa
+                            </button>
                         </td>
                         {% endif %}
                     </tr>
                     {% endfor %}
                     {% else %}
                     <tr id="noDataRow">
-                        <td colspan="{% if current_role == 'admin' %}7{% else %}6{% endif %}"
+                        <td colspan="{% if session.get('role') == 'admin' %}7{% else %}6{% endif %}"
                             class="text-center text-muted">
                             Không có dữ liệu
                         </td>
@@ -141,35 +159,55 @@
         </div>
     </div>
 
-    {% if current_role == 'admin' %}
-    <!-- Modal Thêm người dùng -->
-    <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <form id="addUserForm">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="addUserModalLabel">Thêm người dùng</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
+    <!-- Modal Thêm Staff -->
+    <div class="modal fade" id="addStaffModal" tabindex="-1" aria-labelledby="addStaffModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addStaffModalLabel">Thêm nhân viên mới</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                </div>
+
+                <form id="addStaffForm">
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="phone" class="form-label">Số điện thoại</label>
-                            <input type="text" class="form-control" name="phone" required>
+                            <input type="text" class="form-control" id="phone_input" name="phone" required>
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Mật khẩu</label>
-                            <input type="password" class="form-control" name="password" required>
+                            <input type="password" class="form-control" id="password_input" name="password" required>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                         <button type="submit" class="btn btn-primary">Thêm</button>
                     </div>
-                </div>
-            </form>
+                </form>
+
+            </div>
         </div>
     </div>
-    {% endif %}
+    <!-- Modal xóa -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Xác nhận xóa nhân viên</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Bạn có chắc chắn muốn xóa nhân viên <strong id="staffPhone"></strong>?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-danger" id="btnConfirmDelete">Xóa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- PHÂN TRANG -->
     <div class="pagination">
@@ -199,51 +237,92 @@
 </div>
 
 <script>
-    // document.getElementById('addUserForm').addEventListener('submit', function (e) {
-    //     e.preventDefault();
+    document.getElementById("addStaffForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
 
-    //     let formData = new FormData(this);
+        const phone = document.getElementById("phone_input").value.trim();
+        const password = document.getElementById("password_input").value.trim();
+        if (!phone || !password) { alert("Vui lòng nhập đủ thông tin!"); return; }
 
-    //     fetch("/admin/manage-users/add-user", {
-    //         method: "POST",
-    //         body: formData
-    //     })
-    //         .then(res => res.json())
-    //         .then(data => {
-    //             alert(data.message);
-    //             if (data.success) {
-    //                 // Lấy modal và đóng
-    //                 var modalEl = document.getElementById('addUserModal');
-    //                 var modalInstance = bootstrap.Modal.getInstance(modalEl);
-    //                 if (!modalInstance) modalInstance = new bootstrap.Modal(modalEl);
-    //                 modalInstance.hide();
+        try {
+            const res = await fetch("{{ url_for('admin_user_bp.api_add_staff') }}", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ phone, password })
+            });
+            const data = await res.json();
 
-    //                 // Xóa row "Không có dữ liệu" nếu có
-    //                 var noDataRow = document.getElementById('noDataRow');
-    //                 if (noDataRow) noDataRow.remove();
+            if (res.ok && data.status === "success") {
+                const tbody = document.querySelector("#userTableBody");
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+        <td><a href="#" class="fw-bold">${data.staff.id}</a></td>
+        <td><span class="fw-normal">Chưa có dữ liệu</span></td>
+        <td><span class="fw-normal">${data.staff.phone}</span></td>
+        <td><span class="fw-normal">Chưa có dữ liệu</span></td>
+        <td><span class="fw-normal">Chưa có dữ liệu</span></td>
+        <td><span class="fw-normal">${data.staff.created_at || "Chưa có dữ liệu"}</span></td>
+        {% if session.get('role') == 'admin' %}
+        <td>
+          <a class="dropdown-item rounded" href="#">
+            <span class="fas fa-trash-alt me-2"></span>Xóa
+          </a>
+        </td>
+        {% endif %}
+      `;
+                tbody.prepend(tr);
 
-    //                 // Thêm row mới
-    //                 let tbody = document.getElementById('userTableBody');
-    //                 let newRow = document.createElement('tr');
-    //                 newRow.innerHTML = `
-    //             <td><a href="#" class="fw-bold">${data.new_user.ID}</a></td>
-    //             <td><span class="fw-normal"></span></td>
-    //             <td><span class="fw-normal">${formData.get('phone')}</span></td>
-    //             <td><span class="fw-normal"></span></td>
-    //             <td><span class="fw-normal"></span></td>
-    //             <td><span class="fw-normal">${new Date().toLocaleDateString('vi-VN')}</span></td>
-    //             <td>
-    //                 <a class="dropdown-item rounded" href="#"><span class="fas fa-trash-alt me-2"></span>Xóa</a>
-    //             </td>
-    //         `;
-    //                 tbody.appendChild(newRow);
+                // reset + đóng modal
+                document.getElementById("addStaffForm").reset();
+                const modalEl = document.getElementById("addStaffModal");
+                const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+                modal.hide();
+            } else {
+                alert(data.message || "Có lỗi xảy ra");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Không thể thêm nhân viên!");
+        }
+    });
 
-    //                 // Reset form sau khi modal đóng
-    //                 setTimeout(() => this.reset(), 200);
-    //             }
-    //         })
-    //         .catch(err => console.error(err));
-    // });
+    document.addEventListener("DOMContentLoaded", () => {
+        let staffIdToDelete = null;
+        const staffPhoneSpan = document.getElementById("staffPhone");
+        const confirmDeleteModal = new bootstrap.Modal(document.getElementById("confirmDeleteModal"));
+        const btnConfirmDelete = document.getElementById("btnConfirmDelete");
+
+        // Khi bấm nút Xóa trong bảng
+        document.querySelectorAll(".btn-delete-staff").forEach(btn => {
+            btn.addEventListener("click", () => {
+                staffIdToDelete = btn.dataset.id;
+                staffPhoneSpan.textContent = btn.dataset.phone;
+                confirmDeleteModal.show();
+            });
+        });
+
+        // Khi xác nhận Xóa
+        btnConfirmDelete.addEventListener("click", () => {
+            if (!staffIdToDelete) return;
+
+            fetch(`/admin/api/staff/delete/${staffIdToDelete}`, {
+                method: "DELETE"
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        // Xóa dòng trong bảng
+                        document.querySelector(`.btn-delete-staff[data-id="${staffIdToDelete}"]`)
+                            .closest("tr")
+                            .remove();
+                        confirmDeleteModal.hide();
+                    } else {
+                        alert(data.message || "Có lỗi xảy ra");
+                    }
+                })
+                .catch(() => alert("Lỗi kết nối"));
+        });
+    });
 </script>
 
 {% endblock %}

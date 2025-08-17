@@ -56,3 +56,16 @@ def get_orders_by_status(status=None, page=1, page_size=10, search=None):
 
 
     return orders, pagination, total_records, total_pages
+
+def update_order_status(order_id, new_status):
+    if not new_status:
+        return None, "Thiếu trạng thái mới"
+    
+    order = Order.query.get(order_id)
+    if not order:
+        return None, "Không tìm thấy đơn hàng"
+
+    order.Status = new_status
+    db.session.commit()
+
+    return order, None

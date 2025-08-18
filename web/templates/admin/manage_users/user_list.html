@@ -291,7 +291,7 @@
                                 <td><span class="fw-normal">${data.staff.created_at || "Chưa có dữ liệu"}</span></td>
                                 {% if session.get('role') == 'admin' %}
                                 <td>
-                                <button class="btn btn-sm btn-danger btn-delete-staff" data-id="${data.staff.id}}}"
+                                <button class="btn btn-sm btn-danger btn-delete-staff" data-id="${data.staff.id}"
                                     data-phone="${data.staff.phone}">
                                     Xóa
                                 </button>
@@ -315,44 +315,37 @@
                 }
             }
         });
-    });
+        $(document).on("click", ".btn-delete-staff", function () {
+            const staffIdToDelete = $(this).data("id");
+            const staffPhone = $(this).data("phone");
 
-    document.addEventListener("DOMContentLoaded", () => {
-        let staffIdToDelete = null;
-        const staffPhoneSpan = document.getElementById("staffPhone");
-        const confirmDeleteModal = new bootstrap.Modal(document.getElementById("confirmDeleteModal"));
-        const btnConfirmDelete = document.getElementById("btnConfirmDelete");
+            $("#staffPhone").text(staffPhone);
+            $("#confirmDeleteModal").data("staffId", staffIdToDelete);
 
-        // Khi bấm nút Xóa trong bảng
-        document.querySelectorAll(".btn-delete-staff").forEach(btn => {
-            btn.addEventListener("click", () => {
-                staffIdToDelete = btn.dataset.id;
-                staffPhoneSpan.textContent = btn.dataset.phone;
-                confirmDeleteModal.show();
+            const confirmDeleteModal = new bootstrap.Modal(document.getElementById("confirmDeleteModal"));
+            confirmDeleteModal.show();
+
+            $("#btnConfirmDelete").off("click").on("click", function () {
+                if (!staffIdToDelete) return;
+
+                fetch(`/admin/api/staff/delete/${staffIdToDelete}`, {
+                    method: "DELETE"
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.status === "success") {
+                            $(`.btn-delete-staff[data-id="${staffIdToDelete}"]`)
+                                .closest("tr")
+                                .remove();
+                            confirmDeleteModal.hide();
+                        } else {
+                            alert(data.message || "Có lỗi xảy ra");
+                        }
+                    })
+                    .catch(() => alert("Lỗi kết nối"));
             });
         });
 
-        // Khi xác nhận Xóa
-        btnConfirmDelete.addEventListener("click", () => {
-            if (!staffIdToDelete) return;
-
-            fetch(`/admin/api/staff/delete/${staffIdToDelete}`, {
-                method: "DELETE"
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.status === "success") {
-                        // Xóa dòng trong bảng
-                        document.querySelector(`.btn-delete-staff[data-id="${staffIdToDelete}"]`)
-                            .closest("tr")
-                            .remove();
-                        confirmDeleteModal.hide();
-                    } else {
-                        alert(data.message || "Có lỗi xảy ra");
-                    }
-                })
-                .catch(() => alert("Lỗi kết nối"));
-        });
     });
 </script>
 

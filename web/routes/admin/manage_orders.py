@@ -9,32 +9,10 @@ from web import db
 
 
 admin_order_bp = Blueprint(
-    "admin_order_bp", __name__, url_prefix="/admin/manage-orders"
+    "admin_order_bp", __name__, url_prefix="/admin"
 )
 
-
-# @admin_order_bp.route("/")
-# def admin_manage_orders():
-#     search = request.args.get("search", "").strip()
-    
-
-#     page = int(request.args.get("page", 1))
-
-#     orders, pagination, total_records, total_pages = get_all_orders(
-#         search, page, page_size=10
-#     )
-
-#     return render_template(
-#         "admin/manage_orders/order_list.html",
-#         orders=orders,
-#         pagination=pagination,
-#         currentPage=page,
-#         totalPage=total_pages,
-#         search=search,
-#         total_records=total_records
-#     )
-
-@admin_order_bp.route("/admin/manage-orders", methods=["GET"])
+@admin_order_bp.route("/manage-orders", methods=["GET"])
 def admin_manage_orders():
     status = request.args.get("status") 
     page = int(request.args.get("pageIndex", 1))

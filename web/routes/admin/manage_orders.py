@@ -9,7 +9,7 @@ admin_order_bp = Blueprint(
     "admin_order_bp", __name__, url_prefix="/admin"
 )
 
-@admin_order_bp.route("/manage-orders", methods=["GET"])
+@admin_order_bp.route("/manage-orders", methods=["GET"], strict_slashes=False)
 @admin_required
 def admin_manage_orders():
     status = request.args.get("status") 

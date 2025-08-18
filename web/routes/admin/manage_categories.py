@@ -25,6 +25,8 @@ def admin_manage_categories():
         search=search, page=page, page_size=page_size
     )
 
+    print("categorys:", categories)
+
     return render_template(
         "admin/manage_categories/category_list.html",
         categories=categories,

@@ -14,6 +14,7 @@ from web.routes.cart import cart_bp
 from web.routes.order import order_bp
 from web.routes.admin.manage_orders import admin_order_bp
 from web.routes.admin.manage_users import admin_user_bp
+from web.routes.admin.dashboard import admin_dashboard_bp
 
 
 
@@ -31,15 +32,16 @@ def home():
 #Register route
 app.register_blueprint(products_bp)
 app.register_blueprint(home_bp)
-app.register_blueprint(admin_bp)
-app.register_blueprint(admin_prod_bp)
-app.register_blueprint(admin_cate_bp)
 app.register_blueprint(auth_bp)
 app.register_blueprint(user_bp)
 app.register_blueprint(cart_bp)
 app.register_blueprint(order_bp)
+app.register_blueprint(admin_bp)
+app.register_blueprint(admin_prod_bp)
+app.register_blueprint(admin_cate_bp)
 app.register_blueprint(admin_order_bp)
 app.register_blueprint(admin_user_bp)
+app.register_blueprint(admin_dashboard_bp)
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -13,7 +13,7 @@ admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 @admin_bp.route('/', methods=['GET'])
 @admin_required
 def admin_dashboard():
-    return render_template('admin/layout_admin/base.html')
+    return redirect(url_for('admin_dashboard_bp.dashboard'))
 
 @admin_bp.route("/update_profile", methods=["POST"])
 def update_profile():

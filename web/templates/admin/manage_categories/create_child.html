@@ -17,9 +17,9 @@
 
         <!-- Phân loại -->
         <div class="col-md-3 mb-3">
-          <label for="TypeCode" class="form-label">Phân loại</label>
+          <label for="TypeCode" class="form-label">Phân loại <span class="text-danger">(*)</span></label>
           <select class="form-select" id="TypeCode" name="TypeCode" required>
-            <option value="">-- Chọn phân loại --</option>
+            <!-- <option value="">-- Chọn phân loại --</option> -->
             <option value="DRINK_SIZE_ONLY">Chỉ chọn size</option>
             <option value="DRINK_FULL">Đầy đủ lựa chọn</option>
             <option value="QUANTITY_ONLY">Chỉ chọn số lượng</option>
@@ -32,7 +32,7 @@
           <div class="d-flex mt-2">
             <div class="form-check me-3">
               <input class="form-check-input" type="radio" name="Status" id="Status1" value="1" {% if parent.Status==0
-                %}disabled{% endif %} data-bs-toggle="tooltip" data-bs-placement="top"
+                %}disabled{%else%}checked{% endif %} data-bs-toggle="tooltip" data-bs-placement="top"
                 title="{% if parent.Status == 0 %}Không thể chọn 'Hiện' vì danh mục cha đang bị ẩn.{% endif %}">
               <label class="form-check-label" for="Status1">Hiện</label>
             </div>
@@ -95,6 +95,29 @@
 </div>
 
 <script>
+  $(document).ready(function(){
+    // Validate form
+    $('#childCategoryForm').validate({
+      rules: {
+        Title: {
+          required: true,
+          minlength: 3,
+          maxlength: 255
+        },
+        ParentID: {
+          required: false
+        },
+      },
+      messages: {
+        Title: {
+          required: "Vui lòng nhập tên danh mục",
+          minlength: "Tên danh mục phải ít nhất 3 ký tự",
+          maxlength: "Tên danh mục không được vượt quá 255 ký tự"
+        },
+      }
+    });
+  });
+
   document.getElementById("childCategoryForm").addEventListener("submit", function (e) {
     e.preventDefault();
 

@@ -8,23 +8,23 @@
       <h4 class="mb-0">Thêm sản phẩm mới</h4>
     </div>
     <div class="card-body">
-      <form method="POST" action="/admin/manage-products/create" enctype="multipart/form-data">
+      <form id="create-product-form" method="POST" action="/admin/manage-products/create" enctype="multipart/form-data">
         <div class="row">
           <!-- Tên sản phẩm -->
           <div class="col-md-8 mb-3">
-            <label for="Title" class="form-label">Tên sản phẩm</label>
+            <label for="Title" class="form-label">Tên sản phẩm <span class="text-danger">(*)</span></label>
             <input type="text" class="form-control" id="Title" name="Title" required>
           </div>
 
           <!-- Giá -->
           <div class="col-md-4 mb-3">
-            <label for="Price" class="form-label">Giá (VNĐ)</label>
+            <label for="Price" class="form-label">Giá (VNĐ)<span class="text-danger">(*)</span></label>
             <input type="number" class="form-control" id="Price" name="Price" required>
           </div>
 
           <!-- Danh mục -->
           <div class="col-md-8 mb-3">
-            <label for="CategoryID" class="form-label">Danh mục</label>
+            <label for="CategoryID" class="form-label">Danh mục<span class="text-danger">(*)</span></label>
             <select class="form-select" id="CategoryID" name="CategoryID" required>
               <option value="">-- Chọn danh mục --</option>
               {% for cate in categories %}
@@ -64,8 +64,8 @@
 
           <!-- Upload file -->
           <div class="col-md-8 mb-3">
-            <label for="Image" class="form-label">Chọn tệp</label>
-            <input class="form-control" type="file" id="Image" name="Image" accept="image/*" onchange="previewImage(event)">
+            <label for="Image" class="form-label">Chọn ảnh</label>
+            <input class="form-control" type="file" id="Image" name="Image" accept="image/*" onchange="previewImageView(event)">
           </div>
         </div>
 
@@ -81,7 +81,45 @@
 
 <!-- Preview image script -->
 <script>
-  function previewImage(event) {
+  $(document).ready(function() {
+    // Validate form
+    $('#create-product-form').validate({
+      rules: {
+        Title: {
+          required: true,
+          minlength: 3,
+          maxlength: 255,
+        },
+        Price: {
+          required: true,
+          digits: true,
+          min: 0
+        },
+        CategoryID: {
+          required: true
+        },
+      },
+      messages: {
+        Title: {
+          required: "Vui lòng nhập tên sản phẩm",
+          minlength: "Tên sản phẩm phải ít nhất 3 ký tự",
+          maxlength: "Tên sản phẩm không được vượt quá 255 ký tự",
+        },
+        Price: {
+          required: "Vui lòng nhập giá sản phẩm",
+          digits: "Giá phải là số nguyên dương",
+          min: "Giá không được nhỏ hơn 0"
+        },
+        CategoryID: {
+          required: "Vui lòng chọn danh mục"
+        },
+      },
+      submitHandler: function(form){
+        form.submit();
+      }
+    });
+  });
+  function previewImageView(event) {
     const preview = document.getElementById('imagePreview');
     preview.innerHTML = '';
     const file = event.target.files[0];
@@ -96,5 +134,6 @@
       preview.innerHTML = '<span class="text-muted">No Files Selected</span>';
     }
   }
+
 </script>
 {% endblock %}

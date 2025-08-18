@@ -18,13 +18,16 @@ def staff_list():
     users, total_pages, total_records = get_users_by_role(UserRole.staff, page, page_size, search)
     pagination = calcPagination(page, total_pages)
 
-    return render_template("admin/manage_users/user_list.html",
-                           users=users,
-                           currentPage=page,
-                           totalPage=total_pages,
-                           totalRecords = total_records,
-                           pagination=pagination,
-                           search=search)
+    return render_template(
+        "admin/manage_users/user_list.html",
+        users=users,
+        currentPage=page,
+        totalPage=total_pages,
+        totalRecords = total_records,
+        pagination=pagination,
+        search=search,
+        type="STAFF"
+    )
 
 @admin_user_bp.route("/user")
 @admin_required
@@ -36,13 +39,16 @@ def user_list():
     users, total_pages, total_records = get_users_by_role(UserRole.user, page, page_size, search)
     pagination = calcPagination(page, total_pages)
 
-    return render_template("admin/manage_users/user_list.html",
-                           users=users,
-                           currentPage=page,
-                           totalPage=total_pages,
-                           totalRecords = total_records,
-                           pagination=pagination,
-                           search=search)
+    return render_template(
+        "admin/manage_users/user_list.html",
+        users=users,
+        currentPage=page,
+        totalPage=total_pages,
+        totalRecords = total_records,
+        pagination=pagination,
+        search=search,
+        type="USER"
+    )
 
 @admin_user_bp.route("/api/staff/add", methods=["POST"])
 @admin_required

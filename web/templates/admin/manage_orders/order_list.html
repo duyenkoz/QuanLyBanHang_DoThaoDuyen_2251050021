@@ -19,36 +19,58 @@
                 </svg>
               </a>
             </li>
-            <li class="breadcrumb-item"><a href="#">Admin</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Danh sách đơn hàng</li>
+            <li class="breadcrumb-item"><a href="#">Danh sách đơn</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Tất cả</li>
           </ol>
         </nav>
         <h2 class="h4">Danh sách đơn hàng</h2>
         <p class="mb-0">Hiển thị danh sách đơn hàng của cửa hàng</p>
       </div>
-      <div class="btn-toolbar mb-2 mb-md-0">
+      <!-- <div class="btn-toolbar mb-2 mb-md-0">
         <div class="btn-group ms-2 ms-lg-3">
           <button type="button" class="btn btn-sm btn-outline-gray-600">Chia sẻ</button>
           <button type="button" class="btn btn-sm btn-outline-gray-600">Xuất</button>
         </div>
-      </div>
+      </div> -->
     </div>
     <div class="table-settings mb-4">
       <div class="row align-items-center justify-content-between">
-        <div class="col col-md-6 col-lg-4">
+        <div class="col col-md-8 col-lg-10 gap-2 d-flex flex-wrap justify-content-start">
           <div class="input-group me-2 me-lg-3 fmxw-400">
-            <span class="input-group-text">
+            <!-- <span class="input-group-text">
               <svg class="icon icon-xs" x-description="Heroicon name: solid/search" xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path fill-rule="evenodd"
                   d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
                   clip-rule="evenodd"></path>
               </svg>
-            </span>
-            <input type="text" class="form-control" placeholder="Tìm kiếm">
+            </span> -->
+            <!-- <input type="text" class="form-control" placeholder="Tìm kiếm">             -->
+             <input type="text" name="daterange" class="form-control" id="search-date" placeholder="Tìm kiếm theo ngày">
           </div>
-        </div>
-        <div class="col-4 col-md-2 col-xl-1 ps-md-0 text-end align-items-center justify-content-end">
+          <div class="dropdown">
+              <button class="btn btn-link text-dark dropdown-toggle dropdown-toggle-split m-0 p-1"
+                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Sắp xếp
+                <i class="fa-solid fa-sort"></i>
+                <span class="visually-hidden">Toggle Dropdown</span>
+              </button>
+              <div class="dropdown-menu dropdown-menu-xs dropdown-menu-end pb-0 dropdown-filter">
+                <span class="small ps-3 fw-bold text-dark">Sắp xếp theo</span>
+                <a class="dropdown-item d-flex align-items-center fw-bold" href="#" data-value="CREATED_DESC">Đơn
+                  mới</a>
+                <a class="dropdown-item d-flex align-items-center fw-bold" href="#" data-value="CREATED_ASC">Đơn cũ</a>
+                <a class="dropdown-item d-flex align-items-center fw-bold" href="#" data-value="TOTALPAYMENT_DESC">Giá
+                  cao</a>
+                <a class="dropdown-item d-flex align-items-center fw-bold" href="#" data-value="TOTALPAYMENT_ASC">Giá
+                  thấp</a>
+              </div>
+          </div>
+      </div>
+        <!-- <div class="col col-md-4 col-lg-4">
+          
+        </div> -->
+        <div class="col-4 col-md-4 col-lg-2 ps-md-0 text-end align-items-center justify-content-end">
           <div class="dropdown">
             <button class="btn btn-link text-dark dropdown-toggle dropdown-toggle-split m-0 p-1"
               data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -93,73 +115,73 @@
         </thead>
         <tbody>
           {% if orders|length > 0 %}
-            {% for order in orders %}
-            <tr>
-              <td><a href="#" class="fw-bold">{{ order.ID }}</a></td>
-              <td>{{ order.Created.strftime("%d/%m/%Y %H:%M") }}</td>
-              <td>{{ "{:,.0f}".format(order.TotalPayment) }}₫</td>
-              <td>
-                <div style="font-size: 0.9rem; font-style: italic; font-weight: bold;">
-                  {{ order.CustomerName }}
-                </div>
-                <div class="fw-normal text-truncate d-inline-block" style="max-width: 200px;"
-                  title="{{ order.CustomerAddress }}">
-                  {{ order.CustomerAddress }}
-                </div>
-              </td>
-              <td>
-                {% if order.Status == "WAITING_CONFIRM" %}
-                <span class="badge bg-warning text-dark">Chờ xác nhận</span>
-                {% elif order.Status == "CONFIRMED" %}
-                <span class="badge bg-primary">Đợi giao hàng</span>
-                {% elif order.Status == "SHIPPING" %}
-                <span class="badge bg-info text-dark">Đang giao hàng</span>
-                {% elif order.Status == "DELIVERED" %}
-                <span class="badge bg-success">Hoàn thành</span>
-                {% elif order.Status == "CANCELED" %}
-                <span class="badge bg-danger">Đã hủy</span>
-                {% endif %}
-              </td>
-              <td>
-                <button class="btn btn-link text-success btn-detail" data-id="{{ order.ID }}">
-                  <span class="fa-solid fa-eye"> </span>
-                </button>
-              </td>
-              {% if not status %}
-              <!-- Tất cả: Không có cột hành động -->
-              {% elif status == "WAITING_CONFIRM" %}
-              <td>
-                <button class="btn btn-sm btn-success btn-update-status" data-id="{{ order.ID }}"
-                  data-status="CONFIRMED">Xác nhận</button>
-                <button class="btn btn-sm btn-secondary btn-update-status" data-id="{{ order.ID }}"
-                  data-status="CANCELED">Hủy</button>
-              </td>
-              {% elif status == "CONFIRMED" %}
-              <td>
-                <button class="btn btn-sm btn-primary btn-update-status" data-id="{{ order.ID }}"
-                  data-status="SHIPPING">Giao hàng</button>
-                <button class="btn btn-sm btn-secondary btn-update-status" data-id="{{ order.ID }}"
-                  data-status="CANCELED">Hủy</button>
-              </td>
-              {% elif status == "SHIPPING" %}
-              <td>
-                <button class="btn btn-sm btn-success btn-update-status" data-id="{{ order.ID }}"
-                  data-status="DELIVERED">Hoàn thành</button>
-              </td>
+          {% for order in orders %}
+          <tr>
+            <td><a href="#" class="fw-bold">{{ order.ID }}</a></td>
+            <td>{{ order.Created.strftime("%d/%m/%Y %H:%M") }}</td>
+            <td>{{ "{:,.0f}".format(order.TotalPayment) }}₫</td>
+            <td>
+              <div style="font-size: 0.9rem; font-style: italic; font-weight: bold;">
+                {{ order.CustomerName }}
+              </div>
+              <div class="fw-normal text-truncate d-inline-block" style="max-width: 200px;"
+                title="{{ order.CustomerAddress }}">
+                {{ order.CustomerAddress }}
+              </div>
+            </td>
+            <td>
+              {% if order.Status == "WAITING_CONFIRM" %}
+              <span class="badge bg-warning text-dark">Chờ xác nhận</span>
+              {% elif order.Status == "CONFIRMED" %}
+              <span class="badge bg-primary">Đợi giao hàng</span>
+              {% elif order.Status == "SHIPPING" %}
+              <span class="badge bg-info text-dark">Đang giao hàng</span>
+              {% elif order.Status == "DELIVERED" %}
+              <span class="badge bg-success">Hoàn thành</span>
+              {% elif order.Status == "CANCELED" %}
+              <span class="badge bg-danger">Đã hủy</span>
               {% endif %}
-            </tr>
-            {% endfor %}
+            </td>
+            <td>
+              <button class="btn btn-link text-success btn-detail" data-id="{{ order.ID }}">
+                <span class="fa-solid fa-eye"> </span>
+              </button>
+            </td>
+            {% if not status %}
+            <!-- Tất cả: Không có cột hành động -->
+            {% elif status == "WAITING_CONFIRM" %}
+            <td>
+              <button class="btn btn-sm btn-success btn-update-status" data-id="{{ order.ID }}"
+                data-status="CONFIRMED">Xác nhận</button>
+              <button class="btn btn-sm btn-secondary btn-update-status" data-id="{{ order.ID }}"
+                data-status="CANCELED">Hủy</button>
+            </td>
+            {% elif status == "CONFIRMED" %}
+            <td>
+              <button class="btn btn-sm btn-primary btn-update-status" data-id="{{ order.ID }}"
+                data-status="SHIPPING">Giao hàng</button>
+              <button class="btn btn-sm btn-secondary btn-update-status" data-id="{{ order.ID }}"
+                data-status="CANCELED">Hủy</button>
+            </td>
+            {% elif status == "SHIPPING" %}
+            <td>
+              <button class="btn btn-sm btn-success btn-update-status" data-id="{{ order.ID }}"
+                data-status="DELIVERED">Hoàn thành</button>
+            </td>
+            {% endif %}
+          </tr>
+          {% endfor %}
           {% else %}
-              <tr>
-                <td colspan="{% if has_actions %}7{% else %}6{% endif %}" class="text-center text-muted">
-                  Không có dữ liệu
-                </td>
-              </tr>
+          <tr>
+            <td colspan="{% if has_actions %}7{% else %}6{% endif %}" class="text-center text-muted">
+              Không có dữ liệu
+            </td>
+          </tr>
           {% endif %}
         </tbody>
       </table>
     </div>
-    
+
 
 
     <!-- PHÂN TRANG -->
@@ -204,21 +226,72 @@
   </div>
 
   <script>
-    $('.dropdown-pageSize>a').on('click', function (e) {
-        e.preventDefault();
-        var selectedSize = $(this).data('value');
-        var url = new URL(window.location.href);
-        url.searchParams.set('pageIndex', 1);
-        url.searchParams.set('pageSize', selectedSize);
-        window.location.href = url.toString();
+    $(document).ready(function () {
+      // Lấy giá trị pageSize từ URL hoặc mặc định là 10
+      var pageSize = new URLSearchParams(window.location.search).get('pageSize') || 10;
+      $('.dropdown-pageSize>a').each(function () {
+        if ($(this).data('value') == pageSize) {
+          $(this).append(`<svg class="icon icon-xxs ms-auto" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>`);
+        }
+      });
+      // Lấy giá trị sort từ URL hoặc mặc định là CREATED_DESC
+      var sort = new URLSearchParams(window.location.search).get('sort') || 'CREATED_DESC';
+      $('.dropdown-filter>a').each(function () {
+        if ($(this).data('value') == sort) {
+          $(this).append(`<svg class="icon icon-xxs ms-auto" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>`);
+        }
+      });
+      // Thiết lập daterangepicker
+      var fromDate = new URLSearchParams(window.location.search).get('fromDate');
+      var toDate = new URLSearchParams(window.location.search).get('toDate');
+      $('#search-date').daterangepicker({
+        opens: 'left',
+        startDate: fromDate ? moment(fromDate) : moment().subtract(29, 'days'),
+        endDate: toDate ? moment(toDate) : moment(),
+        locale: {
+          format: 'DD/MM/YYYY'
+        }
+      });
+      $('#search-date').on('hide.daterangepicker', function(ev, picker) {
+        const fromDate = picker.startDate.format('YYYY-MM-DD');
+        const toDate = picker.endDate.format('YYYY-MM-DD');
+        const fromDateParams = new URLSearchParams(window.location.search).get('fromDate');
+        const toDateParams = new URLSearchParams(window.location.search).get('toDate');
+
+        if (fromDate !== fromDateParams || toDate !== toDateParams) {
+          var url = new URL(window.location.href);
+          url.searchParams.set('fromDate', fromDate);
+          url.searchParams.set('toDate', toDate);
+          url.searchParams.set('pageIndex', 1); // Reset to first page
+          window.location.href = url.toString();
+        }
+      });
     });
-    
+
+    $('.dropdown-pageSize>a').on('click', function (e) {
+      e.preventDefault();
+      var selectedSize = $(this).data('value');
+      var url = new URL(window.location.href);
+      url.searchParams.set('pageIndex', 1);
+      url.searchParams.set('pageSize', selectedSize);
+      window.location.href = url.toString();
+    });
+
+    $('.dropdown-filter>a').on('click', function (e) {
+      e.preventDefault();
+      var selectedValue = $(this).data('value');
+      var url = new URL(window.location.href);
+      url.searchParams.set('sort', selectedValue);
+      url.searchParams.set('pageIndex', 1); // Reset to first page
+      window.location.href = url.toString();
+    });
+
     $('.btn-detail').on('click', function () {
       var orderId = $(this).data('id');
       $('#order-id').text(orderId);
 
       $.ajax({
-        url: '/admin/manage-orders/api/detail/' + orderId, // nhớ đúng url
+        url: '/admin/api/detail/' + orderId, // nhớ đúng url
         method: 'GET',
         success: function (response) {
           console.log(response); // debug

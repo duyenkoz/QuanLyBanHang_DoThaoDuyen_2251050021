@@ -84,3 +84,17 @@ def update_product(product_id, title, price, description=None, status=None, cate
 
     db.session.commit()
     return True
+
+def delete_product(product_id):
+    """Xóa sản phẩm theo ID. Trả về True nếu thành công, False nếu thất bại."""
+    try:
+        product = Product.query.get(product_id)
+        if not product:
+            return None  # Không tìm thấy
+
+        db.session.delete(product)
+        db.session.commit()
+        return True
+    except Exception as e:
+        db.session.rollback()
+        return False

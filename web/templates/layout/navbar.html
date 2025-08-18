@@ -40,7 +40,7 @@
               <i class="fa-regular fa-user me-2"></i> Hồ sơ
             </a>
           </li>
-          <li>
+          <!-- <li>
             <a class="dropdown-item d-flex align-items-center" href="/settings">
               <i class="fa-solid fa-gear me-2"></i> Cài đặt
             </a>
@@ -58,7 +58,7 @@
           <li>
             <hr class="dropdown-divider">
           </li>
-          <li>
+          <li> -->
             <a class="dropdown-item d-flex align-items-center text-danger" href="/logout">
               <i class="fa-solid fa-right-from-bracket me-2"></i> Đăng xuất
             </a>
@@ -77,7 +77,7 @@
 <div class="bg-white shadow-sm ">
   <div class="container-fluid">
     <ul class="nav justify-content-center py-1 px-2">
-      <li class="nav-item"><a class="nav-link text-dark" href="#">TRANG CHỦ</a></li>
+      <li class="nav-item"><a class="nav-link text-dark" href="/">TRANG CHỦ</a></li>
 
       <!-- MENU: TypeMenu = 1 -->
       {% if menu|length > 0 %}
@@ -86,7 +86,7 @@
           aria-expanded="false">
           MENU
         </a>
-        <div class="dropdown-menu p-2" aria-labelledby="menuDropdown" style="width: 800px;">
+        <div class="dropdown-menu p-2" aria-labelledby="menuDropdown" style="width: 500px;">
           <div class="row">
             {% for item in menu %}
             <div class="col-md-3">
@@ -110,7 +110,7 @@
           aria-expanded="false">
           SẢN PHẨM ĐÓNG GÓI
         </a>
-        <div class="dropdown-menu p-2" aria-labelledby="SPDropdown" style="width: 800px;">
+        <div class="dropdown-menu p-2" aria-labelledby="SPDropdown" style="width: 500px;">
           <div class="row">
             {% for item in product_package %}
             <div class="col-md-3">

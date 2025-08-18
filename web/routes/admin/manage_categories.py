@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, jsonify, redirect, render_template, request, url_for
+from flask import Blueprint, flash, jsonify, redirect, render_template, request, session, url_for
 
 from web.services.admin.manage_categories import (
     get_categories, 
@@ -24,6 +24,7 @@ def admin_manage_categories():
     categories, pagination, total_records = get_categories(
         search=search, page=page, page_size=page_size
     )
+    role = session.get("role")
 
     print("categorys:", categories)
 
@@ -34,6 +35,7 @@ def admin_manage_categories():
         totalRecords=total_records,
         currentPage=page,
         pagination=pagination,
+        role=role
     )
 
 @admin_cate_bp.route("/manage-categories/<int:parent_id>/children", methods=["GET"])

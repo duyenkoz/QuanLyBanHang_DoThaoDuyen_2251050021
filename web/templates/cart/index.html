@@ -1,4 +1,6 @@
-{% extends 'layout/base.html' %} {% block content %}
+{% extends 'layout/base.html' %}
+<title>Giỏ hàng</title>
+{% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/cart.css') }}">
 <div id="cart-container">
     <div class="row hidden">
@@ -7,21 +9,21 @@
                 <div class="card-body">
                     <div class="card-title">Thông tin nhận hàng</div>
                     <hr />
-                    <form>
+                    <form class="profile-side" method="POST" action="{{ url_for('cart.cart_page') }}">
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="name" class="form-label text-primary fw-bold">Họ tên</label>
-                                <input type="text" class="form-control" id="name" placeholder="Nhập họ tên" value=""
+                                <input type="text" class="form-control" id="name" placeholder="Nhập họ tên" value="{{ user.Name or '' }}"
                                     required />
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="phonenumber" class="form-label text-primary fw-bold">Số điện thoại</label>
                                 <input type="text" class="form-control" id="phonenumber"
-                                    placeholder="Nhập số điện thoại" value="" required />
+                                    placeholder="Nhập số điện thoại" value="{{ user.Phone or '' }}" required />
                             </div>
                             <div class="col-md-12 mb-3">
                                 <label for="address" class="form-label text-primary fw-bold">Địa chỉ</label>
-                                <input type="text" class="form-control" id="address" placeholder="Nhập địa chỉ" value=""
+                                <input type="text" class="form-control" id="address" placeholder="Nhập địa chỉ" value="{{ user.Address or '' }}"
                                     required />
                             </div>
                             <div class="col-md-12 mb-3">

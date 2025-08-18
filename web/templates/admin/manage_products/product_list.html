@@ -107,7 +107,7 @@
                     <tr>
                         <td><a href="#" class="fw-bold">{{ product.ID }}</a></td>
                         <td><span class="fw-normal">{{ product.Title }}</span></td>
-                        <td><span class="fw-bold">{{ product.Price }}₫</span></td>
+                        <td><span class="fw-bold">{{ "{:,.0f}".format(product.Price) }}₫</span></td>
                         <td>
                             <div class="fw-normal text-truncate d-inline-block" style="max-width: 200px;"
                                 title="{{ product.Description }}">
@@ -128,7 +128,7 @@
                                 {{ 'Hiện' if product.Status == 1 else 'Ẩn' }}
                             </span>
                         </td>
-                        <td><span class="fw-normal">{{ product.category.ID }}</span></td>
+                        <td><span class="fw-normal">{{ product.category.Title }}</span></td>
                         <td>
                             <div class="btn-group">
                                 <!-- Nút toggle trạng thái ẩn/hiện -->
@@ -158,13 +158,13 @@
                                         <span class="fas fa-edit me-2"></span>Sửa
                                     </a>
                                     {% if role == 'admin' %}
-                                    <a class="dropdown-item rounded"
-                                        href="{{ url_for('admin_prod_bp.edit_product_get', product_id=product.ID) }}">
-                                        <span class="fas fa-edit me-2"></span>Xóa
+                                    <a class="dropdown-item rounded text-danger btn-delete" href="#"
+                                        data-id="{{ product.ID }}">
+                                        <span class="fa-solid fa-trash-can me-2 text-danger"></span>Xóa
                                     </a>
-                                     {% endif %}
+                                    {% endif %}
                                 </div>
-                                
+
                             </div>
 
                         </td>
@@ -200,6 +200,25 @@
             </nav>
         </div>
         {% endif %}
+    </div>
+</div>
+
+<!-- Modal xác nhận xóa -->
+<div class="modal fade" id="deleteProductModal" tabindex="-1" aria-labelledby="deleteProductLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteProductLabel">Xác nhận xóa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+            <div class="modal-body">
+                Bạn có chắc chắn muốn xóa sản phẩm này không?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Xóa</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -294,6 +313,37 @@
         url.searchParams.set('pageIndex', 1);
         url.searchParams.set('pageSize', selectedSize);
         window.location.href = url.toString();
+    });
+
+    let productIdToDelete = null;
+
+    $(document).on("click", ".btn-delete", function (e) {
+        e.preventDefault();
+        productIdToDelete = $(this).data("id");
+        $("#deleteProductModal").modal("show");
+    });
+
+    $("#confirmDeleteBtn").on("click", function () {
+        if (!productIdToDelete) return;
+
+        $.ajax({
+            url: `/admin/api/manage-products/delete-product/${productIdToDelete}`,
+            type: "DELETE",
+            success: function (response) {
+                if (response.status_code === "SUCCESS") {
+                    // Xóa row khỏi bảng
+                    $(`a[data-id='${productIdToDelete}']`).closest("tr").remove();
+                    toastSuccess(response.message);
+                } else {
+                    toastError(response.message);
+                }
+                $("#deleteProductModal").modal("hide");
+            },
+            error: function () {
+                toastError("Đã xảy ra lỗi khi xóa sản phẩm!");
+                $("#deleteProductModal").modal("hide");
+            }
+        });
     });
 
 </script>

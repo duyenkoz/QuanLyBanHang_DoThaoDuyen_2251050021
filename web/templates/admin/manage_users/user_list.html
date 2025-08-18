@@ -1,5 +1,5 @@
 {% extends 'admin/layout_admin/base.html' %}
-{% block title %}Quản lý sản phẩm{% endblock %}
+{% block title %}Quản lý người dùng{% endblock %}
 {% block content %}
 <div class="">
     <div class="table-wrapper">
@@ -120,7 +120,10 @@
                         </td>
                         <td>
                             {% if user.Address %}
-                            <span class="fw-normal">{{ user.Address }}</span>
+                            <div class="fw-normal text-truncate d-inline-block" style="max-width: 200px;"
+                                title="{{ user.Address }}">
+                                {{ user.Address }}
+                            </div>
                             {% else %}
                             <span class="fw-normal text-muted">Chưa có dữ liệu</span>
                             {% endif %}

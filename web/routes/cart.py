@@ -1,16 +1,22 @@
-from flask import Blueprint, jsonify, render_template, request
+from flask import Blueprint, jsonify, render_template, request, session
 from web.models.topping import Topping
 from web.services import cart as cartService
 from web.common.api_response import APIResponse, ResponseStatus
 from web.services import product as productService
+from web.services import user as userService
+
+
 
 cart_bp = Blueprint("cart", __name__)
 
 
-@cart_bp.route("/cart", methods=["GET"])
+@cart_bp.route("/cart", methods=["GET", "POST"])
 def cart_page():
-    return render_template("cart/index.html")
+    user_id = session.get("user_id")
 
+    user = userService.get_user_by_id(user_id)
+
+    return render_template("cart/index.html", user=user)
 
 # API
 @cart_bp.post("/api/cart")

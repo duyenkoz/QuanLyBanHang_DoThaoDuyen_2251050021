@@ -12,7 +12,7 @@
       <div class="row">
         <!-- Tên danh mục -->
         <div class="col-md-6 mb-3">
-          <label for="Title" class="form-label">Tên danh mục</label>
+          <label for="Title" class="form-label">Tên danh mục <span class="text-danger">(*)</span></label>
           <input type="text" class="form-control" id="Title" name="Title" required>
         </div>
 
@@ -29,9 +29,9 @@
 
         <!-- Loại -->
         <div class="col-md-6 mb-3" id="typeWrapper">
-          <label for="Type" class="form-label">Loại</label>
+          <label for="Type" class="form-label">Loại <span class="text-danger">(*)</span></label>
           <select class="form-select" id="TypeSelect" name="Type">
-            <option value="">-- Chọn loại --</option>
+            <!-- <option value="">-- Chọn loại --</option> -->
             <option value="1">Menu</option>
             <option value="2">Sản phẩm đóng gói</option>
           </select>
@@ -39,9 +39,9 @@
 
         <!-- Phân loại -->
         <div class="col-md-6 mb-3 d-none" id="typeCodeWrapper">
-          <label for="TypeCode" class="form-label">Phân loại</label>
+          <label for="TypeCode" class="form-label">Phân loại <span class="text-danger">(*)</span></label>
           <select class="form-select" id="TypeCodeSelect" name="TypeCode">
-            <option value="">-- Chọn phân loại --</option>
+            <!-- <option value="">-- Chọn phân loại --</option> -->
             <option value="DRINK_SIZE_ONLY">Chỉ chọn size</option>
             <option value="DRINK_FULL">Đầy đủ lựa chọn</option>
             <option value="QUANTITY_ONLY">Chỉ chọn số lượng</option>
@@ -74,6 +74,29 @@
 </div>
 
 <script>
+  $(document).ready(function(){
+    // Validate form
+    $('#categoryForm').validate({
+      rules: {
+        Title: {
+          required: true,
+          minlength: 3,
+          maxlength: 255
+        },
+        ParentID: {
+          required: false
+        },
+      },
+      messages: {
+        Title: {
+          required: "Vui lòng nhập tên danh mục",
+          minlength: "Tên danh mục phải ít nhất 3 ký tự",
+          maxlength: "Tên danh mục không được vượt quá 255 ký tự"
+        },
+      }
+    });
+  });
+
   document.addEventListener("DOMContentLoaded", function () {
     const parentSelect = document.getElementById("ParentID");
     const typeWrapper = document.getElementById("typeWrapper");

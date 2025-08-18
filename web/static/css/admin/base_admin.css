@@ -19,3 +19,8 @@ body {
 .nav ul, .nav li {
     width: 100%!important;
 }
+
+.error {
+    color: red;
+    font-size: 14px;
+}

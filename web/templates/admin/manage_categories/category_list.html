@@ -19,8 +19,8 @@
                 </svg>
               </a>
             </li>
-            <li class="breadcrumb-item"><a href="#">Volt</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Transactions</li>
+            <li class="breadcrumb-item"><a href="#">Danh sách</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Danh mục</li>
           </ol>
         </nav>
         <h2 class="h4">Danh sách danh mục</h2>
@@ -34,17 +34,17 @@
           </svg>
           Thêm danh mục
         </a>
-        <div class="btn-group ms-2 ms-lg-3">
+        <!-- <div class="btn-group ms-2 ms-lg-3">
           <button type="button" class="btn btn-sm btn-outline-gray-600">Chia sẻ</button>
           <button type="button" class="btn btn-sm btn-outline-gray-600">Xuất</button>
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="table-settings mb-4">
       <div class="row align-items-center justify-content-between">
         <div class="col col-md-6 col-lg-3 col-xl-4">
-          <div class="input-group me-2 me-lg-3 fmxw-400">
-            <span class="input-group-text">
+          <!-- <div class="input-group me-2 me-lg-3 fmxw-400">
+            <span id="search-box-icon" class="input-group-text" role="button">
               <svg class="icon icon-xs" x-description="Heroicon name: solid/search" xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path fill-rule="evenodd"
@@ -52,71 +52,8 @@
                   clip-rule="evenodd"></path>
               </svg>
             </span>
-            <input type="text" class="form-control" placeholder="Tìm kiếm">
-            <button class="btn" type="button" id="btn-filter">
-              <svg class="icon icon-xs" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L15 13.414V19a1 1 0 01-1.447.894l-4-2A1 1 0 019 17v-3.586L3.293 6.707A1 1 0 013 6V4z" />
-              </svg>
-            </button>
-            <div id="filter-dropdown" class="dropdown-menu p-3 shadow" class="dropdown-menu p-3 shadow"
-              style="display:none; position:absolute; top:100%; right:0; z-index:100; width:250px; max-height:200px; overflow-y:auto;">
-              <!-- Trạng thái -->
-              <div class="mb-3">
-                <strong>Trạng thái:</strong><br>
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="statusFilter" id="status-all" value="" checked>
-                  <label class="form-check-label" for="status-all">Tất cả</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="statusFilter" id="status-hidden" value="0">
-                  <label class="form-check-label" for="status-hidden">Ẩn</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="statusFilter" id="status-visible" value="1">
-                  <label class="form-check-label" for="status-visible">Hiển thị</label>
-                </div>
-              </div>
-              <hr>
-              <!-- Phân loại -->
-              <div class="mb-3">
-                <strong>Phân loại:</strong><br>
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="classifyFilter" id="classify-all" value="" checked>
-                  <label class="form-check-label" for="classify-all">Tất cả</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="classifyFilter" id="classify-size"
-                    value="DRINK_SIZE_ONLY">
-                  <label class="form-check-label" for="classify-size">Chọn size</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="classifyFilter" id="classify-full"
-                    value="DRINK_FULL">
-                  <label class="form-check-label" for="classify-full">Đủ lựa chọn</label>
-                </div>
-              </div>
-              <hr>
-              <!-- Loại -->
-              <div class="mb-3">
-                <strong>Loại:</strong><br>
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="typeFilter" id="type-all" value="" checked>
-                  <label class="form-check-label" for="type-all">Tất cả</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="typeFilter" id="type-menu" value="1">
-                  <label class="form-check-label" for="type-menu">Menu</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="typeFilter" id="type-pack" value="2">
-                  <label class="form-check-label" for="type-pack">Sản phẩm đóng gói</label>
-                </div>
-              </div>
-              <button class="btn btn-primary btn-sm" id="apply-filter">Áp dụng</button>
-            </div>
-          </div>
+            <input id="search-box" type="text" class="form-control" placeholder="Tìm kiếm" value="{{ search}}">
+          </div> -->
         </div>
         <div class="col-4 col-md-2 col-xl-1 ps-md-0 text-end">
           <div class="dropdown">
@@ -162,99 +99,99 @@
         </thead>
         <tbody>
           {% for cate in categories %}
-          {% if not cate.ParentID %}
-          <tr class="category-row parent-row" data-id="{{ cate.ID }}">
-            <td>
-              <button class="btn btn-sm btn-toggle" data-id="{{ cate.ID }}">
-                <i class="fas fa-chevron-down"></i>
-              </button>
-            </td>
-            <td>{{ cate.ID }}
-            </td>
-            <td>{{ cate.Title }}</td>
-            <td>
-              {% if cate.Type == 1 %}
-              Menu
-              {% elif cate.Type == 2 %}
-              Sản phẩm đóng gói
-              {% else %}
-              Không xác định
-              {% endif %}
-            </td>
-            <td>
-              <span class="cate-status badge {{ 'bg-success' if cate.Status == 1 else 'bg-danger' }}">
-                {{ 'Hiện' if cate.Status == 1 else 'Ẩn' }}
-              </span>
-            </td>
-            <td>
-              -
-            </td>
-            <td>
-              <div class="btn-group">
-                <!-- Dropdown chứa nút sửa -->
-                <button class="btn btn-link text-dark dropdown-toggle dropdown-toggle-split m-0 p-0"
-                  data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <span class="icon icon-sm">
-                    <span class="fas fa-ellipsis-h icon-dark"></span>
-                  </span>
-                  <span class="visually-hidden">Toggle Dropdown</span>
-                </button>
-                <div class="dropdown-menu py-0">
-                  <a class="dropdown-item btn-edit" href="#" data-id="{{ cate.ID }}" data-is-parent="1">
-                    <span class="fas fa-edit me-2"></span>Sửa
-                  </a>
-                  {% if cate.Status == 1 %}
-                  <a href="#" class="dropdown-item text-danger btn-toggle-status" data-id="{{ cate.ID }}">
-                    <span class="fas fa-eye-slash me-2"></span>Ẩn
-                  </a>
+            {% if not cate.ParentID %}
+              <tr class="category-row parent-row" data-id="{{ cate.ID }}">
+                <td>
+                  <button class="btn btn-sm btn-toggle" data-id="{{ cate.ID }}">
+                    <i class="fas fa-chevron-down"></i>
+                  </button>
+                </td>
+                <td>{{ cate.ID }}
+                </td>
+                <td>{{ cate.Title }}</td>
+                <td>
+                  {% if cate.Type == 1 %}
+                  Menu
+                  {% elif cate.Type == 2 %}
+                  Sản phẩm đóng gói
                   {% else %}
-                  <a href="#" class="dropdown-item text-success btn-toggle-status" data-id="{{ cate.ID }}">
-                    <span class="fas fa-eye me-2"></span>Hiện
-                  </a>
+                  Không xác định
                   {% endif %}
-                </div>
-                <a class="dropdown-item text-info" href="/admin/manage-categories/{{ cate.ID }}/children"><span
-                    class="fa-solid fa-plus me-2"></span></a>
-              </div>
-            </td>
-          </tr>
-          {% for child in cate.children %}
-          <tr data-parent-id="{{ cate.ParentID }}" class="child-row child-of-{{ cate.ID }} ">
-            <td></td>
-            <td>{{ child.ID }}</td>
-            <td>{{ child.Title }}</td>
-            <td>-</td>
-            <td>
-              <span class="child-status badge {{ 'bg-success' if child.Status == 1 else 'bg-danger' }}">
-                {{ 'Hiện' if child.Status == 1 else 'Ẩn' }}
-              </span>
-            </td>
-            <td>
-              {% if child.TypeCode == 'DRINK_SIZE_ONLY' %}
-              Chọn size
-              {% elif child.TypeCode == 'DRINK_FULL' %}
-              Đủ lựa chọn
-              {% elif child.TypeCode == 'QUANTITY_ONLY' %}
-              Chọn số lượng
-              {% else %}
-              Không xác định
-              {% endif %}
-            </td>
-            <td>
-              <div class="btn-group">
-                {% if child.Status == 1 %}
-                <button class="btn btn-link text-danger btn-toggle-status m-0 p-0 
-              {% if cate.Status == 0 %}disabled{% endif %}" data-id="{{ child.ID }}" {% if cate.Status==0 %}disabled{%
-                  endif %}>
-                  <span class="fas fa-eye-slash me-1"></span>
-                </button>
-                {% elif child.Status == 0 %}
-                <button class="btn btn-link text-success btn-toggle-status m-0 p-0 
-              {% if cate.Status == 0 %}disabled{% endif %}" data-id="{{ child.ID }}" {% if cate.Status==0 %}disabled{%
-                  endif %}>
-                  <span class="fas fa-eye me-1"></span>
-                </button>
-                {% endif %}
+                </td>
+                <td>
+                  <span class="cate-status badge {{ 'bg-success' if cate.Status == 1 else 'bg-danger' }}">
+                    {{ 'Hiện' if cate.Status == 1 else 'Ẩn' }}
+                  </span>
+                </td>
+                <td>
+                  -
+                </td>
+                <td>
+                  <div class="btn-group">
+                    <!-- Dropdown chứa nút sửa -->
+                    <button class="btn btn-link text-dark dropdown-toggle dropdown-toggle-split m-0 p-0"
+                      data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <span class="icon icon-sm">
+                        <span class="fas fa-ellipsis-h icon-dark"></span>
+                      </span>
+                      <span class="visually-hidden">Toggle Dropdown</span>
+                    </button>
+                    <div class="dropdown-menu py-0">
+                      <a class="dropdown-item btn-edit" href="#" data-id="{{ cate.ID }}" data-is-parent="1">
+                        <span class="fas fa-edit me-2"></span>Sửa
+                      </a>
+                      {% if cate.Status == 1 %}
+                      <a href="#" class="dropdown-item text-danger btn-toggle-status" data-id="{{ cate.ID }}">
+                        <span class="fas fa-eye-slash me-2"></span>Ẩn
+                      </a>
+                      {% else %}
+                      <a href="#" class="dropdown-item text-success btn-toggle-status" data-id="{{ cate.ID }}">
+                        <span class="fas fa-eye me-2"></span>Hiện
+                      </a>
+                      {% endif %}
+                    </div>
+                    <a class="dropdown-item text-info" href="/admin/manage-categories/{{ cate.ID }}/children"><span
+                        class="fa-solid fa-plus me-2"></span></a>
+                  </div>
+                </td>
+              </tr>
+              {% for child in cate.children %}
+              <tr data-parent-id="{{ cate.ParentID }}" class="child-row child-of-{{ cate.ID }} ">
+                <td></td>
+                <td>{{ child.ID }}</td>
+                <td>{{ child.Title }}</td>
+                <td>-</td>
+                <td>
+                  <span class="child-status badge {{ 'bg-success' if child.Status == 1 else 'bg-danger' }}">
+                    {{ 'Hiện' if child.Status == 1 else 'Ẩn' }}
+                  </span>
+                </td>
+                <td>
+                  {% if child.TypeCode == 'DRINK_SIZE_ONLY' %}
+                  Chọn size
+                  {% elif child.TypeCode == 'DRINK_FULL' %}
+                  Đủ lựa chọn
+                  {% elif child.TypeCode == 'QUANTITY_ONLY' %}
+                  Chọn số lượng
+                  {% else %}
+                  Không xác định
+                  {% endif %}
+                </td>
+                <td>
+                  <div class="btn-group">
+                    {% if child.Status == 1 %}
+                    <button class="btn btn-link text-danger btn-toggle-status m-0 p-0 
+                  {% if cate.Status == 0 %}disabled{% endif %}" data-id="{{ child.ID }}" {% if cate.Status==0 %}disabled{%
+                      endif %}>
+                      <span class="fas fa-eye-slash me-1"></span>
+                    </button>
+                    {% elif child.Status == 0 %}
+                    <button class="btn btn-link text-success btn-toggle-status m-0 p-0 
+                  {% if cate.Status == 0 %}disabled{% endif %}" data-id="{{ child.ID }}" {% if cate.Status==0 %}disabled{%
+                      endif %}>
+                      <span class="fas fa-eye me-1"></span>
+                    </button>
+                    {% endif %}
 
 
                 <!-- Dropdown chứa nút sửa -->
@@ -333,6 +270,14 @@
 {% endwith %}
 
 <script>
+  $(document).ready(function(){
+    var pageSize = new URLSearchParams(window.location.search).get('pageSize') || 10;
+    $('.dropdown-pageSize>a').each(function () {
+        if ($(this).data('value') == pageSize) {
+            $(this).append(`<svg class="icon icon-xxs ms-auto" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>`);
+        }
+    });
+  });
   $('.dropdown-pageSize>a').on('click', function (e) {
     e.preventDefault();
     var selectedSize = $(this).data('value');
@@ -353,7 +298,7 @@
       });
 
       icon.classList.toggle('fa-chevron-down');
-      icon.classList.toggle('fa-chevron-up');
+      icon.classList.toggle('fa-chevron-right');
     });
   });
 
@@ -530,31 +475,27 @@
   $(document).on('click', '.btn-cancel', function () {
     location.reload();
   });
-  const btnFilter = document.getElementById('btn-filter');
-  const dropdown = document.getElementById('filter-dropdown');
 
-  btnFilter.addEventListener('click', function (e) {
-    e.stopPropagation();
-    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-  });
-
-  // Đóng khi click ra ngoài
-  document.addEventListener('click', function (e) {
-    if (!dropdown.contains(e.target) && e.target !== btnFilter) {
-      dropdown.style.display = 'none';
+  $('#search-box').on('keydown', function (e) {
+    var preSearchValue = "{{ search }}";
+    var searchValue = $(this).val().trim();
+    if (e.key === 'Enter' && searchValue !== preSearchValue) {
+      e.preventDefault(); // Ngăn chặn hành động mặc định của Enter
+      var url = new URL(window.location.href);
+      url.searchParams.set('search', searchValue);
+      url.searchParams.set('pageIndex', 1); // Reset to first page on search
+      window.location.href = url.toString();
     }
   });
 
-  // Xử lý nút áp dụng filter
-  document.getElementById('apply-filter').addEventListener('click', function () {
-    const status = document.querySelector('input[name="statusFilter"]:checked').value;
-    const classify = document.querySelector('input[name="classifyFilter"]:checked').value;
-    const type = document.querySelector('input[name="typeFilter"]:checked').value;
-
-    // Có thể gửi ajax hoặc reload url với query params
-    console.log({ status, classify, type });
-    dropdown.style.display = 'none';
+  $('#search-box-icon').on('click', function () {
+    var searchValue = $('#search-box').val().trim();
+    if (searchValue !== "{{ search }}") {
+      var url = new URL(window.location.href);
+      url.searchParams.set('search', searchValue);
+      url.searchParams.set('pageIndex', 1); // Reset to first page on search
+      window.location.href = url.toString();
+    }
   });
-
 </script>
 {% endblock %}

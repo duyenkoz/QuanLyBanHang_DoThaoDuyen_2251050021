@@ -1,26 +1,28 @@
-# web/admin/order.py
-import datetime
 from flask import Blueprint, jsonify, render_template, request
 from web.common.api_response import APIResponse, ResponseStatus
-from web.models import Order  # Model đơn hàng
-from web.services.admin.manage_orders import get_orders_by_status, update_order_status
+from web.common.auth import admin_required
+from web.services.admin import manage_orders as manageOrdersService
 from web.services import order as orderService
-from web import db
 
 
 admin_order_bp = Blueprint(
     "admin_order_bp", __name__, url_prefix="/admin"
 )
 
-@admin_order_bp.route("/manage-orders", methods=["GET"])
+@admin_order_bp.route("/manage-orders", methods=["GET"], strict_slashes=False)
+@admin_required
 def admin_manage_orders():
     status = request.args.get("status") 
     page = int(request.args.get("pageIndex", 1))
+    pageSize = int(request.args.get("pageSize", 10))
     search = request.args.get("search", "").strip()
+    sort = request.args.get("sort", "CREATED_DESC")
+    fromDate = request.args.get("fromDate")
+    toDate = request.args.get("toDate")
 
     has_actions = status in ["WAITING_CONFIRM", "CONFIRMED", "SHIPPING"]
 
-    orders, pagination, total_records, total_pages = get_orders_by_status(status, page, 10, search)
+    orders, pagination, total_records, total_pages = manageOrdersService.get_orders_by_status(status, page, pageSize, search, sort, fromDate, toDate)
 
     return render_template(
         "admin/manage_orders/order_list.html",
@@ -35,6 +37,7 @@ def admin_manage_orders():
     )
 
 @admin_order_bp.route("/api/detail/<int:order_id>", methods=["GET"])
+@admin_required
 def api_order_detail(order_id):
     order = orderService.get_order_detail_by_orderid(order_id)
     if not order:
@@ -50,10 +53,11 @@ def api_order_detail(order_id):
     return jsonify(response.to_dict())
 
 @admin_order_bp.route("/api/update-status/<int:order_id>", methods=["POST"])
+@admin_required
 def api_update_order_status(order_id):
     new_status = request.json.get("status")
 
-    order, error = update_order_status(order_id, new_status)  
+    order, error = manageOrdersService.update_order_status(order_id, new_status)  
 
     if error:
         return jsonify(APIResponse(

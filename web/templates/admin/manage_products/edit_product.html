@@ -8,7 +8,7 @@
             <h4 class="mb-0">Sửa sản phẩm</h4>
         </div>
         <div class="card-body">
-            <form method="POST" action="/admin/manage-products/edit/{{ product.ID }}" enctype="multipart/form-data">
+            <form id="edit-product-form" method="POST" action="/admin/manage-products/edit/{{ product.ID }}" enctype="multipart/form-data">
                 <div class="row">
                     <!-- Tên sản phẩm -->
                     <div class="col-md-8 mb-3">
@@ -78,7 +78,7 @@
                     <div class="col-md-9 mb-3">
                         <label for="Image" class="form-label">Chọn hình ảnh mới</label>
                         <input class="form-control" type="file" id="Image" name="Image" accept="image/*"
-                            onchange="previewImage(event)">
+                            onchange="previewImageView(event)">
                     </div>
                 </div>
 
@@ -95,7 +95,45 @@
 
 <!-- Preview image script -->
 <script>
-    function previewImage(event) {
+    $(document).ready(function() {
+        // Validate form
+        $('#edit-product-form').validate({
+        rules: {
+            Title: {
+                required: true,
+                minlength: 3,
+                maxlength: 255
+            },
+            Price: {
+                required: true,
+                digits: true,
+                min: 0
+            },
+            CategoryID: {
+                required: true
+            },
+        },
+        messages: {
+            Title: {
+                required: "Vui lòng nhập tên sản phẩm",
+                minlength: "Tên sản phẩm phải ít nhất 3 ký tự",
+                maxlength: "Tên sản phẩm không được vượt quá 255 ký tự"
+            },
+            Price: {
+                required: "Vui lòng nhập giá sản phẩm",
+                digits: "Giá phải là số nguyên dương",
+                min: "Giá không được nhỏ hơn 0"
+            },
+            CategoryID: {
+                required: "Vui lòng chọn danh mục"
+            },
+        },
+        submitHandler: function(form){
+            form.submit();
+        }
+        });
+    });
+    function previewImageView(event) {
         const preview = document.getElementById('imagePreview');
         preview.innerHTML = '';
         const file = event.target.files[0];

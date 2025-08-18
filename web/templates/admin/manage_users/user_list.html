@@ -18,12 +18,11 @@
                                 </svg>
                             </a>
                         </li>
-                        <li class="breadcrumb-item"><a href="#">Volt</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Transactions</li>
+                        <li class="breadcrumb-item active"><a href="#">{% if type == "STAFF" %} Nhân viên {%else%} Khách hàng {%endif%}</a></li>
                     </ol>
                 </nav>
-                <h2 class="h4">Danh sách người dùng</h2>
-                <p class="mb-0">Hiển thị danh sách người dùng</p>
+                <h2 class="h4">Danh sách {% if type == "STAFF" %} Nhân viên {%else%} Khách hàng {%endif%}</h2>
+                <p class="mb-0">Hiển thị danh sách {% if type == "STAFF" %} Nhân viên {%else%} Khách hàng {%endif%}</p>
             </div>
             <div class="btn-toolbar mb-2 mb-md-0">
                 {% if request.path == '/admin/staff' %}
@@ -172,14 +171,14 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
                 </div>
 
-                <form id="addStaffForm">
+                <form id="addStaffForm" method="POST">
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="phone" class="form-label">Số điện thoại</label>
+                            <label for="phone" class="form-label">Số điện thoại <span class="text-danger">(*)</span></label>
                             <input type="text" class="form-control" id="phone_input" name="phone" required>
                         </div>
                         <div class="mb-3">
-                            <label for="password" class="form-label">Mật khẩu</label>
+                            <label for="password" class="form-label">Mật khẩu <span class="text-danger">(*)</span></label>
                             <input type="password" class="form-control" id="password_input" name="password" required>
                         </div>
                     </div>
@@ -240,91 +239,113 @@
 </div>
 
 <script>
-    document.getElementById("addStaffForm").addEventListener("submit", async function (e) {
-        e.preventDefault();
+    $(document).ready(function(){
+        // Validate form
+        $('#addStaffForm').validate({
+            rules: {
+                phone: {
+                    required: true,
+                    digits: true,
+                    minlength: 10,
+                    maxlength: 10,
+                },
+                password: {
+                    required: true,
+                    minlength: 4,
+                },
+            },
+            messages: {
+                phone: {
+                    required: "Vui lòng nhập số điện thoại",
+                    digits: "Số điện thoại phải là số nguyên dương",
+                    minlength: "Số điện thoại phải có 10 chữ số",
+                    maxlength: "Số điện thoại không được quá 10 chữ số"
+                },
+                password: {
+                    required: "Vui lòng nhập mật khẩu",
+                    minlength: "Mật khẩu phải có ít nhất 4 ký tự"
+                }
+            },
+            submitHandler: async function(form, e) {
+                e.preventDefault(); // Ngăn chặn submit mặc định
+                const phone = $('#phone_input').val().trim();
+                const password = $('#password_input').val().trim();
 
-        const phone = document.getElementById("phone_input").value.trim();
-        const password = document.getElementById("password_input").value.trim();
-        if (!phone || !password) { alert("Vui lòng nhập đủ thông tin!"); return; }
+                try {
+                    const res = await fetch("/admin/api/staff/add", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ phone, password })
+                    });
+                    const data = await res.json();
 
-        try {
-            const res = await fetch("{{ url_for('admin_user_bp.api_add_staff') }}", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ phone, password })
-            });
-            const data = await res.json();
+                    if (res.ok && data.status === "success") {
+                        const tbody = $("#userTableBody");
+                        const tr = $(`
+                            <tr>
+                                <td><a href="#" class="fw-bold">${data.staff.id}</a></td>
+                                <td><span class="fw-normal text-muted">Chưa có dữ liệu</span></td>
+                                <td><span class="fw-normal">${data.staff.phone}</span></td>
+                                <td><span class="fw-normal text-muted">Chưa có dữ liệu</span></td>
+                                <td><span class="fw-normal text-muted">Chưa có dữ liệu</span></td>
+                                <td><span class="fw-normal">${data.staff.created_at || "Chưa có dữ liệu"}</span></td>
+                                {% if session.get('role') == 'admin' %}
+                                <td>
+                                <button class="btn btn-sm btn-danger btn-delete-staff" data-id="${data.staff.id}"
+                                    data-phone="${data.staff.phone}">
+                                    Xóa
+                                </button>
+                                </td>
+                                {% endif %}
+                            </tr>
+                        `);
+                        tbody.prepend(tr);
 
-            if (res.ok && data.status === "success") {
-                const tbody = document.querySelector("#userTableBody");
-                const tr = document.createElement("tr");
-                tr.innerHTML = `
-        <td><a href="#" class="fw-bold">${data.staff.id}</a></td>
-        <td><span class="fw-normal">Chưa có dữ liệu</span></td>
-        <td><span class="fw-normal">${data.staff.phone}</span></td>
-        <td><span class="fw-normal">Chưa có dữ liệu</span></td>
-        <td><span class="fw-normal">Chưa có dữ liệu</span></td>
-        <td><span class="fw-normal">${data.staff.created_at || "Chưa có dữ liệu"}</span></td>
-        {% if session.get('role') == 'admin' %}
-        <td>
-          <a class="dropdown-item rounded" href="#">
-            <span class="fas fa-trash-alt me-2"></span>Xóa
-          </a>
-        </td>
-        {% endif %}
-      `;
-                tbody.prepend(tr);
-
-                // reset + đóng modal
-                document.getElementById("addStaffForm").reset();
-                const modalEl = document.getElementById("addStaffModal");
-                const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-                modal.hide();
-            } else {
-                alert(data.message || "Có lỗi xảy ra");
-            }
-        } catch (err) {
-            console.error(err);
-            alert("Không thể thêm nhân viên!");
-        }
-    });
-
-    document.addEventListener("DOMContentLoaded", () => {
-        let staffIdToDelete = null;
-        const staffPhoneSpan = document.getElementById("staffPhone");
-        const confirmDeleteModal = new bootstrap.Modal(document.getElementById("confirmDeleteModal"));
-        const btnConfirmDelete = document.getElementById("btnConfirmDelete");
-
-        // Khi bấm nút Xóa trong bảng
-        document.querySelectorAll(".btn-delete-staff").forEach(btn => {
-            btn.addEventListener("click", () => {
-                staffIdToDelete = btn.dataset.id;
-                staffPhoneSpan.textContent = btn.dataset.phone;
-                confirmDeleteModal.show();
-            });
-        });
-
-        // Khi xác nhận Xóa
-        btnConfirmDelete.addEventListener("click", () => {
-            if (!staffIdToDelete) return;
-
-            fetch(`/admin/api/staff/delete/${staffIdToDelete}`, {
-                method: "DELETE"
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.status === "success") {
-                        // Xóa dòng trong bảng
-                        document.querySelector(`.btn-delete-staff[data-id="${staffIdToDelete}"]`)
-                            .closest("tr")
-                            .remove();
-                        confirmDeleteModal.hide();
+                        // reset + đóng modal
+                        form.reset();
+                        const modalEl = document.getElementById("addStaffModal");
+                        const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+                        modal.hide();
                     } else {
                         alert(data.message || "Có lỗi xảy ra");
                     }
-                })
-                .catch(() => alert("Lỗi kết nối"));
+                } catch (err) {
+                    console.error(err);
+                    alert("Không thể thêm nhân viên!");
+                }
+            }
         });
+        $(document).on("click", ".btn-delete-staff", function () {
+            const staffIdToDelete = $(this).data("id");
+            const staffPhone = $(this).data("phone");
+
+            $("#staffPhone").text(staffPhone);
+            $("#confirmDeleteModal").data("staffId", staffIdToDelete);
+
+            const confirmDeleteModal = new bootstrap.Modal(document.getElementById("confirmDeleteModal"));
+            confirmDeleteModal.show();
+
+            $("#btnConfirmDelete").off("click").on("click", function () {
+                if (!staffIdToDelete) return;
+
+                fetch(`/admin/api/staff/delete/${staffIdToDelete}`, {
+                    method: "DELETE"
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.status === "success") {
+                            $(`.btn-delete-staff[data-id="${staffIdToDelete}"]`)
+                                .closest("tr")
+                                .remove();
+                            confirmDeleteModal.hide();
+                        } else {
+                            alert(data.message || "Có lỗi xảy ra");
+                        }
+                    })
+                    .catch(() => alert("Lỗi kết nối"));
+            });
+        });
+
     });
 </script>
 

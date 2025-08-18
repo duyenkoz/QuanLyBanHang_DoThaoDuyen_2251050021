@@ -5,7 +5,7 @@ from web.extentions.pagination import calcPagination
 
 def get_categories(search=None, page=1, page_size=10):
     """Hàm lấy danh sách danh mục với phân trang"""
-    query = Category.query.filter(Category.ParentID == None)
+    query = Category.query.filter(Category.ParentID.is_(None))  # Lấy danh mục cha
     if search:
         query = query.filter(Category.Title.like(f"%{search}%"))
 

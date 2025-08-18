@@ -5,10 +5,11 @@ from web.services.admin import manage_orders as manageOrdersService
 from web.services import order as orderService
 
 
-admin_order_bp = Blueprint("admin_order_bp", __name__, url_prefix="/admin/manage-orders")
+admin_order_bp = Blueprint(
+    "admin_order_bp", __name__, url_prefix="/admin"
+)
 
-
-@admin_order_bp.route("/", methods=["GET"])
+@admin_order_bp.route("/manage-orders", methods=["GET"])
 @admin_required
 def admin_manage_orders():
     status = request.args.get("status") 

@@ -60,8 +60,8 @@
                   d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L15 13.414V19a1 1 0 01-1.447.894l-4-2A1 1 0 019 17v-3.586L3.293 6.707A1 1 0 013 6V4z" />
               </svg>
             </button>
-            <div id="filter-dropdown" class="dropdown-menu p-3 shadow"
-              class="dropdown-menu p-3 shadow" style="display:none; position:absolute; top:100%; right:0; z-index:100; width:250px; max-height:200px; overflow-y:auto;">
+            <div id="filter-dropdown" class="dropdown-menu p-3 shadow" class="dropdown-menu p-3 shadow"
+              style="display:none; position:absolute; top:100%; right:0; z-index:100; width:250px; max-height:200px; overflow-y:auto;">
               <!-- Trạng thái -->
               <div class="mb-3">
                 <strong>Trạng thái:</strong><br>
@@ -241,74 +241,78 @@
               {% endif %}
             </td>
             <td>
-              <div class="btn-group"></div>
-              {% if child.Status == 1 %}
-              <button class="btn btn-link text-danger btn-toggle-status m-0 p-0 
+              <div class="btn-group">
+                {% if child.Status == 1 %}
+                <button class="btn btn-link text-danger btn-toggle-status m-0 p-0 
               {% if cate.Status == 0 %}disabled{% endif %}" data-id="{{ child.ID }}" {% if cate.Status==0 %}disabled{%
-                endif %}>
-                <span class="fas fa-eye-slash me-1"></span>
-              </button>
-              {% elif child.Status == 0 %}
-              <button class="btn btn-link text-success btn-toggle-status m-0 p-0 
+                  endif %}>
+                  <span class="fas fa-eye-slash me-1"></span>
+                </button>
+                {% elif child.Status == 0 %}
+                <button class="btn btn-link text-success btn-toggle-status m-0 p-0 
               {% if cate.Status == 0 %}disabled{% endif %}" data-id="{{ child.ID }}" {% if cate.Status==0 %}disabled{%
-                endif %}>
-                <span class="fas fa-eye me-1"></span>
-              </button>
-              {% endif %}
+                  endif %}>
+                  <span class="fas fa-eye me-1"></span>
+                </button>
+                {% endif %}
 
 
-              <!-- Dropdown chứa nút sửa -->
-              <button class="btn btn-link text-dark dropdown-toggle dropdown-toggle-split m-0 p-0"
-                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="icon icon-sm">
-                  <span class="fas fa-ellipsis-h icon-dark"></span>
-                </span>
-                <span class="visually-hidden">Toggle Dropdown</span>
-              </button>
-              <div class="dropdown-menu py-0">
-                <a class="dropdown-item btn-edit" href="#" data-id="{{ child.ID }}" data-is-parent="0">
-                  <span class="fas fa-edit me-2"></span>Sửa
-                </a>
+                <!-- Dropdown chứa nút sửa -->
+                <button class="btn btn-link text-dark dropdown-toggle dropdown-toggle-split m-0 p-0"
+                  data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="icon icon-sm">
+                    <span class="fas fa-ellipsis-h icon-dark"></span>
+                  </span>
+                  <span class="visually-hidden">Toggle Dropdown</span>
+                </button>
+                <div class="dropdown-menu py-0">
+                  <a class="dropdown-item rounded" href="#" data-id="{{ child.ID }}" data-is-parent="0">
+                    <span class="fas fa-edit me-2"></span>Sửa
+                  </a>
+                  {% if role == 'admin' %}
+                  <a class="dropdown-item rounded text-danger" href="#" data-id="{{ child.ID }}">
+                    <span class="fa-solid fa-trash-can me-2 text-danger"></span>Xóa
+                  </a>
+                  {% endif %}
+                </div>
               </div>
+            </td>
+          </tr>
+          {% endfor %}
+          {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+
 
     </div>
-    </td>
-    </tr>
-    {% endfor %}
+
+    <!-- PHÂN TRANG -->
+    <div class="pagination">
+      <nav aria-label="Pagination">
+        <ul class="pagination justify-content-center">
+          <li class="page-item {% if currentPage == 1 %}disabled{% endif %}">
+            <a class="page-link" href="?pageIndex={{ currentPage - 1 }}&search={{ search }}">Trước</a>
+          </li>
+
+          {% for page in pagination %}
+          {% if page == '...' %}
+          <li class="page-item disabled"><span class="page-link">...</span></li>
+          {% else %}
+          <li class="page-item {% if page == currentPage %}active{% endif %}">
+            <a class="page-link" href="?pageIndex={{ page }}&search={{ search }}">{{ page }}</a>
+          </li>
+          {% endif %}
+          {% endfor %}
+
+          <li class="page-item {% if currentPage == totalPage %}disabled{% endif %}">
+            <a class="page-link" href="?pageIndex={{ currentPage + 1 }}&search={{ search }}">Sau</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
     {% endif %}
-    {% endfor %}
-    </tbody>
-    </table>
-
-
   </div>
-
-  <!-- PHÂN TRANG -->
-  <div class="pagination">
-    <nav aria-label="Pagination">
-      <ul class="pagination justify-content-center">
-        <li class="page-item {% if currentPage == 1 %}disabled{% endif %}">
-          <a class="page-link" href="?pageIndex={{ currentPage - 1 }}&search={{ search }}">Trước</a>
-        </li>
-
-        {% for page in pagination %}
-        {% if page == '...' %}
-        <li class="page-item disabled"><span class="page-link">...</span></li>
-        {% else %}
-        <li class="page-item {% if page == currentPage %}active{% endif %}">
-          <a class="page-link" href="?pageIndex={{ page }}&search={{ search }}">{{ page }}</a>
-        </li>
-        {% endif %}
-        {% endfor %}
-
-        <li class="page-item {% if currentPage == totalPage %}disabled{% endif %}">
-          <a class="page-link" href="?pageIndex={{ currentPage + 1 }}&search={{ search }}">Sau</a>
-        </li>
-      </ul>
-    </nav>
-  </div>
-  {% endif %}
-</div>
 </div>
 
 <!-- Check thông báo từ các page khác gọi -->
@@ -330,14 +334,14 @@
 
 <script>
   $('.dropdown-pageSize>a').on('click', function (e) {
-        e.preventDefault();
-        var selectedSize = $(this).data('value');
-        var url = new URL(window.location.href);
-        url.searchParams.set('pageIndex', 1);
-        url.searchParams.set('pageSize', selectedSize);
-        window.location.href = url.toString();
-    });
-    
+    e.preventDefault();
+    var selectedSize = $(this).data('value');
+    var url = new URL(window.location.href);
+    url.searchParams.set('pageIndex', 1);
+    url.searchParams.set('pageSize', selectedSize);
+    window.location.href = url.toString();
+  });
+
   document.querySelectorAll('.btn-toggle').forEach(btn => {
     btn.addEventListener('click', () => {
       const parentId = btn.getAttribute('data-id');
@@ -380,20 +384,20 @@
           var row = btn.closest('tr');
           var statusCell = isParent ? row.find('.cate-status') : row.find('.child-status');
           var icon = btn.find('span'); // icon bên trong nút
-          var statusButton = btn.find('a');
+          var statusButton = btn;
 
           if (newStatus === 1) {
             // Hiện
             statusCell.removeClass('bg-danger').addClass('bg-success').text('Hiện');
             btn.removeClass('text-success').addClass('text-danger');
             icon.removeClass('fa-eye').addClass('fa-eye-slash');
-            if (statusButton) statusButton.text('Ẩn');
+            statusButton.contents().last().replaceWith(" Ẩn"); // đổi chữ
           } else {
             // Ẩn
             statusCell.removeClass('bg-success').addClass('bg-danger').text('Ẩn');
             btn.removeClass('text-danger').addClass('text-success');
             icon.removeClass('fa-eye-slash').addClass('fa-eye');
-            if (statusButton) statusButton.text('Hiện');
+            statusButton.contents().last().replaceWith(" Hiện"); // đổi chữ
           }
 
           // Nếu là danh mục cha → xử lý tất cả dòng con
@@ -438,13 +442,13 @@
     const row = btn.closest('tr');
 
     // --- Lấy dữ liệu tiêu đề ---
-    const titleCell = row.find('td:nth-child(2)');
+    const titleCell = row.find('td:nth-child(3)');
     const title = titleCell.text().trim();
     titleCell.html(`<input type="text" class="form-control form-control-sm" value="${title}">`);
 
     if (isParent) {
       // --- Nếu là danh mục cha → Sửa cột Loại ---
-      const typeCell = row.find('td:nth-child(3)');
+      const typeCell = row.find('td:nth-child(4)');
       const type = typeCell.text().trim();
       const select = `
             <select class="form-select form-select-sm">
@@ -454,7 +458,7 @@
       typeCell.html(select);
     } else {
       // --- Nếu là danh mục con → Sửa cột Phân loại ---
-      const classifyCell = row.find('td:nth-child(5)');
+      const classifyCell = row.find('td:nth-child(6)');
       const classify = classifyCell.text().trim();
       const selectClassify = `
             <select class="form-select form-select-sm">
@@ -466,7 +470,7 @@
     }
 
     // --- Thay đổi cột Thao tác ---
-    const actionCell = row.find('td:nth-child(6)');
+    const actionCell = row.find('td:nth-child(7)');
     actionCell.html(`
         <button class="btn btn-sm btn-success btn-save" data-id="${id}" data-is-parent="${isParent}">Lưu</button>
         <button class="btn btn-sm btn-secondary btn-cancel">Hủy</button>
@@ -479,9 +483,9 @@
     const isParent = btn.data('is-parent') == 1;
     const row = btn.closest('tr');
 
-    const newTitle = row.find('td:nth-child(2) input').val();
-    const newType = isParent ? row.find('td:nth-child(3) select').val() : null;
-    const newTypeCode = !isParent ? row.find('td:nth-child(5) select').val() : null; // Lấy TypeCode cho child
+    const newTitle = row.find('td:nth-child(3) input').val();
+    const newType = isParent ? row.find('td:nth-child(4) select').val() : null;
+    const newTypeCode = !isParent ? row.find('td:nth-child(6) select').val() : null; // Lấy TypeCode cho child
 
     $.ajax({
       url: `/admin/api/manage-categories/update-inline/${id}`,
@@ -495,15 +499,15 @@
       }),
       success: function (res) {
         if (res.status_code === "SUCCESS") {
-          row.find('td:nth-child(2)').text(newTitle);
+          row.find('td:nth-child(3)').text(newTitle);
 
           if (isParent) {
-            row.find('td:nth-child(3)').text(
+            row.find('td:nth-child(4)').text(
               newType == 1 ? "Menu" :
                 newType == 2 ? "Sản phẩm đóng gói" : "Không xác định"
             );
           } else {
-            row.find('td:nth-child(5)').text(
+            row.find('td:nth-child(6)').text(
               newTypeCode == 'DRINK_SIZE_ONLY' ? "Chọn size" :
                 newTypeCode == 'DRINK_FULL' ? "Đủ lựa chọn" :
                   newTypeCode == 'QUANTITY_ONLY' ? "Chọn số lượng" :

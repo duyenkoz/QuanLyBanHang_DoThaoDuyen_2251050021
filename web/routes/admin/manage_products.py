@@ -9,6 +9,7 @@ from web.services.admin.manage_products import (
     update_product_status,
     create_product,
     get_product_by_id,
+    delete_product
 )
 from web.services import category as cateService
 from werkzeug.utils import secure_filename
@@ -140,9 +141,7 @@ def edit_product_post(product_id):
 
 
 # API
-@admin_prod_bp.route(
-    "api/manage-products/update-status/<int:product_id>", methods=["POST"]
-)
+@admin_prod_bp.route("api/manage-products/update-status/<int:product_id>", methods=["POST"])
 @admin_required
 def bp_update_product_status(product_id):
     result = update_product_status(product_id)
@@ -155,3 +154,18 @@ def bp_update_product_status(product_id):
         response.status_code = ResponseStatus.ERROR.value
         response.message = "Có lỗi xảy ra"
     return jsonify(response.to_dict())
+
+@admin_prod_bp.route("api/manage-products/delete-product/<int:product_id>", methods=["DELETE"])
+@admin_required
+def bp_delete_product(product_id):
+    result = delete_product(product_id)
+    response = APIResponse()
+    if result is not None:
+        response.status_code = ResponseStatus.SUCCESS.value
+        response.message = "Xóa sản phẩm thành công!"
+        response.data = {"new_status": result}
+    else:
+        response.status_code = ResponseStatus.ERROR.value
+        response.message = "Có lỗi xảy ra"
+    return jsonify(response.to_dict())
+

@@ -93,3 +93,7 @@
   display: inline-block;
 }
 
+.bread-crumb-home {
+  text-decoration: none;
+  color: inherit;
+}

@@ -1,7 +1,9 @@
 import hashlib
+from .customer import Customer
+from .user import User, seed_data
+from .role import Role
 from .category import Category
 from .product import Product
-from .user import UserRole, User, seed_data
 from .order import Order
 from .orderdetail import OrderDetail
 from .topping import Topping

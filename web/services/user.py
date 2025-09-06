@@ -1,11 +1,16 @@
-from web.models.user import User
+from web.models.customer import Customer
 from web import db
+from web.models.user import User
 
 def get_user_by_id(user_id):
-    return db.session.query(User).filter_by(Id=user_id).first()
+    return db.session.query(Customer).filter_by(CustomerId=user_id).first()
 
-def update_user_profile(user_id, full_name, email, address_street, ward, district, province):
-    user = get_user_by_id(user_id)
+def update_user_profile(user_id, role, full_name, email, address_street, ward, district, province):
+    if role == "customer":
+        user = Customer.query.get(user_id)
+    else:
+        user = User.query.get(user_id)
+
     if not user:
         return False, "Người dùng không tồn tại"
 
@@ -22,6 +27,6 @@ def update_user_profile(user_id, full_name, email, address_street, ward, distric
     try:
         db.session.commit()
         return True, "Cập nhật thông tin thành công"
-    except Exception as e:
+    except Exception:
         db.session.rollback()
         return False, "Có lỗi xảy ra khi cập nhật"

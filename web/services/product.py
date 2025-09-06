@@ -1,5 +1,6 @@
 from web.models import Product
 from web.models import Topping
+from web import db
 
 def get_all_products():
     products = Product.query.all()
@@ -39,3 +40,4 @@ def get_product_by_title(product_title: str):
 def get_toppings():
     toppings = Topping.query.all()
     return toppings
+

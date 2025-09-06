@@ -1,6 +1,6 @@
 import json
 from math import ceil
-from flask import Blueprint, render_template, request, jsonify, redirect, session, url_for, flash
+from flask import Blueprint, get_flashed_messages, render_template, request, jsonify, redirect, session, url_for, flash
 from web.models import Product
 from web.services.admin.manage_products import (
     check_product_exists,
@@ -32,6 +32,7 @@ def admin_manage_products():
     )
 
     role = session.get("role")
+    get_flashed_messages()
 
     return render_template(
         "admin/manage_products/product_list.html",

@@ -4,35 +4,41 @@ from sqlalchemy.ext.declarative import declarative_base
 import enum
 from web import db
 from werkzeug.security import generate_password_hash
+from web.models.role import Role
 
-class UserRole(enum.Enum):
-    staff = 'staff'
-    admin = 'admin'
-    user = 'user'
 
 class User(db.Model):
-    __tablename__ = 'users'
+    __tablename__ = "User"
 
-    Id = Column(Integer, primary_key=True, autoincrement=True)
-    Phone = Column(String(20), unique=True, nullable=False)
-    Password = Column(String(255), nullable=False)
-    Role = Column(Enum(UserRole), default=UserRole.user)
-    Name = Column(String(100))
-    Email = Column(String(100))
-    Address = Column(String(255))
-    Created_at = Column(TIMESTAMP, server_default=func.now())
+    UserId = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    Phone = db.Column(db.String(20), unique=True, nullable=False)
+    Password = db.Column(db.String(255), nullable=False)
+    RoleId = db.Column(db.Integer, db.ForeignKey("Role.RoleId"), nullable=False)
+    Name = db.Column(db.String(100), nullable=False)
+    Email = db.Column(db.String(100), unique=True, nullable=True)
+    Address = db.Column(db.String(255))
+    Status = db.Column(db.Integer, default=1)
+    CreatedAt = db.Column(db.DateTime, server_default=func.now())
 
 def seed_data():
-    admin_user = User.query.filter_by(Role=UserRole.admin).first()
+    # Kiểm tra role "admin" đã có chưa
+    admin_role = Role.query.filter_by(RoleName="admin").first()
+    if not admin_role:
+        admin_role = Role(RoleName="admin", Description="Quản trị hệ thống")
+        db.session.add(admin_role)
+        db.session.commit()
+
+    # Kiểm tra user admin đã có chưa
+    admin_user = User.query.filter_by(RoleId=admin_role.RoleId).first()
     if not admin_user:
         admin = User(
-            Phone="0123456789", 
-            Password=generate_password_hash("admin"),
-            Role=UserRole.admin,
-            Name="Admin",
+            Phone="0123456789",
+            Password=generate_password_hash("admin123"),  
+            RoleId=admin_role.RoleId,
+            Name="Administrator"
         )
         db.session.add(admin)
         db.session.commit()
-        print("Seeded default admin account")
+        print("✅ Seeded default admin account")
     else:
-        print("Admin account already exists")
+        print("ℹ️ Admin account already exists")

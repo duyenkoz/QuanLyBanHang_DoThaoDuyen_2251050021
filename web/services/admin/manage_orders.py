@@ -5,6 +5,8 @@ from web.extentions.pagination import calcPagination
 from web.models import Order
 from math import ceil
 from web import db
+from web.models.role import Role
+from web.models.user import User
 
 
 # def get_all_orders(search=None, page=1, page_size=10):
@@ -40,6 +42,16 @@ def get_orders_by_status(status=None, page=1, page_size=10, search=None, filter=
             query = query.filter(Order.Status == status_enum.value)
         except KeyError:
             pass 
+    
+    busy_shippers = db.session.query(Order.ShipperId).filter(
+        Order.Status.in_(["WAITING_CONFIRM", "CONFIRMED", "SHIPPING"]),
+        Order.ShipperId.isnot(None)
+    )
+
+    available_shippers = db.session.query(User).join(Role).filter(
+        Role.RoleName == "shipper",
+        ~User.UserId.in_(busy_shippers)
+    ).all()
 
     # Lọc theo từ khóa tìm kiếm (nếu có)
     if search:
@@ -79,8 +91,7 @@ def get_orders_by_status(status=None, page=1, page_size=10, search=None, filter=
     )
     pagination = calcPagination(page, total_pages)
 
-
-    return orders, pagination, total_records, total_pages
+    return orders, pagination, total_records, total_pages, available_shippers
 
 def update_order_status(order_id, new_status):
     if not new_status:
@@ -91,6 +102,19 @@ def update_order_status(order_id, new_status):
         return None, "Không tìm thấy đơn hàng"
 
     order.Status = new_status
+    db.session.commit()
+
+    return order, None
+
+def assign_shipper(order_id, shipper_id):
+    order = Order.query.get(order_id)
+    if not order:
+        return None, "Không tìm thấy đơn hàng"
+
+    if order.Status not in ["CONFIRMED", "WAITING_CONFIRM"]:
+        return None, "Trạng thái đơn hàng không hợp lệ để gán shipper"
+
+    order.ShipperId = shipper_id
     db.session.commit()
 
     return order, None

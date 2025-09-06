@@ -1,0 +1,10 @@
+{% extends "admin/layout_admin/base.html" %}
+
+{% block title %}Shipper Dashboard{% endblock %}
+
+{% block content %}
+<div class="p-4">
+    <h2>Xin chào {{ session.get('user_name') }}</h2>
+    <p>Đây là trang quản lý dành cho Shipper.</p>
+</div>
+{% endblock %}

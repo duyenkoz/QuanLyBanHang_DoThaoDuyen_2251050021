@@ -133,3 +133,18 @@ def create_category(title, parent_id, type_value, type_code_value, status):
     except Exception as e:
         db.session.rollback()
         return {"success": False, "error": str(e)}
+    
+
+def delete_category(cate_id):
+    category = Category.query.get(cate_id)
+    if not category:
+        return None, "Không tìm thấy danh mục"
+
+    # Kiểm tra xem danh mục có sản phẩm không
+    if category.products and len(category.products) > 0:
+        return None, "Danh mục đang có sản phẩm, không thể xóa!"
+
+    # Nếu không có sản phẩm thì cho phép xóa
+    db.session.delete(category)
+    db.session.commit()
+    return category, None

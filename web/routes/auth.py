@@ -12,18 +12,24 @@ def login():
         phone = request.form.get("phone")
         password = request.form.get("password")
 
-        user = check_login(phone, password)
-        if user:
-            session["user_phone"] = user.Phone
-            session["user_id"] = user.Id
-            session["role"] = user.Role.value
+        result = check_login(phone, password)
+        if result:
+            obj = result["obj"]
+            role_name = obj.role.RoleName   # nhờ backref role trong model
 
-            # Nếu DB chưa có tên thì lấy role
-            session["user_name"] = user.Name.strip() if user.Name and user.Name.strip() else user.Role.value
+            session["user_id"] = obj.UserId if result["type"] == "user" else obj.CustomerId
+            session["user_phone"] = obj.Phone
+            session["role"] = role_name
+            session["user_name"] = obj.Name.strip() if obj.Name else role_name
 
-            if session.get("role") == "admin":
+            # Điều hướng theo role
+            if role_name == "admin":
                 return redirect(url_for("admin.admin_dashboard"))
-            else:
+            elif role_name == "staff":
+                return redirect(url_for("admin.admin_dashboard"))
+            elif role_name == "shipper":
+                return redirect(url_for("shipper.shipper_dashboard"))
+            else:  # customer
                 return redirect(url_for("home"))
 
         flash("Số điện thoại hoặc mật khẩu không đúng.", "danger")
@@ -49,7 +55,6 @@ def register():
 
 @auth_bp.route("/logout")
 def logout():
-    # Xóa session đăng nhập
     session.clear()
     flash("Đăng xuất thành công!", "success")
     return redirect(url_for("home"))  

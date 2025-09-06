@@ -20,9 +20,9 @@ def admin_manage_orders():
     fromDate = request.args.get("fromDate")
     toDate = request.args.get("toDate")
 
-    has_actions = status in ["WAITING_CONFIRM", "CONFIRMED", "SHIPPING"]
+    has_actions = status in ["WAITING_CONFIRM", "CONFIRMED"]
 
-    orders, pagination, total_records, total_pages = manageOrdersService.get_orders_by_status(status, page, pageSize, search, sort, fromDate, toDate)
+    orders, pagination, total_records, total_pages, available_shippers = manageOrdersService.get_orders_by_status(status, page, pageSize, search, sort, fromDate, toDate)
 
     return render_template(
         "admin/manage_orders/order_list.html",
@@ -33,7 +33,8 @@ def admin_manage_orders():
         totalPage=total_pages,
         pagination=pagination,
         status=status,
-        has_actions=has_actions
+        has_actions=has_actions,
+        available_shippers=available_shippers
     )
 
 @admin_order_bp.route("/api/detail/<int:order_id>", methods=["GET"])
@@ -71,3 +72,11 @@ def api_update_order_status(order_id):
         data={"order_id": order.ID, "new_status": order.Status}
     )
     return jsonify(response.to_dict()), 200
+
+@admin_order_bp.route("/orders/<int:order_id>/assign-shipper/<int:shipper_id>", methods=["POST"])
+def assign_shipper(order_id, shipper_id):
+    order, error = manageOrdersService.assign_shipper(order_id, shipper_id)
+    if error:
+        return jsonify({"success": False, "msg": error}), 400
+
+    return jsonify({"success": True})

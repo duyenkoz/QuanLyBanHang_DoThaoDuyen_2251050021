@@ -1,23 +1,11 @@
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/admin/volt_sidebar.css') }}"
-/>
-<nav
-  id="sidebarMenu"
-  class="sidebar d-lg-block bg-gray-800 text-white collapse"
-  data-simplebar
->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin/volt_sidebar.css') }}" />
+<nav id="sidebarMenu" class="sidebar d-lg-block bg-gray-800 text-white collapse" data-simplebar>
   <div class="sidebar-inner px-4 pt-3">
     <ul class="nav flex-column pt-3 pt-md-0">
       <li class="nav-item">
         <a href="/admin/dashboard" class="nav-link d-flex align-items-center">
           <span class="sidebar-icon">
-            <img
-              src="/static/images/logo-ca-phe-effoc.jpg"
-              height="50"
-              width="80"
-              alt=" Logo"
-            />
+            <img src="/static/images/logo-ca-phe-effoc.jpg" height="50" width="80" alt=" Logo" />
           </span>
           <span class="mt-1 ms-1 sidebar-text">Logo</span>
         </a>
@@ -25,12 +13,7 @@
       <li class="nav-item">
         <a href="/admin/dashboard" class="nav-link">
           <span class="sidebar-icon">
-            <svg
-              class="icon icon-xs me-2"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+            <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
               <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path>
               <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>
             </svg>
@@ -39,109 +22,56 @@
         </a>
       </li>
       <li class="nav-item">
-        <span
-          class="nav-link collapsed d-flex justify-content-between align-items-center"
-          data-bs-toggle="collapse"
-          data-bs-target="#submenu-orders"
-          aria-expanded="true"
-        >
+        <span class="nav-link collapsed d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
+          data-bs-target="#submenu-orders" aria-expanded="true">
           <span>
             <span class="sidebar-icon">
-              <svg
-                class="icon icon-xs me-2"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
+              <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd"
                   d="M5 4a3 3 0 00-3 3v6a3 3 0 003 3h10a3 3 0 003-3V7a3 3 0 00-3-3H5zm-1 9v-1h5v2H5a1 1 0 01-1-1zm7 1h4a1 1 0 001-1v-1h-5v2zm0-4h5V8h-5v2zM9 8H4v2h5V8z"
-                  clip-rule="evenodd"
-                ></path>
+                  clip-rule="evenodd"></path>
               </svg>
             </span>
             <span class="sidebar-text">Danh sách đơn</span>
           </span>
           <span class="link-arrow">
-            <svg
-              class="icon icon-sm"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fill-rule="evenodd"
+            <svg class="icon icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd"
                 d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                clip-rule="evenodd"
-              ></path>
+                clip-rule="evenodd"></path>
             </svg>
           </span>
         </span>
 
-        <div
-          class="multi-level collapse"
-          role="list"
-          id="submenu-orders"
-          aria-expanded="false"
-        >
+        <div class="multi-level collapse" role="list" id="submenu-orders" aria-expanded="false">
           <ul class="flex-column nav">
-            <li
-              class="nav-item"
-            >
-              <a
-                class="nav-link"
-                href="{{ url_for('admin_order_bp.admin_manage_orders') }}"
-              >
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('admin_order_bp.admin_manage_orders') }}">
                 <span class="sidebar-text">Tất cả</span>
               </a>
             </li>
-            <li
-              class="nav-item {% if request.args.get('status') == 'WAITING_CONFIRM' %}active{% endif %}"
-            >
-              <a
-                class="nav-link"
-                href="{{ url_for('admin_order_bp.admin_manage_orders', status='WAITING_CONFIRM') }}"
-              >
+            <li class="nav-item {% if request.args.get('status') == 'WAITING_CONFIRM' %}active{% endif %}">
+              <a class="nav-link" href="{{ url_for('admin_order_bp.admin_manage_orders', status='WAITING_CONFIRM') }}">
                 <span class="sidebar-text">Đơn mới</span>
               </a>
             </li>
-            <li
-              class="nav-item {% if request.args.get('status') == 'CONFIRMED' %}active{% endif %}"
-            >
-              <a
-                class="nav-link"
-                href="{{ url_for('admin_order_bp.admin_manage_orders', status='CONFIRMED') }}"
-              >
+            <li class="nav-item {% if request.args.get('status') == 'CONFIRMED' %}active{% endif %}">
+              <a class="nav-link" href="{{ url_for('admin_order_bp.admin_manage_orders', status='CONFIRMED') }}">
                 <span class="sidebar-text">Đợi giao hàng</span>
               </a>
             </li>
-            <li
-              class="nav-item {% if request.args.get('status') == 'SHIPPING' %}active{% endif %}"
-            >
-              <a
-                class="nav-link"
-                href="{{ url_for('admin_order_bp.admin_manage_orders', status='SHIPPING') }}"
-              >
+            <li class="nav-item {% if request.args.get('status') == 'SHIPPING' %}active{% endif %}">
+              <a class="nav-link" href="{{ url_for('admin_order_bp.admin_manage_orders', status='SHIPPING') }}">
                 <span class="sidebar-text">Đang giao hàng</span>
               </a>
             </li>
-            <li
-              class="nav-item {% if request.args.get('status') == 'DELIVERED' %}active{% endif %}"
-            >
-              <a
-                class="nav-link"
-                href="{{ url_for('admin_order_bp.admin_manage_orders', status='DELIVERED') }}"
-              >
+            <li class="nav-item {% if request.args.get('status') == 'DELIVERED' %}active{% endif %}">
+              <a class="nav-link" href="{{ url_for('admin_order_bp.admin_manage_orders', status='DELIVERED') }}">
                 <span class="sidebar-text">Hoàn thành</span>
               </a>
             </li>
-            <li
-              class="nav-item {% if request.args.get('status') == 'CANCELED' %}active{% endif %}"
-            >
-              <a
-                class="nav-link"
-                href="{{ url_for('admin_order_bp.admin_manage_orders', status='CANCELED') }}"
-              >
+            <li class="nav-item {% if request.args.get('status') == 'CANCELED' %}active{% endif %}">
+              <a class="nav-link" href="{{ url_for('admin_order_bp.admin_manage_orders', status='CANCELED') }}">
                 <span class="sidebar-text">Đơn hủy</span>
               </a>
             </li>
@@ -150,77 +80,41 @@
       </li>
 
       <li class="nav-item">
-        <span
-          class="nav-link collapsed d-flex justify-content-between align-items-center"
-          data-bs-toggle="collapse"
-          data-bs-target="#submenu-app"
-          aria-expanded="true"
-        >
+        <span class="nav-link collapsed d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
+          data-bs-target="#submenu-app" aria-expanded="true">
           <span>
             <span class="sidebar-icon">
-              <svg
-                class="icon icon-xs me-2"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
+              <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd"
                   d="M5 4a3 3 0 00-3 3v6a3 3 0 003 3h10a3 3 0 003-3V7a3 3 0 00-3-3H5zm-1 9v-1h5v2H5a1 1 0 01-1-1zm7 1h4a1 1 0 001-1v-1h-5v2zm0-4h5V8h-5v2zM9 8H4v2h5V8z"
-                  clip-rule="evenodd"
-                ></path>
+                  clip-rule="evenodd"></path>
               </svg>
             </span>
             <span class="sidebar-text">Danh sách</span>
           </span>
           <span class="link-arrow">
-            <svg
-              class="icon icon-sm"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fill-rule="evenodd"
+            <svg class="icon icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd"
                 d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                clip-rule="evenodd"
-              ></path>
+                clip-rule="evenodd"></path>
             </svg>
           </span>
         </span>
-        <div
-          class="multi-level collapse"
-          role="list"
-          id="submenu-app"
-          aria-expanded="false"
-        >
+        <div class="multi-level collapse" role="list" id="submenu-app" aria-expanded="false">
           <ul class="flex-column nav">
             <li
-              class="nav-item {% if request.path == url_for('admin_prod_bp.admin_manage_products') %}active{% endif %}"
-            >
-              <a
-                class="nav-link"
-                href="{{ url_for('admin_prod_bp.admin_manage_products') }}"
-              >
+              class="nav-item {% if request.path == url_for('admin_prod_bp.admin_manage_products') %}active{% endif %}">
+              <a class="nav-link" href="{{ url_for('admin_prod_bp.admin_manage_products') }}">
                 <span class="sidebar-text">Sản phẩm</span>
               </a>
             </li>
           </ul>
         </div>
-        <div
-          class="multi-level collapse"
-          role="list"
-          id="submenu-app"
-          aria-expanded="false"
-        >
+        <div class="multi-level collapse" role="list" id="submenu-app" aria-expanded="false">
           <ul class="flex-column nav">
             <li
-              class="nav-item {% if request.path == url_for('admin_cate_bp.admin_manage_categories') %}active{% endif %}"
-            >
-              <a
-                class="nav-link"
-                href="{{ url_for('admin_cate_bp.admin_manage_categories') }}"
-              >
+              class="nav-item {% if request.path == url_for('admin_cate_bp.admin_manage_categories') %}active{% endif %}">
+              <a class="nav-link" href="{{ url_for('admin_cate_bp.admin_manage_categories') }}">
                 <span class="sidebar-text">Danh mục</span>
               </a>
             </li>
@@ -229,18 +123,12 @@
       </li>
 
       <li class="nav-item">
-        <a href="{{ url_for('admin_user_bp.user_list') }}" class="nav-link">
+        <a href="{{ url_for('admin_user_bp.customer_list') }}" class="nav-link">
           <span class="sidebar-icon">
             <!-- Icon user, 1 path -->
-            <svg
-              class="icon icon-xs me-2"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-            >
+            <svg class="icon icon-xs me-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
               <path
-                d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"
-              />
+                d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z" />
             </svg>
           </span>
           <span class="sidebar-text">Khách hàng</span>
@@ -251,15 +139,9 @@
         <a href="{{ url_for('admin_user_bp.staff_list') }}" class="nav-link">
           <span class="sidebar-icon">
             <!-- Icon user, 1 path -->
-            <svg
-              class="icon icon-xs me-2"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-            >
+            <svg class="icon icon-xs me-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
               <path
-                d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"
-              />
+                d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z" />
             </svg>
           </span>
           <span class="sidebar-text">Nhân viên</span>
@@ -325,22 +207,11 @@
                 </a>
             </li> -->
       <li class="nav-item">
-        <a
-          href="/"
-          class="btn btn-secondary d-flex align-items-center justify-content-center btn-upgrade-pro"
-        >
-          <span
-            class="sidebar-icon d-inline-flex align-items-center justify-content-center"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              class="icon icon-xs me-2"
-            >
+        <a href="/" class="btn btn-secondary d-flex align-items-center justify-content-center btn-upgrade-pro">
+          <span class="sidebar-icon d-inline-flex align-items-center justify-content-center">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon icon-xs me-2">
               <path
-                d="M9.195 18.44c1.25.714 2.805-.189 2.805-1.629v-2.34l6.945 3.968c1.25.715 2.805-.188 2.805-1.628V8.69c0-1.44-1.555-2.343-2.805-1.628L12 11.029v-2.34c0-1.44-1.555-2.343-2.805-1.628l-7.108 4.061c-1.26.72-1.26 2.536 0 3.256l7.108 4.061Z"
-              />
+                d="M9.195 18.44c1.25.714 2.805-.189 2.805-1.629v-2.34l6.945 3.968c1.25.715 2.805-.188 2.805-1.628V8.69c0-1.44-1.555-2.343-2.805-1.628L12 11.029v-2.34c0-1.44-1.555-2.343-2.805-1.628l-7.108 4.061c-1.26.72-1.26 2.536 0 3.256l7.108 4.061Z" />
             </svg>
           </span>
           <span>Về trang web</span>

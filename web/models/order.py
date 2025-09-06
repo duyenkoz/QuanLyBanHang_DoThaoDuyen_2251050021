@@ -17,3 +17,8 @@ class Order(db.Model):
     PaymentType = db.Column(db.String(20), nullable=False)
     Promotion = db.Column(db.String(50), nullable=True)
     Status = db.Column(db.String(45), nullable=False)
+    StatusUpdatedAt = db.Column(db.DateTime, nullable=True)
+    ShipperId = db.Column(db.Integer, db.ForeignKey("User.UserId"), nullable=True)  # shipper được gán
+    CancelReason = db.Column(db.String(255), nullable=True)  # lý do hủy
+
+    Shipper = db.relationship("User", backref="orders", foreign_keys=[ShipperId])

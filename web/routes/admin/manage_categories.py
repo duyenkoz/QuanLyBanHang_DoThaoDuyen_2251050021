@@ -1,5 +1,6 @@
 from flask import Blueprint, flash, jsonify, redirect, render_template, request, session, url_for
 
+from web.common.api_response import APIResponse, ResponseStatus
 from web.services.admin.manage_categories import (
     get_categories, 
     get_category_by_id, 
@@ -8,7 +9,9 @@ from web.services.admin.manage_categories import (
     create_child_category,
     update_inline_category_service,
     get_all_parent_categories,
-    create_category)
+    create_category,
+    delete_category
+)
 
 
 admin_cate_bp = Blueprint("admin_cate_bp", __name__, url_prefix="/admin")
@@ -126,3 +129,22 @@ def update_inline_category(cate_id):
 
     result = update_inline_category_service(cate_id, title, type, is_parent, type_code)
     return jsonify(result)
+
+@admin_cate_bp.route("/api/manage-categories/delete/<int:cate_id>", methods=["DELETE"])
+def api_delete_category(cate_id):
+    category, error = delete_category(cate_id)
+
+    if error:
+        response = APIResponse(
+            data=None,
+            message=error,
+            status_code=ResponseStatus.ERROR.value
+        )
+        return jsonify(response.to_dict()), 400 if "sản phẩm" in error else 404
+
+    response = APIResponse(
+        data={"id": cate_id},
+        message="Xóa danh mục thành công!",
+        status_code=ResponseStatus.SUCCESS.value
+    )
+    return jsonify(response.to_dict())

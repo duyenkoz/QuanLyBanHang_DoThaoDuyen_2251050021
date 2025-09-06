@@ -15,6 +15,7 @@ from web.routes.order import order_bp
 from web.routes.admin.manage_orders import admin_order_bp
 from web.routes.admin.manage_users import admin_user_bp
 from web.routes.admin.dashboard import admin_dashboard_bp
+from web.routes.shipper.shipper import shipper_bp
 
 
 
@@ -42,6 +43,7 @@ app.register_blueprint(admin_cate_bp)
 app.register_blueprint(admin_order_bp)
 app.register_blueprint(admin_user_bp)
 app.register_blueprint(admin_dashboard_bp)
+app.register_blueprint(shipper_bp)
 
 if __name__ == '__main__':
     app.run(debug=True)

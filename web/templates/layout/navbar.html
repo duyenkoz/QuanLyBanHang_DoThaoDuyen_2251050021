@@ -13,9 +13,9 @@
     </form>
 
     <div class="ms-auto d-flex align-items-center">
-      <a href="#" class="btn btn-outline-success me-2 rounded-pill">
+      <!-- <a href="#" class="btn btn-outline-success me-2 rounded-pill">
         <i class="fas fa-truck"></i> Chọn Phương Thức Nhận Hàng
-      </a>
+      </a> -->
       {% if session.get('user_phone') %}
         <a href="/cart" class="cart-icon text-dark me-3">
           <span class="cart-number"></span>
@@ -27,7 +27,7 @@
           <i class="fa-solid fa-cart-shopping"></i>
         </a>
       {% endif %}
-      <a href="#" class="text-dark me-3"><i class="fa-regular fa-envelope fs-5"></i></a>
+      <!-- <a href="#" class="text-dark me-3"><i class="fa-regular fa-envelope fs-5"></i></a> -->
       {% if session.get('user_phone') %}
       <div class="">
         <a href="#" class="" id="userDropdown"

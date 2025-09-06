@@ -1,7 +1,5 @@
-{% extends 'admin/layout_admin/base.html' %}
-{% block title %}Danh sách đơn hàng{% endblock %}
-
-{% block content %}
+{% extends 'admin/layout_admin/base.html' %} {% block title %}Danh sách đơn
+hàng{% endblock %} {% block content %}
 <div class="">
   <div class="table-wrapper">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
@@ -46,27 +44,27 @@
               </svg>
             </span> -->
             <!-- <input type="text" class="form-control" placeholder="Tìm kiếm">             -->
-             <input type="text" name="daterange" class="form-control" id="search-date" placeholder="Tìm kiếm theo ngày">
+            <input type="text" name="daterange" class="form-control" id="search-date"
+              placeholder="Tìm kiếm theo ngày" />
           </div>
           <div class="dropdown">
-              <button class="btn btn-link text-dark dropdown-toggle dropdown-toggle-split m-0 p-1"
-                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Sắp xếp
-                <i class="fa-solid fa-sort"></i>
-                <span class="visually-hidden">Toggle Dropdown</span>
-              </button>
-              <div class="dropdown-menu dropdown-menu-xs dropdown-menu-end pb-0 dropdown-filter">
-                <span class="small ps-3 fw-bold text-dark">Sắp xếp theo</span>
-                <a class="dropdown-item d-flex align-items-center fw-bold" href="#" data-value="CREATED_DESC">Đơn
-                  mới</a>
-                <a class="dropdown-item d-flex align-items-center fw-bold" href="#" data-value="CREATED_ASC">Đơn cũ</a>
-                <a class="dropdown-item d-flex align-items-center fw-bold" href="#" data-value="TOTALPAYMENT_DESC">Giá
-                  cao</a>
-                <a class="dropdown-item d-flex align-items-center fw-bold" href="#" data-value="TOTALPAYMENT_ASC">Giá
-                  thấp</a>
-              </div>
+            <button class="btn btn-link text-dark dropdown-toggle dropdown-toggle-split m-0 p-1"
+              data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Sắp xếp
+              <i class="fa-solid fa-sort"></i>
+              <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-xs dropdown-menu-end pb-0 dropdown-filter">
+              <span class="small ps-3 fw-bold text-dark">Sắp xếp theo</span>
+              <a class="dropdown-item d-flex align-items-center fw-bold" href="#" data-value="CREATED_DESC">Đơn mới</a>
+              <a class="dropdown-item d-flex align-items-center fw-bold" href="#" data-value="CREATED_ASC">Đơn cũ</a>
+              <a class="dropdown-item d-flex align-items-center fw-bold" href="#" data-value="TOTALPAYMENT_DESC">Giá
+                cao</a>
+              <a class="dropdown-item d-flex align-items-center fw-bold" href="#" data-value="TOTALPAYMENT_ASC">Giá
+                thấp</a>
+            </div>
           </div>
-      </div>
+        </div>
         <!-- <div class="col col-md-4 col-lg-4">
           
         </div> -->
@@ -108,23 +106,24 @@
             <th class="border-gray-200">Thông tin giao hàng</th>
             <th class="border-gray-200">Trạng thái</th>
             <th class="border-gray-200">Chi tiết</th>
-            {% if has_actions %}
+            {% if status == "WAITING_CONFIRM" %}
             <th class="border-gray-200">Hành động</th>
+            {% else %}
+            <th class="border-gray-200">Thông tin shipper</th>
             {% endif %}
           </tr>
         </thead>
         <tbody>
-          {% if orders|length > 0 %}
-          {% for order in orders %}
+          {% if orders|length > 0 %} {% for order in orders %}
           <tr>
             <td><a href="#" class="fw-bold">{{ order.ID }}</a></td>
             <td>{{ order.Created.strftime("%d/%m/%Y %H:%M") }}</td>
             <td>{{ "{:,.0f}".format(order.TotalPayment) }}₫</td>
             <td>
-              <div style="font-size: 0.9rem; font-style: italic; font-weight: bold;">
+              <div style="font-size: 0.9rem; font-style: italic; font-weight: bold">
                 {{ order.CustomerName }}
               </div>
-              <div class="fw-normal text-truncate d-inline-block" style="max-width: 200px;"
+              <div class="fw-normal text-truncate d-inline-block" style="max-width: 200px"
                 title="{{ order.CustomerAddress }}">
                 {{ order.CustomerAddress }}
               </div>
@@ -147,42 +146,107 @@
                 <span class="fa-solid fa-eye"> </span>
               </button>
             </td>
-            {% if not status %}
-            <!-- Tất cả: Không có cột hành động -->
-            {% elif status == "WAITING_CONFIRM" %}
+
+            {% if status == "WAITING_CONFIRM" %}
             <td>
-              <button class="btn btn-sm btn-success btn-update-status" data-id="{{ order.ID }}"
-                data-status="CONFIRMED">Xác nhận</button>
+              <button class="btn btn-sm btn-success btn-update-status" data-id="{{ order.ID }}" data-status="CONFIRMED">
+                Xác nhận
+              </button>
               <button class="btn btn-sm btn-secondary btn-update-status" data-id="{{ order.ID }}"
-                data-status="CANCELED">Hủy</button>
+                data-status="CANCELED">
+                Hủy
+              </button>
             </td>
             {% elif status == "CONFIRMED" %}
             <td>
-              <button class="btn btn-sm btn-primary btn-update-status" data-id="{{ order.ID }}"
-                data-status="SHIPPING">Giao hàng</button>
+              {% if order.Shipper %}
+              <div>
+                <strong>{{ order.Shipper.Name or "Chưa có tên" }}</strong>
+              </div>
+              <div class="text-muted">
+                {{ order.Shipper.Phone or "Chưa có SĐT" }}
+              </div>
+              <a href="javascript:void(0)" class="btn-assign-shipper text-danger fst-italic" data-id="{{ order.ID }}">
+                Thay đổi shipper
+              </a>
+              {% else %}
+              <button class="btn btn-sm btn-primary btn-assign-shipper" data-id="{{ order.ID }}">
+                Chọn shipper
+              </button>
               <button class="btn btn-sm btn-secondary btn-update-status" data-id="{{ order.ID }}"
-                data-status="CANCELED">Hủy</button>
+                data-status="CANCELED">
+                Hủy
+              </button>
+              {% endif %}
             </td>
-            {% elif status == "SHIPPING" %}
+            {% else %}
             <td>
-              <button class="btn btn-sm btn-success btn-update-status" data-id="{{ order.ID }}"
-                data-status="DELIVERED">Hoàn thành</button>
+              {% if order.Shipper %}
+              <div>
+                <strong>{{ order.Shipper.Name or "Chưa có tên" }}</strong>
+              </div>
+              <div class="text-muted">
+                {{ order.Shipper.Phone or "Chưa có SĐT" }}
+              </div>
+              {% else %}
+              <span class="text-danger">Chưa có shipper</span>
+              {% endif %}
             </td>
             {% endif %}
           </tr>
-          {% endfor %}
-          {% else %}
+          {% endfor %} {% else %}
           <tr>
-            <td colspan="{% if has_actions %}7{% else %}6{% endif %}" class="text-center text-muted">
-              Không có dữ liệu
-            </td>
+            <td colspan="7" class="text-center text-muted">Không có dữ liệu</td>
           </tr>
           {% endif %}
         </tbody>
       </table>
     </div>
 
-
+    <!--Modal chọn shipper-->
+    <div class="modal fade" id="assignShipperModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Chọn shipper</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Tên</th>
+                  <th>Số điện thoại</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% if available_shippers|length > 0 %} {% for shipper in
+                available_shippers %}
+                <tr>
+                  <td>{{ shipper.UserId }}</td>
+                  <td>{{ shipper.Name }}</td>
+                  <td>{{ shipper.Phone }}</td>
+                  <td>
+                    <button class="btn btn-sm btn-success btn-choose-shipper" data-shipper="{{ shipper.UserId }}">
+                      Chọn
+                    </button>
+                  </td>
+                </tr>
+                {% endfor %} {% else %}
+                <tr>
+                  <td colspan="4" class="text-center text-muted">
+                    Không có shipper rảnh
+                  </td>
+                </tr>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- PHÂN TRANG -->
     <div class="pagination">
@@ -192,15 +256,13 @@
             <a class="page-link" href="?pageIndex={{ currentPage - 1 }}&search={{ search }}">Trước</a>
           </li>
 
-          {% for page in pagination %}
-          {% if page == '...' %}
+          {% for page in pagination %} {% if page == '...' %}
           <li class="page-item disabled"><span class="page-link">...</span></li>
           {% else %}
           <li class="page-item {% if page == currentPage %}active{% endif %}">
             <a class="page-link" href="?pageIndex={{ page }}&search={{ search }}">{{ page }}</a>
           </li>
-          {% endif %}
-          {% endfor %}
+          {% endif %} {% endfor %}
 
           <li class="page-item {% if currentPage == totalPage %}disabled{% endif %}">
             <a class="page-link" href="?pageIndex={{ currentPage + 1 }}&search={{ search }}">Sau</a>
@@ -214,7 +276,9 @@
       <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Chi tiết đơn hàng #<span id="order-id"></span></h5>
+            <h5 class="modal-title">
+              Chi tiết đơn hàng #<span id="order-id"></span>
+            </h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body" id="order-detail-body">
@@ -228,106 +292,124 @@
   <script>
     $(document).ready(function () {
       // Lấy giá trị pageSize từ URL hoặc mặc định là 10
-      var pageSize = new URLSearchParams(window.location.search).get('pageSize') || 10;
-      $('.dropdown-pageSize>a').each(function () {
-        if ($(this).data('value') == pageSize) {
-          $(this).append(`<svg class="icon icon-xxs ms-auto" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>`);
+      var pageSize =
+        new URLSearchParams(window.location.search).get("pageSize") || 10;
+      $(".dropdown-pageSize>a").each(function () {
+        if ($(this).data("value") == pageSize) {
+          $(this).append(
+            `<svg class="icon icon-xxs ms-auto" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>`
+          );
         }
       });
       // Lấy giá trị sort từ URL hoặc mặc định là CREATED_DESC
-      var sort = new URLSearchParams(window.location.search).get('sort') || 'CREATED_DESC';
-      $('.dropdown-filter>a').each(function () {
-        if ($(this).data('value') == sort) {
-          $(this).append(`<svg class="icon icon-xxs ms-auto" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>`);
+      var sort =
+        new URLSearchParams(window.location.search).get("sort") ||
+        "CREATED_DESC";
+      $(".dropdown-filter>a").each(function () {
+        if ($(this).data("value") == sort) {
+          $(this).append(
+            `<svg class="icon icon-xxs ms-auto" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>`
+          );
         }
       });
       // Thiết lập daterangepicker
-      var fromDate = new URLSearchParams(window.location.search).get('fromDate');
-      var toDate = new URLSearchParams(window.location.search).get('toDate');
-      $('#search-date').daterangepicker({
-        opens: 'left',
-        startDate: fromDate ? moment(fromDate) : moment().subtract(29, 'days'),
+      var fromDate = new URLSearchParams(window.location.search).get(
+        "fromDate"
+      );
+      var toDate = new URLSearchParams(window.location.search).get("toDate");
+      $("#search-date").daterangepicker({
+        opens: "left",
+        startDate: fromDate ? moment(fromDate) : moment().subtract(29, "days"),
         endDate: toDate ? moment(toDate) : moment(),
         locale: {
-          format: 'DD/MM/YYYY'
-        }
+          format: "DD/MM/YYYY",
+        },
       });
-      $('#search-date').on('hide.daterangepicker', function(ev, picker) {
-        const fromDate = picker.startDate.format('YYYY-MM-DD');
-        const toDate = picker.endDate.format('YYYY-MM-DD');
-        const fromDateParams = new URLSearchParams(window.location.search).get('fromDate');
-        const toDateParams = new URLSearchParams(window.location.search).get('toDate');
+      $("#search-date").on("hide.daterangepicker", function (ev, picker) {
+        const fromDate = picker.startDate.format("YYYY-MM-DD");
+        const toDate = picker.endDate.format("YYYY-MM-DD");
+        const fromDateParams = new URLSearchParams(window.location.search).get(
+          "fromDate"
+        );
+        const toDateParams = new URLSearchParams(window.location.search).get(
+          "toDate"
+        );
 
         if (fromDate !== fromDateParams || toDate !== toDateParams) {
           var url = new URL(window.location.href);
-          url.searchParams.set('fromDate', fromDate);
-          url.searchParams.set('toDate', toDate);
-          url.searchParams.set('pageIndex', 1); // Reset to first page
+          url.searchParams.set("fromDate", fromDate);
+          url.searchParams.set("toDate", toDate);
+          url.searchParams.set("pageIndex", 1); // Reset to first page
           window.location.href = url.toString();
         }
       });
     });
 
-    $('.dropdown-pageSize>a').on('click', function (e) {
+    $(".dropdown-pageSize>a").on("click", function (e) {
       e.preventDefault();
-      var selectedSize = $(this).data('value');
+      var selectedSize = $(this).data("value");
       var url = new URL(window.location.href);
-      url.searchParams.set('pageIndex', 1);
-      url.searchParams.set('pageSize', selectedSize);
+      url.searchParams.set("pageIndex", 1);
+      url.searchParams.set("pageSize", selectedSize);
       window.location.href = url.toString();
     });
 
-    $('.dropdown-filter>a').on('click', function (e) {
+    $(".dropdown-filter>a").on("click", function (e) {
       e.preventDefault();
-      var selectedValue = $(this).data('value');
+      var selectedValue = $(this).data("value");
       var url = new URL(window.location.href);
-      url.searchParams.set('sort', selectedValue);
-      url.searchParams.set('pageIndex', 1); // Reset to first page
+      url.searchParams.set("sort", selectedValue);
+      url.searchParams.set("pageIndex", 1); // Reset to first page
       window.location.href = url.toString();
     });
-
-    $('.btn-detail').on('click', function () {
-      var orderId = $(this).data('id');
-      $('#order-id').text(orderId);
+    //Xem chi tiet
+    $(".btn-detail").on("click", function () {
+      var orderId = $(this).data("id");
+      $("#order-id").text(orderId);
 
       $.ajax({
-        url: '/admin/api/detail/' + orderId, // nhớ đúng url
-        method: 'GET',
+        url: "/admin/api/detail/" + orderId, // nhớ đúng url
+        method: "GET",
         success: function (response) {
           console.log(response); // debug
-          if (response.status_code === "SUCCESS" || response.status_code === 1) {
-            $('#order-detail-body').html(response.data);
-            $('#orderDetailModal').modal('show');
+          if (
+            response.status_code === "SUCCESS" ||
+            response.status_code === 1
+          ) {
+            $("#order-detail-body").html(response.data);
+            $("#orderDetailModal").modal("show");
           } else {
-            toastError("Không thể tải chi tiết đơn hàng. Vui lòng thử lại sau.");
+            toastError(
+              "Không thể tải chi tiết đơn hàng. Vui lòng thử lại sau."
+            );
           }
         },
         error: function () {
           toastError("Không thể tải chi tiết đơn hàng. Vui lòng thử lại sau.");
-        }
+        },
       });
     });
-
-    $(document).on('click', '.btn-update-status', function () {
-      var orderId = $(this).data('id');
-      var newStatus = $(this).data('status');
+    //Update status
+    $(document).on("click", ".btn-update-status", function () {
+      var orderId = $(this).data("id");
+      var newStatus = $(this).data("status");
 
       $.ajax({
-        url: '/admin/manage-orders/api/update-status/' + orderId,
-        type: 'POST',
-        contentType: 'application/json',
+        url: "/admin/api/update-status/" + orderId,
+        type: "POST",
+        contentType: "application/json",
         data: JSON.stringify({ status: newStatus }),
         success: function (res) {
-          if (res.status_code === 'SUCCESS') {
+          if (res.status_code === "SUCCESS") {
             toastSuccess("Cập nhật thành công");
 
             // Xóa dòng hiện tại
-            var row = $('button[data-id="' + orderId + '"]').closest('tr');
+            var row = $('button[data-id="' + orderId + '"]').closest("tr");
             row.remove();
 
             // Nếu không còn hàng nào → hiện thông báo
-            if ($('#table-orders tbody tr').length === 0) {
-              $('#table-orders tbody').append(
+            if ($("#table-orders tbody tr").length === 0) {
+              $("#table-orders tbody").append(
                 '<tr><td colspan="7" class="text-center text-muted">Không có dữ liệu</td></tr>'
               );
             }
@@ -337,8 +419,35 @@
         },
         error: function () {
           toastError("Không thể cập nhật trạng thái");
-        }
+        },
+      });
+    });
+
+    $(document).ready(function () {
+      let currentOrderId = null;
+
+      // Khi bấm nút Chọn shipper trong bảng đơn hàng
+      $(document).on("click", ".btn-assign-shipper", function () {
+        currentOrderId = $(this).data("id");
+        $("#assignShipperModal").modal("show");
+      });
+
+      // Khi chọn shipper trong modal
+      $(document).on("click", ".btn-choose-shipper", function () {
+        const shipperId = $(this).data("shipper");
+
+        $.post(
+          `/admin/orders/${currentOrderId}/assign-shipper/${shipperId}`,
+          function (res) {
+            if (res.success) {
+              location.reload();
+            } else {
+              alert("Không thể gán shipper.");
+            }
+          }
+        );
       });
     });
   </script>
   {% endblock %}
+</div>

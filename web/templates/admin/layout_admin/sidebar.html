@@ -263,3 +263,21 @@
     </ul>
   </div>
 </nav>
+
+<script type="text/javascript" charset="utf-8">
+    $(document).ready(function() {
+        var socket = io("/admin");
+        socket.on('connect', function() {
+            console.log('Connected to admin socket server');
+        });
+    
+        socket.on('new_order', function(data) {
+            var message = "Bạn có đơn hàng mới. <a href=\"/admin/manage-orders?status=WAITING_CONFIRM\">Xem ngay</a>"
+            toastNewOrder(message);
+            let count = 0;
+            var audio = new Audio('/static/audio/new-order.mp3');
+            audio.play();
+            
+        });
+    });
+</script>

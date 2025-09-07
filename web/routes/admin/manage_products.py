@@ -27,7 +27,7 @@ def admin_manage_products():
     page = request.args.get("pageIndex", 1, type=int)
     page_size = request.args.get("pageSize", default=10, type=int)
 
-    products, pagination, total_records = get_products(
+    products, pagination, total_records, total_page = get_products(
         search=search, page=page, page_size=page_size
     )
 
@@ -41,7 +41,8 @@ def admin_manage_products():
         totalRecords=total_records,
         currentPage=page,
         pagination=pagination,
-        role=role
+        role=role,
+        totalPage=total_page,
     )
 
 @admin_prod_bp.route("/manage-products/create", methods=["GET", "POST"])

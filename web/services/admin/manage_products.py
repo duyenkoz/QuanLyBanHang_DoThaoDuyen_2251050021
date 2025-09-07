@@ -30,7 +30,7 @@ def get_products(search=None, page=1, page_size=10):
 
     pagination = calcPagination(page, total_pages)
     
-    return products, pagination, total_records
+    return products, pagination, total_records, total_pages
     
 
 def create_product(title, price, description=None, status=None, category_id=None, image_filename=None):

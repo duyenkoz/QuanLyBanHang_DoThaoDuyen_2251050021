@@ -2,69 +2,7 @@
 {% block title %}Dashboard{% endblock %}
 {% block content %}
 <div class="row">
-    <div class="col-12 col-sm-6 col-xl-4 mb-4">
-        <div class="card border-0 shadow">
-            <div class="card-body">
-                <div class="row d-block d-xl-flex align-items-center">
-                    <div class="col-12 col-xl-5 text-xl-center mb-3 mb-xl-0 d-flex align-items-center justify-content-xl-center">
-                        <div class="icon-shape icon-shape-primary rounded me-4 me-sm-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M24 48C10.7 48 0 58.7 0 72C0 85.3 10.7 96 24 96L69.3 96C73.2 96 76.5 98.8 77.2 102.6L129.3 388.9C135.5 423.1 165.3 448 200.1 448L456 448C469.3 448 480 437.3 480 424C480 410.7 469.3 400 456 400L200.1 400C188.5 400 178.6 391.7 176.5 380.3L171.4 352L475 352C505.8 352 532.2 330.1 537.9 299.8L568.9 133.9C572.6 114.2 557.5 96 537.4 96L124.7 96L124.3 94C119.5 67.4 96.3 48 69.2 48L24 48zM208 576C234.5 576 256 554.5 256 528C256 501.5 234.5 480 208 480C181.5 480 160 501.5 160 528C160 554.5 181.5 576 208 576zM432 576C458.5 576 480 554.5 480 528C480 501.5 458.5 480 432 480C405.5 480 384 501.5 384 528C384 554.5 405.5 576 432 576z"/></svg>
-                        </div>
-                        <div class="d-sm-none">
-                            <h2 class="h5">Đơn hàng</h2>
-                            <h3 class="fw-extrabold mb-1">{{ data.get("count_orders", 0) }}</h3>
-                        </div>
-                    </div>
-                    <div class="col-12 col-xl-7 px-xl-0">
-                        <div class="d-none d-sm-block">
-                            <h2 class="h6 text-gray-400 mb-0">Đơn hàng</h2>
-                            <h3 class="fw-extrabold mb-2">{{ data.get("count_orders", 0) }}</h3>
-                        </div>
-                        <!-- <small class="d-flex align-items-center text-gray-500">
-                            Feb 1 - Apr 1,  
-                            <svg class="icon icon-xxs text-gray-500 ms-2 me-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clip-rule="evenodd"></path></svg>
-                            USA
-                        </small> 
-                        <div class="small d-flex mt-1">                               
-                            <div>Since last month <svg class="icon icon-xs text-success" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg><span class="text-success fw-bolder">22%</span></div>
-                        </div> -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-sm-6 col-xl-4 mb-4">
-        <div class="card border-0 shadow">
-            <div class="card-body">
-                <div class="row d-block d-xl-flex align-items-center">
-                    <div class="col-12 col-xl-5 text-xl-center mb-3 mb-xl-0 d-flex align-items-center justify-content-xl-center">
-                        <div class="icon-shape icon-shape-secondary rounded me-4 me-sm-0">
-                            <svg class="icon" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd"></path></svg>
-                        </div>
-                        <div class="d-sm-none">
-                            <h2 class="fw-extrabold h5">Doanh thu</h2>
-                            <h3 class="mb-1">{{ "{:,.0f}".format(data.get("total_revenue", 0)) }} VNĐ</h3>
-                        </div>
-                    </div>
-                    <div class="col-12 col-xl-7 px-xl-0">
-                        <div class="d-none d-sm-block">
-                            <h2 class="h6 text-gray-400 mb-0">Doanh thu</h2>
-                            <h3 class="fw-extrabold mb-2">{{ "{:,.0f}".format(data.get("total_revenue", 0)) }} VNĐ</h3>
-                        </div>
-                        <!-- <small class="d-flex align-items-center text-gray-500">
-                            Feb 1 - Apr 1,  
-                            <svg class="icon icon-xxs text-gray-500 ms-2 me-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clip-rule="evenodd"></path></svg>
-                            GER
-                        </small> 
-                        <div class="small d-flex mt-1">                               
-                            <div>Since last month <svg class="icon icon-xs text-danger" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg><span class="text-danger fw-bolder">2%</span></div>
-                        </div> -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-sm-6 col-xl-4 mb-4">
+    <div class="col-12 col-sm-6 col-xl-3 mb-4">
         <div class="card border-0 shadow">
             <div class="card-body">
                 <div class="row d-block d-xl-flex align-items-center">
@@ -74,13 +12,13 @@
                         </div>
                         <div class="d-sm-none">
                             <h2 class="fw-extrabold h5"> Sản phẩm</h2>
-                            <h3 class="mb-1">{{ data.get("count_products")}}</h3>
+                            <h3 class="mb-1">{{ data.get("count_products", 0)}}</h3>
                         </div>
                     </div>
                     <div class="col-12 col-xl-7 px-xl-0">
                         <div class="d-none d-sm-block">
                             <h2 class="h6 text-gray-400 mb-0"> Sản phẩm</h2>
-                            <h3 class="fw-extrabold mb-2">{{ data.get("count_products")}}</h3>
+                            <h3 class="fw-extrabold mb-2">{{ data.get("count_products", 0)}}</h3>
                         </div>
                         <!-- <small class="text-gray-500">
                             Feb 1 - Apr 1
@@ -93,7 +31,7 @@
             </div>
         </div>
     </div>
-    <div class="col-12 col-sm-6 col-xl-4 mb-4">
+    <div class="col-12 col-sm-6 col-xl-3 mb-4">
         <div class="card border-0 shadow">
             <div class="card-body">
                 <div class="row d-block d-xl-flex align-items-center">
@@ -103,13 +41,13 @@
                         </div>
                         <div class="d-sm-none">
                             <h2 class="fw-extrabold h5"> Khách hàng</h2>
-                            <h3 class="mb-1">{{ data.get("count_users")}}</h3>
+                            <h3 class="mb-1">{{ data.get("count_users", 0)}}</h3>
                         </div>
                     </div>
                     <div class="col-12 col-xl-7 px-xl-0">
                         <div class="d-none d-sm-block">
                             <h2 class="h6 text-gray-400 mb-0"> Khách hàng</h2>
-                            <h3 class="fw-extrabold mb-2">{{ data.get("count_users")}}</h3>
+                            <h3 class="fw-extrabold mb-2">{{ data.get("count_users", 0)}}</h3>
                         </div>
                         <!-- <small class="text-gray-500">
                             Feb 1 - Apr 1
@@ -122,7 +60,7 @@
             </div>
         </div>
     </div>
-    <div class="col-12 col-sm-6 col-xl-4 mb-4">
+    <div class="col-12 col-sm-6 col-xl-3 mb-4">
         <div class="card border-0 shadow">
             <div class="card-body">
                 <div class="row d-block d-xl-flex align-items-center">
@@ -132,13 +70,13 @@
                         </div>
                         <div class="d-sm-none">
                             <h2 class="fw-extrabold h5"> Nhân viên</h2>
-                            <h3 class="mb-1">{{ data.get("count_staff")}}</h3>
+                            <h3 class="mb-1">{{ data.get("count_staff", 0)}}</h3>
                         </div>
                     </div>
                     <div class="col-12 col-xl-7 px-xl-0">
                         <div class="d-none d-sm-block">
                             <h2 class="h6 text-gray-400 mb-0"> Nhân viên</h2>
-                            <h3 class="fw-extrabold mb-2">{{ data.get("count_staff")}}</h3>
+                            <h3 class="fw-extrabold mb-2">{{ data.get("count_staff", 0)}}</h3>
                         </div>
                         <!-- <small class="text-gray-500">
                             Feb 1 - Apr 1
@@ -151,7 +89,7 @@
             </div>
         </div>
     </div>
-    <div class="col-12 col-sm-6 col-xl-4 mb-4">
+    <div class="col-12 col-sm-6 col-xl-3 mb-4">
         <div class="card border-0 shadow">
             <div class="card-body">
                 <div class="row d-block d-xl-flex align-items-center">
@@ -161,13 +99,13 @@
                         </div>
                         <div class="d-sm-none">
                             <h2 class="fw-extrabold h5"> Danh mục</h2>
-                            <h3 class="mb-1">{{ data.get("count_categories")}}</h3>
+                            <h3 class="mb-1">{{ data.get("count_categories", 0)}}</h3>
                         </div>
                     </div>
                     <div class="col-12 col-xl-7 px-xl-0">
                         <div class="d-none d-sm-block">
                             <h2 class="h6 text-gray-400 mb-0"> Danh mục</h2>
-                            <h3 class="fw-extrabold mb-2">{{ data.get("count_categories")}}</h3>
+                            <h3 class="fw-extrabold mb-2">{{ data.get("count_categories", 0)}}</h3>
                         </div>
                         <!-- <small class="text-gray-500">
                             Feb 1 - Apr 1
@@ -180,5 +118,224 @@
             </div>
         </div>
     </div>
+    <div class="col-12">
+        <div class="row mb-3">
+            <!-- <div class="col-2">
+                <select id="viewMode" class="form-select">
+                    <option value="day">Theo ngày</option>
+                    <option value="month">Theo tháng</option>
+                    <option value="year">Theo năm</option>
+                </select>
+            </div> -->
+            <div class="col-2" id="filterContainer">
+                <input type="text" name="daterange" class="form-control" id="search-date" placeholder="Tìm kiếm theo ngày" />
+            </div>
+        </div>
+        <div>
+            <span class="badge rounded-pill bg-success">Biểu đồ doanh thu theo thời gian</span>
+            <canvas id="chartRevenue" class="chart-statistics"></canvas>
+        </div>
+        <div>
+            <span class="badge rounded-pill bg-info">Biểu đồ đơn hàng theo thời gian</span>
+            <canvas id="chartOrder" class="chart-statistics"></canvas>
+        </div>
+    </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        let mode = $("#viewMode").val();
+        initControl(mode).then((drp) => {
+            fetchRevenueData(drp);
+            fetchOrderData(drp);
+            $("#search-date").on("hide.daterangepicker", function (ev, picker) {
+                fetchRevenueData(picker);
+                fetchOrderData(picker);
+            });
+        });
+        
+        //Nghe sự kiện
+        // $("#viewMode").on("change", function() {
+        //     mode = $(this).val();
+        //     initControl(mode).then(drp => {
+        //         fetchRevenueData(drp, mode);
+
+        //         $("#search-date").off("apply.daterangepicker").on("apply.daterangepicker", function(ev, drpInstance) {
+        //             fetchRevenueData(drpInstance, mode);
+        //         });
+        //     });
+        // });
+    });
+
+    function initControl(mode) {
+        return new Promise((resolve, reject) => {
+            try {
+                let format = "DD/MM/YYYY";
+                if (mode === "month") format = "MM/YYYY";
+                if (mode === "year") format = "YYYY";
+                const picker = $("#search-date").daterangepicker({
+                    opens: "left",
+                    startDate:moment().subtract(29, "days"),
+                    endDate: moment(),
+                    locale: {
+                        format: format,
+                    },
+                    ranges: {
+                        "Hôm nay": [moment(), moment()],
+                        "Hôm qua": [moment().subtract(1, "days"), moment().subtract(1, "days")],
+                        "7 ngày trước": [moment().subtract(6, "days"), moment()],
+                        "30 ngày trước": [moment().subtract(29, "days"), moment()],
+                        "Tháng này": [moment().startOf("month"), moment().endOf("month")],
+                        "Tháng trước": [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf("month")],
+                    }
+                }).data("daterangepicker");
+                resolve(picker);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    function fetchRevenueData(picker, mode) {
+        const fromDate = picker.startDate.format("YYYY-MM-DD");
+        const toDate = picker.endDate.format("YYYY-MM-DD");
+
+        $.ajax({
+            url: `/admin/api/chart/revenue?from=${fromDate}&to=${toDate}&mode=${mode || "day"}`,
+            method: "GET",
+            dataType: "json",
+            success: function(response) {
+                if (response.status_code === "SUCCESS") {
+                    const chartData = response.data;
+                    const labels = chartData?.labels;
+                    const revenues = chartData?.revenues;
+
+                    if (!labels || !revenues) {
+                        toastError("Dữ liệu biểu đồ không hợp lệ");
+                        return;
+                    }
+
+                    //Khởi tạo biểu đồ
+                    window.revenueChart = initRevenueChart(labels, revenues);
+                } else {
+                    console.error("Failed to fetch revenue chart data:", response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error fetching revenue chart data:", error);
+            }
+        });
+    }
+
+    function fetchOrderData(picker, mode) {
+        const fromDate = picker.startDate.format("YYYY-MM-DD");
+        const toDate = picker.endDate.format("YYYY-MM-DD");
+
+        $.ajax({
+            url: `/admin/api/chart/order?from=${fromDate}&to=${toDate}&mode=${mode || "day"}`,
+            method: "GET",
+            dataType: "json",
+            success: function(response) {
+                if (response.status_code === "SUCCESS") {
+                    const chartData = response.data;
+                    const labels = chartData?.labels;
+                    const orderCounts = chartData?.orders;
+
+                    if (!labels || !orderCounts) {
+                        toastError("Dữ liệu biểu đồ không hợp lệ");
+                        return;
+                    }
+
+                    //Khởi tạo biểu đồ
+                    window.orderChart = initOrderChart(labels, orderCounts);
+                } else {
+                    console.error("Failed to fetch order chart data:", response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error fetching order chart data:", error);
+            }
+        });
+    }
+
+    function initRevenueChart(labels, revenues) {
+        if (window.revenueChart) {
+            window.revenueChart.destroy();
+        }
+
+        const ctxChartRevenue = document.getElementById('chartRevenue').getContext('2d');
+        const revenueChart = new Chart(ctxChartRevenue, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Doanh thu',
+                    data: revenues,
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.3)',
+                    borderWidth: 1,
+                    fill: true,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Doanh thu (VND)'
+                        },
+                        beginAtZero: true,
+                        ticks:{
+                            stepSize: 300000
+                        }
+                    }
+                }                
+            }
+        });
+        return revenueChart;
+    }
+
+    function initOrderChart(labels, orderCounts) {
+        if (window.orderChart) {
+            window.orderChart.destroy();
+        }
+        const ctxChartOrder = document.getElementById('chartOrder').getContext('2d');
+        const orderChart = new Chart(ctxChartOrder, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Số đơn hàng',
+                    data: orderCounts,
+                    borderColor: 'rgb(54, 162, 235)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Số đơn hàng'
+                        },
+                        beginAtZero: true,
+                        ticks:{
+                            stepSize: 10
+                        }
+                    }
+                },
+                interaction: {
+                    mode: 'nearest',   // bắt điểm gần nhất
+                    intersect: false   // không cần hover trúng chính xác
+                },
+            }
+        });
+        return orderChart;
+    }
+</script>
 {% endblock %}

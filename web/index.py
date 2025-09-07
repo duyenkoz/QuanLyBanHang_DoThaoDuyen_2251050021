@@ -1,6 +1,7 @@
 from urllib import request
 from flask import Flask, render_template
 from flask_login import login_user
+from flask_socketio import SocketIO
 from web import app
 from web.services import category as categoryService
 from web.routes.products import products_bp
@@ -16,8 +17,7 @@ from web.routes.admin.manage_orders import admin_order_bp
 from web.routes.admin.manage_users import admin_user_bp
 from web.routes.admin.dashboard import admin_dashboard_bp
 from web.routes.shipper.shipper import shipper_bp
-
-
+from web.sockets import socketio
 
 @app.context_processor
 def init_menu():
@@ -45,5 +45,13 @@ app.register_blueprint(admin_user_bp)
 app.register_blueprint(admin_dashboard_bp)
 app.register_blueprint(shipper_bp)
 
+socketio.init_app(app)
+
+import web.sockets.admin_socket
+# @socketio.on('connect')
+# def test_connect():
+#     print('Client connected')
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    socketio.run(app, debug=True)
+    #app.run(debug=True)

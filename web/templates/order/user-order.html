@@ -51,7 +51,31 @@
                     </tbody>
                 </table>
             </div>
+            
+            <!-- PHÂN TRANG -->
+            <div class="pagination">
+                <nav aria-label="Pagination">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item {% if currentPage == 1 %}disabled{% endif %}">
+                            <a class="page-link" href="?pageIndex={{ currentPage - 1 }}&search={{ search }}">Trước</a>
+                        </li>
 
+                        {% for page in pagination %}
+                        {% if page == '...' %}
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                        {% else %}
+                        <li class="page-item {% if page == currentPage %}active disabled{% endif %}">
+                            <a class="page-link" href="?pageIndex={{ page }}&search={{ search }}">{{ page }}</a>
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+
+                        <li class="page-item {% if currentPage == totalPage %}disabled{% endif %}">
+                            <a class="page-link" href="?pageIndex={{ currentPage + 1 }}&search={{ search }}">Sau</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
 
             <!-- Modal xem chi tiết -->
             <div class="modal fade" id="orderDetailModal" tabindex="-1" aria-hidden="true">

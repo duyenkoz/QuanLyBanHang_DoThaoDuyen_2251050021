@@ -23,6 +23,6 @@ def shipper_required(f):
     def decorated_function(*args, **kwargs):
         if not session.get("user_id") or session.get("role") != "shipper":
             flash("Bạn không có quyền truy cập trang này!", "danger")
-            return redirect(url_for("admin_user.login"))
+            return redirect(url_for("auth.login"))
         return f(*args, **kwargs)
     return decorated_function

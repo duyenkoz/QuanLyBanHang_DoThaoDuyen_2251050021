@@ -24,3 +24,9 @@ body {
     color: red;
     font-size: 14px;
 }
+
+.chart-statistics {
+    width: 100%!important;
+    height: 400px!important;
+}
+

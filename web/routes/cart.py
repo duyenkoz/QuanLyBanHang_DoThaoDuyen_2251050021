@@ -4,7 +4,7 @@ from web.services import cart as cartService
 from web.common.api_response import APIResponse, ResponseStatus
 from web.services import product as productService
 from web.services import user as userService
-
+from web.sockets import socketio
 
 
 cart_bp = Blueprint("cart", __name__)
@@ -51,6 +51,8 @@ def api_checkout():
 
     checkout_result = cartService.save_order(data_payment)
     if checkout_result == "SUCCESS":
+        # Socket để thông báo cho admin
+        socketio.emit("new_order", {"id": 123}, namespace="/admin", room="admin_room")
         response.status_code = ResponseStatus.SUCCESS.value
     else:
         response.status_code = ResponseStatus.ERROR.value

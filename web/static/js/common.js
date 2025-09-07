@@ -31,6 +31,18 @@ function toastWarning(text){
     })
 }
 
+function toastNewOrder(text){
+    $.toast({
+        heading: "Đơn hàng mới",
+        text: text,
+        hideAfter: false,
+        showHideTransition: 'fade',
+        position: 'top-right',
+        bgColor: '#156c14',
+        stack: 1
+    })
+}
+
 function updateCartCount() {
     let cart = JSON.parse(localStorage.getItem("cart") || "[]");
     let count = cart.length;
